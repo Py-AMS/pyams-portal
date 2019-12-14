@@ -1,0 +1,14 @@
+<configure
+	xmlns="http://pylonshq.com/pyramid"
+	xmlns:meta="http://namespaces.zope.org/meta">
+
+	<meta:directives namespace="http://namespaces.ztfy.org/pyams">
+
+		<meta:directive
+			name="pagelet"
+			schema=".metadirectives.IPageletDirective"
+			handler=".metaconfigure.PageletDirective" />
+
+	</meta:directives>
+
+</configure>
