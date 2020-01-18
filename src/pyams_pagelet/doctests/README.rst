@@ -7,8 +7,14 @@ Let's start by creating a new template:
 
     >>> from pyramid.testing import setUp, tearDown
     >>> from pyams_utils.request import get_annotations
+
     >>> config = setUp()
     >>> config.add_request_method(get_annotations, 'annotations', reify=True)
+
+    >>> from pyams_utils import includeme as include_utils
+    >>> include_utils(config)
+    >>> from pyams_template import includeme as include_template
+    >>> include_template(config)
 
     >>> import os, tempfile
     >>> temp_dir = tempfile.mkdtemp()
@@ -100,12 +106,9 @@ This template will be registered using the custom view interface:
 This exception is raised because the pagelet is not yet registered; this should be done
 automatically when *pyams_pagelet* package is included into Pyramid configuration:
 
-    >>> from zope.contentprovider.interfaces import IContentProvider
-    >>> from pyams_pagelet.interfaces import IPagelet
-    >>> from pyams_pagelet.pagelet import PageletRenderer
-    >>> config.registry.registerAdapter(PageletRenderer,
-    ...                                 (Interface, IRequest, IPagelet),
-    ...                                 IContentProvider, name='pagelet')
+    >>> from pyams_pagelet import includeme as include_pagelet
+    >>> include_pagelet(config)
+
     >>> print(view())
     200 OK
     Content-Type: text/html; charset=UTF-8
@@ -117,5 +120,8 @@ automatically when *pyams_pagelet* package is included into Pyramid configuratio
       </body>
     </html>
     <BLANKLINE>
+
+
+Tests cleanup:
 
     >>> tearDown()
