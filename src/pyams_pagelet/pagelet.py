@@ -22,12 +22,10 @@ import venusian
 from pyramid.httpexceptions import HTTPUnauthorized
 from pyramid.interfaces import IRequest
 from pyramid.response import Response
-from pyramid_chameleon.interfaces import IChameleonTranslate
-from zope.component import queryUtility
 from zope.interface import Interface, implementer
 
 from pyams_pagelet.interfaces import IPagelet, IPageletRenderer, PageletCreatedEvent
-from pyams_template.interfaces import IContentTemplate, ILayoutTemplate
+from pyams_template.template import get_content_template, get_layout_template
 from pyams_utils.adapter import adapter_config
 
 
@@ -42,8 +40,9 @@ REDIRECT_STATUS_CODES = (301, 302, 303)
 class Pagelet:
     """Content provider with layout support"""
 
-    template = None
-    layout = None
+    template = get_content_template()
+    layout = get_layout_template()
+
     permission = None
 
     def __init__(self, context, request):
@@ -62,44 +61,15 @@ class Pagelet:
 
     def render(self):
         """See `zope.contentprovider.interfaces.IContentProvider`"""
-        request = self.request
-        cdict = {
-            'context': self.context,
-            'request': request,
-            'view': self,
-            'translate': queryUtility(IChameleonTranslate)
-        }
-        if self.template is None:
-            registry = request.registry
-            template = registry.queryMultiAdapter((self, request, self.context),
-                                                  IContentTemplate)
-            if template is None:
-                template = registry.getMultiAdapter((self, request), IContentTemplate)
-            return template(**cdict)
-        return self.template(**cdict)  # pylint: disable=not-callable
+        return self.template()  # pylint: disable=not-callable
 
     def __call__(self, **kwargs):
         """Call update and return layout template"""
         self.update()
-        if self.request.response.status_code in REDIRECT_STATUS_CODES:
-            return ''
-
         request = self.request
-        cdict = {
-            'context': self.context,
-            'request': request,
-            'view': self,
-            'translate': queryUtility(IChameleonTranslate)
-        }
-        cdict.update(kwargs)
-        if self.layout is None:
-            registry = request.registry
-            layout = registry.queryMultiAdapter((self, request, self.context),
-                                                ILayoutTemplate)
-            if layout is None:
-                layout = registry.getMultiAdapter((self, request), ILayoutTemplate)
-            return Response(layout(**cdict))
-        return Response(self.layout(**cdict))  # pylint: disable=not-callable
+        if request.response.status_code in REDIRECT_STATUS_CODES:
+            return ''
+        return Response(self.layout(**kwargs))  # pylint: disable=not-callable
 
 
 @adapter_config(name='pagelet', context=(Interface, IRequest, IPagelet), provides=IPageletRenderer)
