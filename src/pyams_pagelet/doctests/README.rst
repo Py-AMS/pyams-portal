@@ -42,10 +42,10 @@ here from *pyams_template* package, while it may be done using a *template_confi
 
     >>> from pyams_template.template import TemplateFactory
     >>> factory = TemplateFactory(content_template, 'text/html')
-    >>> config.registry.registerAdapter(factory, (Interface, IRequest), IContentTemplate)
+    >>> config.registry.registerAdapter(factory, (Interface, IRequest, Interface), IContentTemplate)
 
     >>> factory = TemplateFactory(layout_template, 'text/html')
-    >>> config.registry.registerAdapter(factory, (Interface, IRequest), ILayoutTemplate)
+    >>> config.registry.registerAdapter(factory, (Interface, IRequest, Interface), ILayoutTemplate)
 
 Let's now create a pagelet view:
 
@@ -74,7 +74,6 @@ Let's now create a pagelet view:
         <div class="layout"><div>Base template content</div></div>
       </body>
     </html>
-    <BLANKLINE>
 
 But the standard way of using a pagelet is by using the "pagelet:" TALES expression:
 
@@ -95,7 +94,7 @@ This template will be registered using the custom view interface:
     >>> PageTemplateFile.expression_types['provider'] = ProviderExpr
 
     >>> factory = TemplateFactory(pagelet_template, 'text/html')
-    >>> config.registry.registerAdapter(factory, (IMyView, IRequest), ILayoutTemplate)
+    >>> config.registry.registerAdapter(factory, (Interface, IRequest, IMyView), ILayoutTemplate)
 
     >>> try:
     ...     view()
@@ -119,8 +118,29 @@ automatically when *pyams_pagelet* package is included into Pyramid configuratio
         <div class="pagelet"><div>Base template content</div></div>
       </body>
     </html>
-    <BLANKLINE>
 
+
+Testing the pagelet decorator
+-----------------------------
+
+This package provides a "pagelet_config" decorator, which is working like the classic Pyramid's
+"view_config" decorator: it is registering a new view, but is also registering this view as an
+IPagelet adapter:
+
+    >>> from pyams_pagelet import includeme as include_pagelet
+    >>> include_pagelet(config)
+
+Let's now try to check if this pagelet is correctly registered:
+
+    >>> from pyramid.view import render_view
+    >>> print(render_view(content, request, 'testing.html').decode())
+    <html>
+      <body>
+        <div class="layout"><div>Base template content</div></div>
+      </body>
+    </html>
+
+As view doesn't implement any custom interface, it's inheriting default layout and template!
 
 Tests cleanup:
 
