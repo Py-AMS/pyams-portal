@@ -18,7 +18,6 @@ This module is used to add additional testing features.
 import sys
 
 from pyams_pagelet.pagelet import pagelet_config
-from pyams_template.template import template_config
 
 __docformat__ = 'restructuredtext'
 
