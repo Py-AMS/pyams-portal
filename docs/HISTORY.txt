@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.1.0
+-----
+ - removed ZCML declarations
+ - updated doctests
+
 1.0.1
 -----
  - updated pagelet templates registration to use standard (context, request, view)

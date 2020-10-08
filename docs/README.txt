@@ -15,13 +15,15 @@ and content management with the Pyramid framework.
 see PyAMS_content package), but many features are generic and can be used inside any kind of web
 application.
 
-All PyAMS documentation is available on `ReadTheDocs <https://pyams.readthedocs.io>`_
+All PyAMS documentation is available on `ReadTheDocs <https://pyams.readthedocs.io>`_; source code
+is available on `Gitlab <https://gitlab.com/pyams>`_ and pushed to `Github
+<https://github.com/py-ams>`_.
 
 
 What is PyAMS_pagelet?
 ======================
 
-This package is a small rewrite of z3c.pagelet package for use with Pyramid.
+This package is a small rewrite of z3c.pagelet package for use with Pyramid and PyAMS.
 
 PyAMS_template allows to separate a view's Python code from it's template implementation, so that
 this template can be easilly overriden for a given view or a given layer; it also allows to
