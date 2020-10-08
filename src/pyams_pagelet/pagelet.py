@@ -118,12 +118,20 @@ class pagelet_config:  # pylint: disable=invalid-name
 
             LOGGER.debug('Registering pagelet view "{0}" for {1} ({2})'.format(
                 settings.get('name'), str(settings.get('context', Interface)), str(new_class)))
+
             config = context.config.with_package(info.module)  # pylint: disable=no-member
-            registry = settings.get('registry') or config.registry
+            registry = settings.get('registry')
+            if registry is None:
+                registry = config.registry
             registry.registerAdapter(new_class,
                                      (settings.get('context', Interface),
                                       settings.get('request_type', IRequest)),
                                      IPagelet, settings.get('name'))
+
+            if 'registry' in settings:
+                settings.pop('registry')
+            if 'venusian' in settings:
+                settings.pop('venusian')
             config.add_view(view=new_class, **settings)
 
         info = self.venusian.attach(wrapped, callback, category='pyams_pagelet',
