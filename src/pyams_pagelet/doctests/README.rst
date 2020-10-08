@@ -8,7 +8,7 @@ Let's start by creating a new template:
     >>> from pyramid.testing import setUp, tearDown
     >>> from pyams_utils.request import get_annotations
 
-    >>> config = setUp()
+    >>> config = setUp(hook_zca=True)
     >>> config.add_request_method(get_annotations, 'annotations', reify=True)
 
     >>> from pyams_utils import includeme as include_utils
@@ -75,7 +75,7 @@ Let's now create a pagelet view:
       </body>
     </html>
 
-But the standard way of using a pagelet is by using the "pagelet:" TALES expression:
+But the standard way of using a pagelet is by using the "provider:pagelet" TALES expression:
 
     >>> pagelet_template = os.path.join(temp_dir, 'pagelet-template.pt')
     >>> with open(pagelet_template, 'w') as file:
@@ -130,17 +130,48 @@ IPagelet adapter:
     >>> from pyams_pagelet import includeme as include_pagelet
     >>> include_pagelet(config)
 
+    >>> from pyams_utils.testing import call_decorator
+    >>> from pyams_pagelet.pagelet import pagelet_config
+    >>> from pyams_template.template import template_config, layout_config
+
+    >>> class AnotherView:
+    ...     """Pagelet view"""
+
+    >>> pagelet_template = os.path.join(temp_dir, 'pagelet-template-2.pt')
+    >>> with open(pagelet_template, 'w') as file:
+    ...     _ = file.write('''<div>Pagelet content</div>''')
+
+    >>> layout_template = os.path.join(temp_dir, 'layout-template-2.pt')
+    >>> with open(layout_template, 'w') as file:
+    ...     _ = file.write('''
+    ... <html>
+    ...   <body>
+    ...     <div class="layout-2">${structure:provider:pagelet}</div>
+    ...   </body>
+    ... </html>
+    ... ''')
+
+    >>> call_decorator(config, pagelet_config, AnotherView,
+    ...                name='testing-2.html',
+    ...                for_=Interface,
+    ...                layer=IRequest)
+    >>> call_decorator(config, template_config, AnotherView,
+    ...                template=pagelet_template)
+    >>> call_decorator(config, layout_config, AnotherView,
+    ...                template=layout_template)
+
 Let's now try to check if this pagelet is correctly registered:
 
     >>> from pyramid.view import render_view
-    >>> print(render_view(content, request, 'testing.html').decode())
+    >>> print(render_view(content, request, 'testing-2.html').decode())
     <html>
       <body>
-        <div class="layout"><div>Base template content</div></div>
+        <div class="layout-2"><div>Pagelet content</div></div>
       </body>
     </html>
 
 As view doesn't implement any custom interface, it's inheriting default layout and template!
+
 
 Tests cleanup:
 
