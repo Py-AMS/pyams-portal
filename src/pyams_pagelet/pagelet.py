@@ -51,7 +51,6 @@ class Pagelet:
         if self.permission and not request.has_permission(self.permission):
             raise HTTPUnauthorized('You are not authorized to access the page called `%s`.' %
                                    request.view_name)
-        request.registry.notify(PageletCreatedEvent(self))
 
     def update(self):
         """See `zope.contentprovider.interfaces.IContentProvider`"""
@@ -65,14 +64,20 @@ class Pagelet:
 
     def __call__(self, **kwargs):
         """Call update and return layout template"""
+        self.request.registry.notify(PageletCreatedEvent(self))
         self.update()
+
+        # Don't render anything if we are doing a redirect
         request = self.request
         if request.response.status_code in REDIRECT_STATUS_CODES:
-            return ''
+            return Response('')
+
         return Response(self.layout(**kwargs))  # pylint: disable=not-callable
 
 
-@adapter_config(name='pagelet', context=(Interface, IRequest, IPagelet), provides=IPageletRenderer)
+@adapter_config(name='pagelet',
+                required=(Interface, IRequest, IPagelet),
+                provides=IPageletRenderer)
 class PageletRenderer:
     """Pagelet renderer"""
 
