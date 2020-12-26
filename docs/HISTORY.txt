@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.1.1
+-----
+ - updated pagelet creation event notification
+
 1.1.0
 -----
  - removed ZCML declarations
