@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.1.2
+-----
+ - updated Gitlab-CI configuration
+ - removed Travis-CI configuration
+
 1.1.1
 -----
  - updated pagelet creation event notification
