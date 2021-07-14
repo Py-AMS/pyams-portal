@@ -48,7 +48,7 @@ class ImagePortletSettings(PortletSettings):
     def image(self, value):
         """Image setter"""
         self._image = value
-        if IImageFile.providedby(self._image):
+        if IImageFile.providedBy(self._image):
             alsoProvides(self._image, IResponsiveImage)
 
 
