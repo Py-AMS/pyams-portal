@@ -14,6 +14,9 @@
 
 This module is used for Pyramid integration.
 """
+
+import re
+
 from zope.interface import classImplements
 
 from pyams_portal.interfaces import DESIGNER_ROLE, IPortalContext, MANAGE_TEMPLATE_PERMISSION
@@ -60,6 +63,6 @@ def include_package(config):
     try:
         import pyams_zmi  # pylint: disable=import-outside-toplevel,unused-import
     except ImportError:
-        config.scan(ignore='pyams_portal.zmi')
+        config.scan(ignore=[re.compile(r'pyams_portal\..*\.zmi\.?.*').search])
     else:
         config.scan()
