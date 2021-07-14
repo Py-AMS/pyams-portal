@@ -1,0 +1,57 @@
+<div tal:define="settings view.settings;
+				 renderer_settings view.renderer_settings;
+				 slot_config view.slot_configuration;">
+	<h2 tal:define="title i18n:settings.title"
+		tal:condition="title">
+		${title}
+	</h2>
+	<p class="lead" tal:define="lead i18n:settings.lead"
+	   tal:condition="lead">${lead}</p>
+	<div class="${renderer_settings.css_class}">
+		<div tal:repeat="card settings.get_visible_items()"
+			 class="${card.css_class}">
+			<div class="card h-100">
+				<tal:if define="illustration card.illustration"
+						condition="illustration">
+					${structure:tales:picture(illustration,
+											  xs_thumb=renderer_settings.thumb_selection,
+											  xs_width=slot_config.xs_width,
+											  sm_thumb=renderer_settings.thumb_selection,
+											  sm_width=slot_config.sm_width,
+											  md_thumb=renderer_settings.thumb_selection,
+											  md_width=slot_config.md_width,
+											  lg_thumb=renderer_settings.thumb_selection,
+											  lg_width=slot_config.lg_width,
+											  xl_thumb=renderer_settings.thumb_selection,
+											  xl_width=slot_config.xl_width,
+											  css_class='card-img-top w-100')}
+				</tal:if>
+				<div class="card-body">
+					<h3 class="card-title"
+						tal:define="title i18n:card.title"
+						tal:condition="title">
+						${title}
+					</h3>
+					<p class="card-text"
+					   tal:define="body i18n:card.body"
+					   tal:condition="body">
+						${structure:tales:html(body)}
+					</p>
+				</div>
+				<tal:if define="target card.target"
+						condition="(target is not None) or card.target_url">
+					<div class="card-footer text-right"
+						 tal:define="label i18n:card.button_label;
+									 href tales:absolute_url(target);
+									 url href if target is not None else card.target_url;"
+						 tal:condition="label and url">
+						<a class="btn btn-${card.button_status} btn-md mx-auto" role="button"
+						   href="${url}">
+							${label}
+						</a>
+					</div>
+				</tal:if>
+			</div>
+		</div>
+	</div>
+</div>

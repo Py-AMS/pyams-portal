@@ -1,0 +1,781 @@
+====================
+PyAMS portal package
+====================
+
+Introduction
+------------
+
+This package is composed of a set of utility functions, usable into any Pyramid application.
+
+    >>> import pprint
+    >>> from pyramid.testing import setUp, tearDown, DummyRequest
+    >>> from pyams_utils.request import get_annotations
+
+    >>> config = setUp(hook_zca=True)
+    >>> config.add_request_method(get_annotations, 'annotations', reify=True)
+    >>> config.registry.settings['zodbconn.uri'] = 'memory://'
+
+    >>> from pyramid_zodbconn import includeme as include_zodbconn
+    >>> include_zodbconn(config)
+    >>> from cornice import includeme as include_cornice
+    >>> include_cornice(config)
+    >>> from pyams_utils import includeme as include_utils
+    >>> include_utils(config)
+    >>> from pyams_viewlet import includeme as include_viewlet
+    >>> include_viewlet(config)
+    >>> from pyams_pagelet import includeme as include_pagelet
+    >>> include_pagelet(config)
+    >>> from pyams_i18n import includeme as include_i18n
+    >>> include_i18n(config)
+    >>> from pyams_security import includeme as include_security
+    >>> include_security(config)
+    >>> from pyams_catalog import includeme as include_catalog
+    >>> include_catalog(config)
+    >>> from pyams_form import includeme as include_form
+    >>> include_form(config)
+    >>> from pyams_portal import includeme as include_portal
+    >>> include_portal(config)
+
+    >>> from zope.interface import alsoProvides
+    >>> from pyams_site.generations import upgrade_site
+    >>> from pyams_layer.interfaces import IPyAMSLayer
+
+    >>> request = DummyRequest()
+    >>> alsoProvides(request, IPyAMSLayer)
+
+    >>> app = upgrade_site(request)
+    Upgrading PyAMS I18n to generation 1...
+    Upgrading PyAMS catalog to generation 1...
+    Upgrading PyAMS security to generation 2...
+    Upgrading PyAMS portal to generation 1...
+
+    >>> from pyramid.threadlocal import manager
+    >>> from pyams_portal.interfaces import IPortalContext
+
+    >>> alsoProvides(app, IPortalContext)
+    >>> request.root = app
+    >>> manager.push({'request': request, 'registry': request.registry})
+
+    >>> from pyams_utils.registry import handle_site_before_traverse
+    >>> from zope.traversing.interfaces import BeforeTraverseEvent
+    >>> handle_site_before_traverse(BeforeTraverseEvent(app, request))
+
+    >>> from pyams_utils.registry import get_utility
+    >>> from pyams_portal.interfaces import IPortalTemplateContainer
+    >>> ptc = get_utility(IPortalTemplateContainer)
+    >>> ptc
+    <pyams_portal.template.PortalTemplateContainer object at 0x...>
+
+
+Portal templates
+----------------
+
+A template is a presentation component made of rows containing slots containing portlets.
+Rows are always "full-width" components, while slots can be configured using a Bootstrap grid;
+portlets are then full-width inside a slot.
+
+Let's create a first template:
+
+    >>> from pyams_utils.factory import get_object_factory
+    >>> from pyams_portal.interfaces import IPortalTemplate
+
+    >>> factory = get_object_factory(IPortalTemplate)
+    >>> template = factory()
+    >>> template
+    <pyams_portal.template.PortalTemplate object at 0x...>
+    >>> template.name = 'First template'
+
+    >>> from zope.lifecycleevent import ObjectAddedEvent
+    >>> ptc['first'] = template
+    >>> request.registry.notify(ObjectAddedEvent(template, ptc))
+
+    >>> from pyams_utils.interfaces.intids import IUniqueID
+    >>> get_utility(IPortalTemplate, name=IUniqueID(template).oid) is template
+    True
+
+    >>> from pyams_portal.interfaces import IPortalTemplateConfiguration
+    >>> config = IPortalTemplateConfiguration(template)
+    >>> config
+    <pyams_portal.template.PortalTemplateConfiguration object at 0x...>
+    >>> config.rows
+    1
+    >>> config.slot_order[0]
+    []
+
+    >>> row_index = config.add_row()
+    >>> row_index
+    1
+    >>> config.rows
+    2
+
+Let's create a new slot:
+
+    >>> row_id, name = config.add_slot('Slot 1')
+    >>> row_id, name
+    (0, 'Slot 1')
+    >>> config.get_slots(0)
+    ['Slot 1']
+
+    >>> config.slot_names
+    ['Slot 1']
+    >>> config.slot_order
+    {0: ['Slot 1'], 1: []}
+    >>> config.get_slot_row('Slot 1')
+    0
+    >>> config.get_slots(0)
+    ['Slot 1']
+
+    >>> config.slot_config
+    {'Slot 1': <pyams_portal.slot.SlotConfiguration object at 0x...>}
+    >>> config.get_slot_configuration('Slot 1')
+    <pyams_portal.slot.SlotConfiguration object at 0x...>
+    >>> config.get_slot_configuration('missing') is None
+    True
+
+    >>> config.get_slots_width()
+    {'Slot 1': {'xs': 12, 'sm': 12, 'md': 12, 'lg': 12, 'xl': 12, 'css': 'col  col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12', 'visible': True}}
+    >>> config.set_slot_width('Slot 1', 'md', 6)
+    >>> config.get_slots_width('md')
+    {'Slot 1': {'md': 6, 'css': 'col  col-md-6', 'visible': True}}
+
+We can than add a new slot:
+
+    >>> config.add_slot('Slot 2', row_id=1)
+    (1, 'Slot 2')
+    >>> config.add_slot('Slot 3', row_id=1)
+    (1, 'Slot 3')
+
+    >>> config.slot_order
+    {0: ['Slot 1'], 1: ['Slot 2', 'Slot 3']}
+
+A slot can be moved from one row to another:
+
+    >>> config.set_slot_order({0: ['Slot 1', 'Slot 3'], 1: ['Slot 2']})
+    >>> config.slot_order
+    {0: ['Slot 1', 'Slot 3'], 1: ['Slot 2']}
+
+We can also delete a slot:
+
+    >>> config.delete_slot('Slot 3')
+    >>> config.slot_order
+    {0: ['Slot 1'], 1: ['Slot 2']}
+
+We can also change rows order, or delete a row:
+
+    >>> config.set_row_order([1, 0])
+    >>> config.slot_order
+    {0: ['Slot 2'], 1: ['Slot 1']}
+
+    >>> config.delete_row(0)
+    >>> config.slot_order
+    {0: ['Slot 1']}
+
+
+Configuring slots
+-----------------
+
+Each slot can configured using a number of properties:
+
+    >>> config.get_slot_configuration('Slot 2') is None
+    True
+    >>> slot_configuration = config.get_slot_configuration('Slot 1')
+    >>> slot_configuration
+    <pyams_portal.slot.SlotConfiguration object at 0x...>
+
+    >>> slot_configuration.visible
+    True
+    >>> slot_configuration.container_css_class is None
+    True
+    >>> slot_configuration.md_width
+    6
+    >>> slot_configuration.template is template
+    True
+
+
+Adding portlets
+---------------
+
+A portlet is a named utility providing IPortlet interface, which is registered using
+the "portlet_config" decorator; some portlets are provided by PyAMS_portal package.
+
+A portlets vocabulary is available:
+
+    >>> from pyams_portal.portlet import PortletVocabulary
+    >>> vocabulary = PortletVocabulary(app)
+    >>> pprint.pprint(vocabulary.by_token)
+    {'pyams_portal.portlet.cards': <zope.schema.vocabulary.SimpleTerm object at 0x...>,
+     'pyams_portal.portlet.carousel': <zope.schema.vocabulary.SimpleTerm object at 0x...>,
+     'pyams_portal.portlet.html': <zope.schema.vocabulary.SimpleTerm object at 0x...>,
+     'pyams_portal.portlet.image': <zope.schema.vocabulary.SimpleTerm object at 0x...>,
+     'pyams_portal.portlet.jumbotron': <zope.schema.vocabulary.SimpleTerm object at 0x...>,
+     'pyams_portal.portlet.raw': <zope.schema.vocabulary.SimpleTerm object at 0x...>,
+     'pyams_portal.portlet.spacer': <zope.schema.vocabulary.SimpleTerm object at 0x...>}
+
+    >>> from pyams_portal.portlets.html import HTML_PORTLET_NAME
+
+    >>> portlet = config.add_portlet(HTML_PORTLET_NAME, 'Slot 1')
+    >>> pprint.pprint(portlet)
+    {'label': 'Rich text',
+     'portlet_id': 2,
+     'portlet_name': 'pyams_portal.portlet.html',
+     'position': 0,
+     'slot_name': 'Slot 1'}
+
+    >>> config.get_portlet_slot(2)
+    (0, 'Slot 1')
+
+The same portlet can be added several times in a same slot:
+
+    >>> portlet2 = config.add_portlet(HTML_PORTLET_NAME, 'Slot 1')
+    >>> pprint.pprint(portlet2)
+    {'label': 'Rich text',
+     'portlet_id': 3,
+     'portlet_name': 'pyams_portal.portlet.html',
+     'position': 1,
+     'slot_name': 'Slot 1'}
+
+We can then change portlets order:
+
+    >>> config.set_portlet_order({'from': 3, 'to': {'slot': 'Slot 1', 'portlet_ids': [3, 2]}})
+    >>> config.get_slot_configuration('Slot 1').portlet_ids
+    [3, 2]
+
+Providing bad IDs doesn't change anything:
+
+    >>> config.set_portlet_order({'from': 4, 'to': {'slot': 'Slot 1', 'portlet_ids': [4, 1]}})
+    >>> config.get_slot_configuration('Slot 1').portlet_ids
+    [3, 2]
+
+
+Updating portlet configuration
+------------------------------
+
+Portlet configuration is defined for each portlet:
+
+    >>> from pyams_portal.interfaces import IPortalPortletsConfiguration
+
+    >>> portlets_config = IPortalPortletsConfiguration(template)
+    >>> pprint.pprint(portlets_config)
+    {2: <pyams_portal.portlet.PortletConfiguration object at 0x...>,
+     3: <pyams_portal.portlet.PortletConfiguration object at 0x...>}
+
+    >>> portlet_config = portlets_config[2]
+    >>> portlet_config.can_inherit
+    False
+    >>> portlet_config.inherit_parent
+    False
+    >>> portlet_config.override_parent
+    True
+    >>> portlet_config.parent is template
+    True
+
+    >>> settings = portlet_config.settings
+    >>> settings
+    <pyams_portal.portlets.html.HTMLPortletSettings object at 0x...>
+
+    >>> portlet_config.get_settings(allow_inherit=True) is settings
+    True
+    >>> portlet_config.get_settings(allow_inherit=False) is settings
+    True
+
+    >>> settings.configuration is portlet_config
+    True
+    >>> settings.visible
+    True
+    >>> settings.renderer
+    ''
+    >>> settings.get_renderer(request)
+    <pyams_portal.portlets.html.skin.HTMLPortletDefaultRenderer object at 0x...>
+
+    >>> settings.body = {'en': '<p>This is my body!</p>'}
+
+
+Setting portlet renderer
+------------------------
+
+    >>> settings.renderer = 'hidden'
+    >>> settings.renderer
+    'hidden'
+    >>> settings.get_renderer(request)
+    <pyams_portal.skin.HiddenPortletRenderer object at 0x...>
+    >>> settings.visible
+    False
+
+
+Setting portlet renderer with custom settings
+---------------------------------------------
+
+Some renderers can need custom settings which are not defined for the whole portlet but
+only for a specific renderer; the settings factory is defined by the renderer's
+*settings_interface* attribute.
+
+Let's try to add another portlet:
+
+    >>> from pyams_portal.portlets.html import RAW_PORTLET_NAME
+    >>> portlet3 = config.add_portlet(RAW_PORTLET_NAME, 'Slot 1')
+    >>> portlet3['portlet_id']
+    4
+    >>> portlet_config = portlets_config[4]
+    >>> portlet_config.get_portlet()
+    <pyams_portal.portlets.html.RawPortlet object at 0x...>
+
+    >>> settings = portlet_config.settings
+    >>> settings.renderer = 'source-code'
+    >>> renderer = settings.get_renderer(request)
+    >>> renderer.settings is settings
+    True
+    >>> renderer.renderer_settings
+    <pyams_utils.pygments.PygmentsCodeRendererSettings object at 0x...>
+
+
+Portlets adapters
+-----------------
+
+    >>> from pyams_portal.interfaces import IPortletSettings
+    >>> IPortletSettings(portlet_config) is settings
+    True
+
+    >>> from pyams_portal.interfaces import IPortletConfiguration
+    >>> IPortletConfiguration(settings) is portlet_config
+    True
+
+
+Deleting portlet
+----------------
+
+    >>> config.delete_portlet(3)
+    >>> config.get_slot_configuration('Slot 1').portlet_ids
+    [2, 4]
+
+
+Defining a portal page
+----------------------
+
+A portal *page* is a template definition which can be applied on a portal *context*; a portal
+context is defined by implementing the *IPortalContext* interface:
+
+    >>> from pyams_portal.interfaces import IPortalPage
+    >>> page = IPortalPage(app)
+    >>> page
+    <pyams_portal.page.PortalPage object at 0x...>
+
+A portal page can choose to use a shared template, to use a local template or to inherit from
+it's parent template, if any:
+
+    >>> page.parent is app
+    True
+    >>> page.can_inherit
+    False
+    >>> page.inherit_parent
+    False
+    >>> page.override_parent
+    True
+
+Choosing to inherit has no effect when you can't inherit:
+
+    >>> page.override_parent = False
+    >>> page.override_parent
+    True
+
+    >>> page.use_shared_template = True
+
+    >>> page.shared_template = IUniqueID(template).oid
+    >>> page.shared_template == IUniqueID(template).oid
+    True
+    >>> page.use_shared_template
+    True
+    >>> page.template is template
+    True
+
+A portal page is then getting it's slots configuration from it's selected template, but each
+portlet can override it's configuration:
+
+    >>> from pyams_portal.interfaces import IPortalTemplateConfiguration
+    >>> IPortalTemplateConfiguration(app) is config
+    True
+
+    >>> from pyams_portal.interfaces import IPortalPortletsConfiguration
+    >>> IPortalPortletsConfiguration(app) is portlets_config
+    False
+    >>> page_portlets_config = IPortalPortletsConfiguration(app)
+    >>> pprint.pprint(page_portlets_config)
+    {2: <pyams_portal.portlet.PortletConfiguration object at 0x...>,
+     4: <pyams_portal.portlet.PortletConfiguration object at 0x...>}
+
+    >>> page_portlets_config[2].can_inherit
+    True
+    >>> page_portlets_config[2].inherit_parent
+    True
+    >>> page_portlets_config[2].settings.body
+    {'en': '<p>This is my body!</p>'}
+
+Please note however that a clone of original portlet configuration is created on first access:
+
+    >>> page_portlets_config[2] is portlets_config[2]
+    False
+    >>> page_portlets_config[2].get_settings(allow_inherit=True) is page_portlets_config[2].settings
+    True
+    >>> page_portlets_config[2].get_settings(allow_inherit=False) is page_portlets_config[2].settings
+    False
+
+
+Changing portlet settings require to override from parent:
+
+    >>> page_portlets_config[2].settings.body = {'en': '<p>This is my modified body!</p>'}
+    >>> page_portlets_config[2].settings.body
+    {'en': '<p>This is my modified body!</p>'}
+    >>> portlets_config[2].settings.body
+    {'en': '<p>This is my modified body!</p>'}
+
+While still inheriting from parent, a modification is applied to portlet from which we inherit!
+We have to break inheritance to apply local modifications:
+
+    >>> page_portlets_config[2].override_parent = True
+    >>> page_portlets_config[2].settings.body = {'en': '<p>This is my second modified body!</p>'}
+    >>> page_portlets_config[2].settings.body
+    {'en': '<p>This is my second modified body!</p>'}
+    >>> portlets_config[2].settings.body
+    {'en': '<p>This is my modified body!</p>'}
+
+
+Using local template
+--------------------
+
+Instead of using a shared template, we can always choose to use a local template:
+
+    >>> page.use_local_template = True
+    >>> page.template is template
+    False
+    >>> page.template.__name__
+    '++template++'
+
+    >>> app_template = IPortalTemplateConfiguration(app)
+    >>> app_template
+    <pyams_portal.template.PortalTemplateConfiguration object at 0x...>
+    >>> app_template.rows
+    1
+    >>> app_template.slot_order[0]
+    []
+    >>> pprint.pprint(IPortalPortletsConfiguration(app))
+    {}
+
+The new template is empty; we can add slots and portlets as we did with the shared template:
+
+    >>> row_id, name = app_template.add_slot('Slot 1')
+    >>> row_id, name
+    (0, 'Slot 1')
+    >>> portlet = app_template.add_portlet(HTML_PORTLET_NAME, 'Slot 1')
+    >>> pprint.pprint(portlet)
+    {'label': 'Rich text',
+     'portlet_id': 5,
+     'portlet_name': 'pyams_portal.portlet.html',
+     'position': 0,
+     'slot_name': 'Slot 1'}
+    >>> pprint.pprint(IPortalPortletsConfiguration(app))
+    {5: <pyams_portal.portlet.PortletConfiguration object at 0x...>}
+
+You can notice here that portlets IDs are not defined for a template, but globally.
+
+
+Templates inheritance
+---------------------
+
+When defining sub-levels, you can choose to apply a shared template or a local template,
+but you can also choose to inherit from parent level:
+
+    >>> from zope.container.folder import Folder
+    >>> folder = Folder()
+    >>> alsoProvides(folder, IPortalContext)
+    >>> app['folder'] = folder
+
+    >>> folder_page = IPortalPage(folder)
+    >>> folder_page.can_inherit
+    True
+    >>> folder_page.inherit_parent
+    True
+
+    >>> IPortalTemplateConfiguration(folder) is app_template
+    True
+
+    >>> folder_portlets = IPortalPortletsConfiguration(folder)
+    >>> pprint.pprint(folder_portlets)
+    {5: <pyams_portal.portlet.PortletConfiguration object at 0x...>}
+    >>> folder_portlets.get_portlet_configuration(5)
+    <pyams_portal.portlet.PortletConfiguration object at 0x...>
+
+    >>> folder_portlets[5].parent
+    <pyams_site.site.BaseSiteRoot object at 0x... oid 0x1 in <Connection at ...>>
+
+If we create a new portlet in parent template after initialization, we always get a clone of it's
+configuration in the inherited template:
+
+    >>> portlet = app_template.add_portlet(HTML_PORTLET_NAME, 'Slot 1')
+    >>> portlet['portlet_id']
+    6
+    >>> folder_portlets.get_portlet_configuration(6)
+    <pyams_portal.portlet.PortletConfiguration object at 0x...>
+
+    >>> folder_portlets = IPortalPortletsConfiguration(folder)
+    >>> pprint.pprint(folder_portlets)
+    {5: <pyams_portal.portlet.PortletConfiguration object at 0x...>,
+     6: <pyams_portal.portlet.PortletConfiguration object at 0x...>}
+
+    >>> folder_portlets[6].settings.body = {'en': '<p>This is a test!</p>'}
+
+
+Rendering portlets
+------------------
+
+Portlets are rendered using renderers. A renderer is a registered adapter which is usually
+relies on a template to do it's rendering.
+
+    >>> renderer = folder_portlets[6].settings.get_renderer()
+    >>> renderer
+    <pyams_portal.portlets.html.skin.HTMLPortletDefaultRenderer object at 0x...>
+    >>> renderer.slot_configuration
+    <pyams_portal.slot.SlotConfiguration object at 0x...>
+
+Portlets renderers can use a shared cache to store their content for a short duration; this
+cache is never used in preview mode.
+
+    >>> renderer.use_portlets_cache
+    True
+
+The cache key is based on the current hostname, on the context and on the current locale:
+
+    >>> renderer.get_cache_key()
+    'portlet::example.com:80::...::1::en'
+    >>> renderer.render()
+    Traceback (most recent call last):
+    ...
+    KeyError: 'portlets'
+
+Rendering portlets requires a matching cache region:
+
+    >>> from beaker.cache import CacheManager, cache_regions
+    >>> cache = CacheManager(**{'cache.type': 'memory'})
+    >>> cache_regions.update({'portlets': {'type': 'memory', 'expire': 60}})
+
+    >>> renderer.render()
+    '\n\t<p>This is a test!</p>\n'
+
+A second rendering should use the cache:
+
+    >>> renderer.render()
+    '\n\t<p>This is a test!</p>\n'
+
+The 'hidden' renderer just returns an empty string:
+
+    >>> folder_portlets[6].settings.override_parent = True
+    >>> folder_portlets[6].settings.renderer = 'hidden'
+    >>> folder_portlets[6].settings.get_renderer().render()
+    ''
+
+    >>> folder_portlets[6].settings.renderer = ''
+    >>> folder_portlets[6].settings.override_parent = False
+
+
+Rendering portal page
+---------------------
+
+Two rendering modes are available for portal pages: a *preview* mode where caching is disabled
+and workflow status is ignored to always get a "fresh" preview, and a *normal* mode where
+workflow status is checked and where cache can be used.
+
+    >>> from pyams_pagelet.interfaces import IPagelet
+    >>> from pyams_portal.skin.page import PortalContextIndexPage, PortalContextPreviewPage
+
+    >>> preview = request.registry.queryMultiAdapter((folder, request), IPagelet, name='preview.html')
+    >>> preview.update()
+    >>> response = preview()
+    >>> response.status_code
+    200
+    >>> print(response.body.decode())
+    <!DOCTYPE html>
+    <html>
+      <head>
+      </head>
+      <body>
+        <div class="">
+          <div>
+            <div class="rows">
+              <div class="row m-0">
+                <div class="slots w-100">
+                  <div>
+                    <div class="slot col  col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                      <div class="portlets">
+                        <div class="portlet ">
+                        </div>
+                        <div class="portlet ">
+                          <p>This is a test!</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+
+    >>> index = request.registry.queryMultiAdapter((folder, request), IPagelet, name='')
+    >>> index.update()
+    >>> response = index()
+    >>> response.status_code
+    200
+    >>> print(response.body.decode())
+    <!DOCTYPE html>
+    <html>
+      <head>
+      </head>
+      <body>
+        <div class="">
+          <div>
+            <div class="rows">
+              <div class="row m-0">
+                <div class="slots w-100">
+                  <div>
+                    <div class="slot col  col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                      <div class="portlets">
+                        <div class="portlet ">
+                        </div>
+                        <div class="portlet ">
+                          <p>This is a test!</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+
+Let's try to use several renderers on another portlet:
+
+    >>> portlet = app_template.add_portlet(RAW_PORTLET_NAME, 'Slot 1')
+    >>> portlet['portlet_id']
+    7
+    >>> folder_portlets = IPortalPortletsConfiguration(folder)
+    >>> folder_portlets[7].settings.body = {'en': "*This* is my code"}
+    >>> folder_portlets[7].settings.renderer = 'source-code'
+
+    >>> index = request.registry.queryMultiAdapter((folder, request), IPagelet, name='')
+    >>> index.update()
+    >>> response = index()
+    >>> print(response.body.decode())
+    <!DOCTYPE html>
+    <html>
+      <head>
+      </head>
+      <body>
+        <div class="">
+          <div>
+            <div class="rows">
+              <div class="row m-0">
+                <div class="slots w-100">
+                  <div>
+                    <div class="slot col  col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                      <div class="portlets">
+                        <div class="portlet ">
+                        </div>
+                        <div class="portlet ">
+                          <p>This is a test!</p>
+                        </div>
+                        <div class="portlet ">
+                          <div class="source"><pre><span></span><span class="linenos">1</span>*This* is my code
+                            </pre></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+
+    >>> folder_portlets[7].settings.renderer = 'rest'
+    >>> index = request.registry.queryMultiAdapter((folder, request), IPagelet, name='')
+    >>> index.update()
+    >>> response = index()
+    >>> print(response.body.decode())
+    <!DOCTYPE html>
+    <html>
+      <head>
+      </head>
+      <body>
+        <div class="">
+          <div>
+            <div class="rows">
+              <div class="row m-0">
+                <div class="slots w-100">
+                  <div>
+                    <div class="slot col  col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                      <div class="portlets">
+                        <div class="portlet ">
+                        </div>
+                        <div class="portlet ">
+                          <p>This is a test!</p>
+                        </div>
+                        <div class="portlet ">
+                          <p><em>This</em> is my code</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+
+    >>> folder_portlets[7].settings.renderer = 'markdown'
+    >>> index = request.registry.queryMultiAdapter((folder, request), IPagelet, name='')
+    >>> index.update()
+    >>> response = index()
+    >>> print(response.body.decode())
+    <!DOCTYPE html>
+    <html>
+      <head>
+      </head>
+      <body>
+        <div class="">
+          <div>
+            <div class="rows">
+              <div class="row m-0">
+                <div class="slots w-100">
+                  <div>
+                    <div class="slot col  col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                      <div class="portlets">
+                        <div class="portlet ">
+                        </div>
+                        <div class="portlet ">
+                          <p>This is a test!</p>
+                        </div>
+                        <div class="portlet ">
+                          <p><em>This</em> is my code</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+
+
+Tests cleanup:
+
+    >>> tearDown()

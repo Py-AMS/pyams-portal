@@ -1,0 +1,23 @@
+<div class="jumbotron"
+	 tal:define="settings view.settings">
+	<div class="container">
+		<h1 class="display-4">${i18n:settings.title}</h1>
+		<p class="lead" tal:define="lead i18n:settings.lead"
+		   tal:condition="lead">${lead}</p>
+		<hr class="my-4" tal:condition="settings.display_ruler" />
+		<p tal:define="body i18n:settings.body"
+		   tal:condition="body">
+			${structure:tales:html(body)}
+		</p>
+		<tal:if define="target settings.target"
+				condition="(target is not None) or settings.target_url">
+			<a class="btn btn-${settings.button_status} btn-lg" role="button"
+			   tal:define="href tales:absolute_url(target);
+						   url href if target is not None else settings.target_url;"
+			   tal:condition="url"
+			   href="${url}">
+				${i18n:settings.button_label}
+			</a>
+		</tal:if>
+	</div>
+</div>

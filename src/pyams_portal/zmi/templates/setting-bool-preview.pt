@@ -1,0 +1,4 @@
+<div>
+	<small><strong>${label}</strong></small>
+	<i class="far fa-${'check-' if checked else ''}square"></i>
+</div>

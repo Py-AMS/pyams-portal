@@ -1,0 +1,10 @@
+<tal:var define="settings view.settings">
+	${structure:view.get_setting(settings, 'title')}
+	${structure:view.get_setting(settings, 'lead')}
+	${structure:view.get_setting(settings, 'display_ruler')}
+	${structure:view.get_setting(settings, 'body', 'text')}
+	${structure:view.get_setting(settings, 'reference', 'reference-label')}
+	${structure:view.get_setting(settings, 'target_url')}
+	${structure:view.get_setting(settings, 'button_label')}
+	${structure:view.get_setting(settings, 'button_status')}
+</tal:var>

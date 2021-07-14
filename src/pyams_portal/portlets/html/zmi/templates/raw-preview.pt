@@ -1,0 +1,17 @@
+<tal:var define="settings view.settings;
+				 renderer_settings view.renderer_settings;"
+		 i18n:domain="pyams_portal">
+	<div>
+		<small><strong i18n:translate="">Title:</strong></small>
+		${i18n:settings.title}
+	</div>
+	<div tal:define="body i18n:settings.body;
+					 content body or '--';
+					 renderer settings.renderer;"
+		 tal:omit-tag="renderer != 'source-code'"
+		 class="pt-2"
+		 data-ams-plugins="pygments"
+		 data-ams-plugin-pygments-css="/get-pygments-style.css?style=${renderer_settings.style if renderer=='source-code' else ''}">
+		${structure:tales:html(content, renderer=renderer)}
+	</div>
+</tal:var>

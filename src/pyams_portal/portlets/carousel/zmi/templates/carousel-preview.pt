@@ -1,0 +1,11 @@
+<tal:var define="settings view.settings" i18n:domain="pyams_portal">
+	${structure:view.get_setting(settings, 'title')}
+	<small><strong i18n:translate="">Items list:</strong></small>
+	<ul class="mb-0">
+		<li class="text-truncated"
+			tal:repeat="item settings.values()">
+			${structure:view.get_setting(item, 'title', visible=item.visible,
+										 icon='far fa-image' if item.illustration and item.illustration.data else None)}
+		</li>
+	</ul>
+</tal:var>

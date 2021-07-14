@@ -1,0 +1,76 @@
+<tal:var define="settings view.settings">
+	<tal:if condition="settings.image">
+		<a class="wrapper-image fancybox" data-toggle
+		   data-ams-fancybox-type="image"
+		   tal:define="image settings.image;
+					   image_url tales:absolute_url(image);
+					   slot_config view.slot_configuration;
+					   slot_width slot_config.get_width();
+					   thumbnails tales:thumbnails(image);
+					   target python:thumbnails.get_thumbnail('800x600');
+					   timestamp tales:timestamp(image);"
+		   href="${tales:absolute_url(target)}">
+			<picture>
+				<tal:var define="xs_width slot_width['xs']">
+					<tal:if condition="xs_width">
+						<source media="(max-width: 575px)"
+								tal:define="width round(575 / 12 * xs_width)"
+								srcset="${image_url}/++thumb++xs:w${width}?_=${timestamp}" />
+					</tal:if>
+					<source media="(max-width: 575px)"
+							tal:condition="not:xs_width"
+							srcset="/--static--/pyams_default_theme/img/dot.png" />
+				</tal:var>
+				<tal:var define="sm_width slot_width['sm']">
+					<tal:if condition="sm_width">
+						<source media="(min-width: 576px)"
+								tal:define="width round(768 / 12 * sm_width)"
+								srcset="${image_url}/++thumb++sm:w${width}?_=${timestamp}" />
+					</tal:if>
+					<source media="(min-width: 576px)"
+							tal:condition="not:sm_width"
+							srcset="/--static--/pyams_default_theme/img/dot.png" />
+				</tal:var>
+				<tal:var define="md_width slot_width['md']">
+					<tal:if condition="md_width">
+						<source media="(min-width: 768px)"
+								tal:define="width round(992 / 12 * md_width)"
+								srcset="${image_url}/++thumb++md:w${width}?_=${timestamp}" />
+					</tal:if>
+					<source media="(min-width: 768px)"
+							tal:condition="not:md_width"
+							srcset="/--static--/pyams_default_theme/img/dot.png" />
+				</tal:var>
+				<tal:var define="lg_width slot_width['lg']">
+					<tal:if condition="lg_width">
+						<source media="(min-width: 992px)"
+								tal:define="width round(1200 / 12 * lg_width)"
+								srcset="${image_url}/++thumb++lg:w${width}?_=${timestamp}" />
+					</tal:if>
+					<source media="(min-width: 992px)"
+							tal:condition="not:lg_width"
+							srcset="/--static--/pyams_default_theme/img/dot.png" />
+				</tal:var>
+				<tal:var define="xl_width slot_width['xl']">
+					<tal:if condition="xl_width">
+						<source media="(min-width: 1200px)"
+								tal:define="width round(1600 / 12 * xl_width)"
+								srcset="${image_url}/++thumb++xl:w${width}?_=${timestamp}" />
+					</tal:if>
+					<source media="(min-width: 1200px)"
+							tal:condition="not:xl_width"
+							srcset="/--static--/pyams_default_theme/img/dot.png" />
+				</tal:var>
+				<img tal:attributes="src image_url" />
+			</picture>
+		</a>
+	</tal:if>
+	<tal:if condition="not settings.image">
+		<div class="text-center py-2">
+			<span class="fa-stack fa-lg">
+				<i class="far fa-fw fa-image fa-stack-1x"></i>
+				<i class="fa fa-fw fa-ban fa-stack-2x text-danger"></i>
+			</span>
+		</div>
+	</tal:if>
+</tal:var>

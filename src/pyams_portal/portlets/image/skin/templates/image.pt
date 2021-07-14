@@ -1,0 +1,12 @@
+<div class="wrapper-image"
+	 tal:define="image view.settings.image;
+				 slot_config view.slot_configuration;"
+	 tal:condition="image">
+	${structure:tales:picture(image,
+							  xs_width=slot_config.xs_width,
+							  sm_width=slot_config.sm_width,
+							  md_width=slot_config.md_width,
+							  lg_width=slot_config.lg_width,
+							  xl_width=slot_config.xl_width,
+							  css_class='rounded-lg w-100'))}
+</div>

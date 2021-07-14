@@ -1,0 +1,54 @@
+<div class="d-flex flex-nowrap align-items-center"
+	 i18n:domain="pyams_portal">
+	<select id="${view.id}"
+			name="${view.name}"
+			class="form-control select2 ${view.klass}"
+			style="${view.style}"
+			lang="${view.lang}"
+			onclick="${view.onclick}"
+			ondblclick="${view.ondblclick}"
+			onmousedown="${view.onmousedown}"
+			onmouseup="${view.onmouseup}"
+			onmouseover="${view.onmouseover}"
+			onmousemove="${view.onmousemove}"
+			onmouseout="${view.onmouseout}"
+			onkeypress="${view.onkeypress}"
+			onkeydown="${view.onkeydown}"
+			onkeyup="${view.onkeyup}"
+			disabled="${view.disabled}"
+			tabindex="${view.tabindex}"
+			onfocus="${view.onfocus}"
+			onblur="${view.onblur}"
+			onchange="${view.onchange}"
+			multiple="${view.multiple}"
+			size="${view.size}"
+			tal:define="placeholder view.placeholder | nothing;
+						ajax_url view.ajax_url | nothing;"
+			data-allow-clear="${'true' if placeholder and not view.required else None}"
+			data-placeholder="${placeholder}"
+			data-ajax--url="${ajax_url}"
+			data-ajax--params='${view.ajax_params | nothing}'
+			data-minimum-input-length="${'2' if ajax_url else None}"
+			data-ams-data='${tales:object_data(view)}'>
+		<tal:if condition="placeholder">
+			<option i18n:translate="">${placeholder}</option>
+		</tal:if>
+		<tal:loop repeat="item view.items">
+			<option id="${item['id']}"
+					value="${item['value']}"
+					selected="${'selected' if item['selected'] else None}">${item['content']}</option>
+		</tal:loop>
+	</select>
+	<div tal:define="renderer context.get_renderer(request);
+					 has_settings renderer.settings_interface is not None;"
+		 class="btn btn-sm btn-primary mx-2 ${'disabled' if not has_settings else ''}"
+		 data-ams-url="${tales:absolute_url(context, 'renderer-settings.html')}"
+		 data-toggle="modal">
+		<i tal:condition="has_settings"
+		   class="fas fa-fw fa-pencil-alt hint"
+		   title="Set renderer settings" i18n:attributes="title"></i>
+		<i tal:condition="not:has_settings"
+		   class="fas fa-fw fa-pencil-alt"></i>
+	</div>
+	<input name="${view.name}-empty-marker" type="hidden" value="1"/>
+</div>

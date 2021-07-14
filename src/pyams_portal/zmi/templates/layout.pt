@@ -1,0 +1,152 @@
+<div class="layout"
+	 tal:define="js tales:resource_path('pyams_portal.zmi:layout_js');
+				 css tales:resource_path('pyams_portal.zmi:layout_css');"
+	 data-ams-modules='{"portal": "${js}"}'
+	 data-ams-portal-css="${css}"
+	 data-ams-callback="MyAMS.portal.template.initConfig"
+	 i18n:domain="pyams_portal">
+	<tal:var define="template_config view.template_configuration;
+					 can_change view.can_change;">
+		<section class="rounded-lg"
+				 data-ams-modules="callbacks plugins"
+				 data-ams-focus-target>
+			<h2 class="d-flex flex-wrap pl-3">
+				<span class="flex-grow-1">${view.title}</span>
+				<i tal:omit-tag="">${structure:provider:pyams.toolbar}</i>
+			</h2>
+			<div class="btn-toolbar px-2" role="toolbar"
+				 tal:condition="can_change">
+				<div class="btn-group" role="group">
+					<div class="btn btn-secondary btn-row bg-color-silverLight hint"
+						 title="Add row<br />Drag and drop button to page template to position new row" i18n:attributes="title"
+						 data-ams-hint-gravity="n" data-ams-hint-html="true">
+						<i class="fa fa-fw fa-2x fa-indent"></i>
+					</div>
+					<div class="btn btn-secondary btn-slot bg-color-silverLight hint"
+						 title="Add slot<br />Drag and drop button to page template to position new slot" i18n:attributes="title"
+						 data-ams-hint-gravity="n" data-ams-hint-html="true">
+						<i class="fa fa-fw fa-2x fa-columns"></i>
+					</div>
+				</div>
+				<div class="btn-group ml-3" role="group">
+					<div tal:repeat="portlet view.selected_portlets"
+						 class="btn btn-light btn-portlet hint"
+						 data-ams-hint-gravity="n" data-ams-hint-html="true"
+						 data-ams-portlet-name="${portlet.name}"
+						 title="${view.get_portlet_add_label(portlet)}">
+						<img tal:condition="portlet.toolbar_image"
+							 src="${portlet.toolbar_image}" />
+						<i tal:condition="portlet.toolbar_css_class"
+						   class="fa-fw fa-2x ${portlet.toolbar_css_class}"></i>
+					</div>
+				</div>
+				<div class="btn-group ml-3" role="group">
+					<div class="btn btn-light hint"
+						 data-ams-url="add-template-portlet.html" data-toggle="modal"
+						 data-ams-hint-gravity="n"
+						 title="Add another portlet..." i18n:attributes="title">
+						<i class="fa fa-fw fa-2x fa-plus"></i>
+					</div>
+				</div>
+			</div>
+			<div class="clearfix">
+				<div class="ams-form form-horizontal margin-bottom-10">
+					<div class="form-group widget-group row">
+						<label class="col-form-label text-sm-right col-md-4"
+							   for="device_selector" i18n:translate="">
+							Selected display:
+						</label>
+						<div class="col-md-5">
+							<div class="form-widget">
+								<select id="device_selector" class="form-control select-widget select2"
+										data-ams-change-handler="MyAMS.portal.template.selectDisplay">
+									<option value="xs" i18n:translate="">Extra small device (phone, &lt; 576px)</option>
+									<option value="sm" i18n:translate="">Small device (tablet, &gt;= 576px)</option>
+									<option value="md" selected i18n:translate="">Medium desktop device (&gt;= 768px)</option>
+									<option value="lg" i18n:translate="">Large desktop device (&gt;= 992px)</option>
+									<option value="xl" i18n:translate="">Extra-large device (&gt;= 1200px)</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="portal_config" class="container container-md"
+				 data-ams-allowed-change="${'true' if can_change else 'false'}">
+				<div id="rowMenu" class="dropdown-menu" role="menu"
+					 tal:condition="can_change">
+					<a class="dropdown-item small" tabindex="-1"
+					   href="MyAMS.portal.template.deleteRow">
+						<i class="fa fa-fw fa-trash"></i>
+						<i18n:var translate="">Delete row...</i18n:var>
+					</a>
+				</div>
+				<div class="rows"
+					 data-ams-sortable-placeholder="row-highlight"
+					 data-ams-sortable-items="> .row"
+					 data-ams-sortable-over="MyAMS.portal.template.overRows"
+					 data-ams-sortable-stop="MyAMS.portal.template.sortRows">
+					<div class="row context-menu"
+						 data-reference="#rowMenu"
+						 data-ams-contextmenu-selector="#rowMenu"
+						 tal:repeat="row range(template_config.rows)"
+						 data-ams-row-id="${row}">
+						<strong class="row_id badge badge-danger pull-left">${row+1}</strong>
+						<strong class="row_id badge badge-danger pull-right">${row+1}</strong>
+						<div class="slots width-100"
+							 data-ams-sortable-placeholder="slot-highlight"
+							 data-ams-sortable-connectwith=".slots"
+							 data-ams-sortable-over="MyAMS.portal.template.overSlots"
+							 data-ams-sortable-stop="MyAMS.portal.template.sortSlots">
+							<tal:loop repeat="slot_name template_config.get_slots(row)">
+								<div tal:define="config template_config.get_slot_configuration(slot_name);
+												 css_class config.get_css_class('md');"
+									 class="slot px-0 col ${css_class.replace('-md', '')} ${css_class} ${'resizable' if can_change else ''}"
+									 data-ams-resizable-start="MyAMS.portal.template.startSlotResize"
+									 data-ams-resizable-resize="MyAMS.portal.template.resizeSlot"
+									 data-ams-resizable-stop="MyAMS.portal.template.stopSlotResize"
+									 data-ams-resizable-handles="e"
+									 data-ams-slot-name="${slot_name}">
+									<div class="header px-1 d-flex align-items-center">
+										<i class="action mr-1 fa fa-fw fa-minus-square"
+										   data-ams-click-handler="MyAMS.portal.template.switchSlot"></i>
+										<span class="flex-grow-1">
+											${slot_name}
+											<i tal:condition="can_change"
+											   class="action ml-2 fa fa-fw fa-eye${'-slash text-danger' if not config.visible else ''} hint"
+											   title="Show/hide slot" i18n:attributes="title"
+											   data-ams-click-handler="MyAMS.portal.template.switchSlotVisibility"></i>
+											<i tal:condition="not can_change and not config.visible"
+											   class="ml-2 fa fa-fw fa-eye-slash text-danger hint"
+											   title="This slot is not visible" i18n:attributes="title"></i>
+										</span>
+										<i tal:condition="can_change"
+										   class="action fa fa-fw fa-edit hint"
+										   title="Edit slot properties" i18n:attributes="title"
+										   data-ams-click-handler="MyAMS.portal.template.editSlot"></i>
+										<i tal:condition="can_change"
+										   class="action fa fa-fw fa-trash hint"
+										   title="Delete slot" i18n:attributes="title"
+										   data-ams-click-handler="MyAMS.portal.template.deleteSlot"></i>
+									</div>
+									<div class="portlets ${'opacity-50' if not config.visible else ''}"
+										 data-ams-sortable-placeholder="portlet-highlight"
+										 data-ams-sortable-connectwith=".portlets"
+										 data-ams-sortable-over="MyAMS.portal.template.overPortlets"
+										 data-ams-sortable-stop="MyAMS.portal.template.sortPortlets">
+										<div tal:repeat="portlet_id template_config.slot_config[slot_name].portlet_ids"
+											 class="portlet border-1 border-light"
+											 data-ams-portlet-id="${portlet_id}">
+											${structure:view.get_portlet_preview(portlet_id)}
+										</div>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</tal:loop>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</tal:var>
+</div>

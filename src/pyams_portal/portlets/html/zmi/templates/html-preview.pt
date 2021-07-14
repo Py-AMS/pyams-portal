@@ -1,0 +1,4 @@
+<tal:var define="settings view.settings;
+				 body i18n:view.settings.body;">
+	${structure:body or '--'}
+</tal:var>

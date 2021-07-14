@@ -1,0 +1,6 @@
+<div class="text-center py-2">
+	<span class="fa-stack fa-lg">
+		<i class="fa fa-fw fa-eye fa-stack-1x"></i>
+		<i class="fa fa-fw fa-ban fa-stack-2x text-danger"></i>
+	</span>
+</div>

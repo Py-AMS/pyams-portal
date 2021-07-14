@@ -1,0 +1,25 @@
+<div class="header px-1 d-flex align-items-center"
+	 i18n:domain="pyams_portal">
+	<i class="action mr-1 fa fa-fw fa-minus-square"
+	   data-ams-click-handler="MyAMS.portal.template.switchPortlet"></i>
+	<span class="label flex-grow-1">
+		${label}
+		<i tal:condition="not:config.settings.visible"
+		   class="action ml-2 fa fa-fw fa-eye-slash text-danger hint"
+		   title="This portlet is hidden" i18n:attributes="title"></i>
+	</span>
+	<i class="action fa fa-fw fa-edit hint"
+	   title="Edit portlet properties" i18n:attributes="title"
+	   data-ams-click-handler="MyAMS.portal.template.editPortlet"></i>
+	<tal:if condition="config.can_inherit and not config.inherit_parent">
+		<i class="action fas fa-fw fa-unlink text-danger hint"
+		   title="Portlet settings are not those of original template" i18n:attributes="title"></i>
+	</tal:if>
+	<i tal:condition="can_delete"
+	   class="action fa fa-fw fa-trash hint"
+	   title="Delete portlet" i18n:attributes="title"
+	   data-ams-click-handler="MyAMS.portal.template.deletePortlet"></i>
+</div>
+<div class="preview p-1">
+	${structure:portlet}
+</div>

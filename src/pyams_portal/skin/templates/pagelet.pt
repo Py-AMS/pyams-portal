@@ -1,0 +1,23 @@
+<div tal:define="template_config view.template_configuration;
+				 portlet_config view.portlet_configuration;">
+	<div class="rows">
+		<div class="row m-0" tal:repeat="row range(template_config.rows)">
+			<div class="slots w-100">
+				<tal:loop repeat="slot_name template_config.get_slots(row)">
+					<div tal:define="slot_config template_config.get_slot_configuration(slot_name)"
+						 tal:condition="slot_config.visible"
+						 class="${slot_config.container_css_class}">
+						<div class="slot ${slot_config.get_css_class()} px-0">
+							<div class="portlets">
+								<div class="portlet ${view.get_portlet_css_class(portlet_id)}"
+									 tal:repeat="portlet_id template_config.slot_config[slot_name].portlet_ids">
+									${structure:view.render_portlet(portlet_id)}
+								</div>
+							</div>
+						</div>
+					</div>
+				</tal:loop>
+			</div>
+		</div>
+	</div>
+</div>

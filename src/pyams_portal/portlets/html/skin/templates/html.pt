@@ -1,0 +1,3 @@
+<tal:var define="body i18n:view.settings.body">
+	${structure:tales:html(body, 'oid_to_href')}
+</tal:var>

@@ -1,0 +1,7 @@
+<tal:var define="settings view.settings">
+	<h3 tal:define="title i18n:settings.title"
+		tal:condition="title">
+		${title}
+	</h3>
+	${structure:i18n:settings.body}
+</tal:var>

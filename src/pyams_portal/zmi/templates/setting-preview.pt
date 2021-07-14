@@ -1,0 +1,11 @@
+<div class="text-truncate">
+	<i tal:condition="not:visible"
+	   class="far fa-eye-slash text-danger hint"
+	   title="Hidden element" i18n:attributes="title"></i>
+	<i tal:condition="icon"
+	   class="${icon} text-muted"></i>
+	<i tal:omit-tag="visible">
+		<small><strong>${label} :</strong></small>
+		${structure:value}
+	</i>
+</div>

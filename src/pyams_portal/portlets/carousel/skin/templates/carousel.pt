@@ -1,0 +1,56 @@
+<div tal:define="settings view.settings;
+				 renderer_settings view.renderer_settings;
+				 slot_config view.slot_configuration;
+				 carousel_id tales:cache_key(settings);"
+	 id="carousel_${carousel_id}"
+	 class="${renderer_settings.css_class} slide ${'carousel-fade' if renderer_settings.fade_effect else ''}"
+	 data-ride="${'carousel' if renderer_settings.automatic_slide else 'false'}"
+	 data-interval="${'false' if not renderer_settings.automatic_slide else None}"
+	 data-touch="${'false' if not renderer_settings.enable_touch else None}"
+	 i18n:domain="pyams_portal">
+	<div class="carousel-inner">
+		<ol class="carousel-indicators"
+			tal:condition="renderer_settings.display_indicators">
+			<li tal:repeat="item settings.get_visible_items()"
+				data-target="#carousel_${carousel_id}"
+				data-slide-to="${repeat['item'].index()}"
+				class="${'active' if repeat['item'].start() else None}"></li>
+		</ol>
+		<div tal:repeat="item settings.get_visible_items()"
+			 class="carousel-item ${'active' if repeat['item'].start() else ''}"
+			 data-interval="${item.interval * 1000}">
+			<tal:if define="illustration item.illustration"
+					condition="illustration and illustration.data">
+				${structure:tales:picture(illustration,
+										  xs_thumb=renderer_settings.thumb_selection,
+										  xs_width=slot_config.xs_width,
+										  sm_thumb=renderer_settings.thumb_selection,
+										  sm_width=slot_config.sm_width,
+										  md_thumb=renderer_settings.thumb_selection,
+										  md_width=slot_config.md_width,
+										  lg_thumb=renderer_settings.thumb_selection,
+										  lg_width=slot_config.lg_width,
+										  xl_thumb=renderer_settings.thumb_selection,
+										  xl_width=slot_config.xl_width,
+										  css_class='d-block w-100')}
+			</tal:if>
+			<div tal:condition="renderer_settings.display_captions"
+				 class="carousel-caption d-none d-md-block">
+				<h5>${i18n:item.title}</h5>
+				<p>${i18n:item.lead}</p>
+			</div>
+		</div>
+		<tal:if condition="renderer_settings.display_controls">
+			<a class="carousel-control-prev" role="button"
+			   data-slide="prev" href="#carousel_${carousel_id}">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="sr-only" i18n:translate="">Previous</span>
+			</a>
+			<a class="carousel-control-next" role="button"
+			   data-slide="next" href="#carousel_${carousel_id}">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="sr-only" i18n:translate="">Next</span>
+			</a>
+		</tal:if>
+	</div>
+</div>

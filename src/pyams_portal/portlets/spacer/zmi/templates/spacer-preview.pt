@@ -1,0 +1,5 @@
+<div tal:define="settings view.renderer_settings"
+	 class="spacer ${'py-2' if settings.with_ruler else 'py-3'}"
+	 style="${'background-color: #' + settings.background_color if not settings.transparent else None}">
+	<hr tal:condition="settings.with_ruler" />
+</div>

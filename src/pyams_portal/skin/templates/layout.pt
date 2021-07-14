@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<i tal:omit-tag="">${structure:tales:metas}</i>
+		<i tal:omit-tag="">${tales:need_resource('myams_js:bootstrap_css')}</i>
+		<i tal:omit-tag="">${tales:need_resource('myams_js:bootstrap')}</i>
+		<i tal:omit-tag="">${tales:resources}</i>
+	</head>
+	<body>
+		<div class="${tales:container_class}">
+			${structure:provider:pagelet}
+		</div>
+	</body>
+</html>
