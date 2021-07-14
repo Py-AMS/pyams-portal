@@ -32,6 +32,8 @@ from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortlets
     IPortalTemplate, IPortalTemplateConfiguration, IPortletAddingInfo, IPortletConfiguration, \
     IPortletPreviewer, IPortletRendererSettings, IPortletSettings, MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.page import check_local_template
+from pyams_portal.portlet import LOGGER
+from pyams_portal.skin import PORTLETS_CACHE_NAME, PORTLETS_CACHE_NAMESPACE, PORTLETS_CACHE_REGION
 from pyams_portal.zmi.interfaces import IPortletConfigurationEditor
 from pyams_portal.zmi.layout import PortalTemplateLayoutView
 from pyams_portal.zmi.widget import PortletRendererFieldWidget
@@ -39,6 +41,7 @@ from pyams_skin.interfaces.viewlet import IHeaderViewletManager
 from pyams_skin.viewlet.help import AlertMessage
 from pyams_skin.viewlet.menu import MenuDivider, MenuItem
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
+from pyams_utils.cache import get_cache
 from pyams_utils.dict import merge_dict
 from pyams_utils.url import absolute_url
 from pyams_viewlet.viewlet import viewlet_config
@@ -368,6 +371,13 @@ class PortletConfigurationEditFormRenderer(AJAXFormRenderer):
         """AJAX form renderer"""
         if not changes:
             return None
+        # clear portlets cache on update
+        LOGGER.debug("Clearing portlets cache...")
+        portlets_cache = get_cache(PORTLETS_CACHE_NAME,
+                                   PORTLETS_CACHE_REGION,
+                                   PORTLETS_CACHE_NAMESPACE)
+        portlets_cache.clear()
+        # return notice on renderer update
         if 'renderer' in changes.get(IPortletSettings, ()):
             result = {}
             renderer = self.context.get_renderer(self.request)
@@ -430,8 +440,8 @@ def delete_template_portlet(request):
 @ajax_form_config(name='renderer-settings.html',
                   context=IPortletSettings, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
-class PortletSettingsEditForm(AdminModalEditForm):
-    """Portlet settings edit form"""
+class PortletRendererSettingsEditForm(AdminModalEditForm):
+    """Portlet renderer settings edit form"""
 
     def __init__(self, context, request):
         super().__init__(context, request)
@@ -455,3 +465,24 @@ class PortletSettingsEditForm(AdminModalEditForm):
 
     def get_content(self):
         return IPortletRendererSettings(self.context)
+
+
+@adapter_config(required=(Interface, IAdminLayer, PortletRendererSettingsEditForm),
+                provides=IAJAXFormRenderer)
+class PortletRendererSettingsEditFormRenderer(ContextRequestViewAdapter):
+    """Portlet renderer settings edit form renderer"""
+
+    def render(self, changes):
+        """AJAX form renderer"""
+        if not changes:
+            return None
+        # clear portlets cache on update
+        LOGGER.debug("Clearing portlets cache...")
+        portlets_cache = get_cache(PORTLETS_CACHE_NAME,
+                                   PORTLETS_CACHE_REGION,
+                                   PORTLETS_CACHE_NAMESPACE)
+        portlets_cache.clear()
+        return {
+            'status': 'success',
+            'message': self.request.localizer.translate(self.view.success_message)
+        }
