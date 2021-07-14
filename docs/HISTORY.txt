@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.1
+-----
+ - Javascript code cleanup
+
 1.0.0
 -----
  - initial release
