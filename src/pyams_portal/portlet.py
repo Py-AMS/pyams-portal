@@ -71,7 +71,7 @@ class portlet_config:  # pylint: disable=invalid-name
         depth = settings.pop('_depth', 0)
 
         def callback(context, name, ob):  # pylint: disable=invalid-name,unused-argument
-            name = settings.get('name') or getattr(ob, 'name', None)
+            name = settings.get('name') or getattr(ob, 'name', name)
             if name is None:
                 raise ConfigurationError("You must provide a name for a portlet")
 
