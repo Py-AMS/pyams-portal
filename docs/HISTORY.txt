@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.3
+-----
+ - updated layout offset classes for XS devices
+
 1.0.2
 -----
  - corrected syntax error in image portlet setting
