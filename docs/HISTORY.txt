@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.0.2
+-----
+ - corrected syntax error in image portlet setting
+ - updated ZMI modules exclusion rule when including package
+
 1.0.1
 -----
  - Javascript code cleanup
