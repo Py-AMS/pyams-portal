@@ -91,23 +91,23 @@ const portal = {
                 const config = $('#portal_config');
                 config.removeClassPrefix('container-');
                 if (device) {
-                    config.addClass('container-' + device);
+                    config.addClass(`container-${device}`);
                 }
                 $('.slot', config).removeClassPrefix('col-');
-                for (let slot_name in result) {
+                for (const slot_name in result) {
                     if (!result.hasOwnProperty(slot_name)) {
                         continue;
                     }
                     const widths = result[slot_name];
-                    const slot = $('.slot[data-ams-slot-name="' + slot_name + '"]', config);
+                    const slot = $(`.slot[data-ams-slot-name="${slot_name}"]`, config);
                     if (device) {
-                        slot.addClass('col-' + widths[device]);
+                        slot.addClass(`col-${widths[device]}`);
                     } else {
-                        for (let display in widths) {
+                        for (const display in widths) {
                             if (!widths.hasOwnProperty(display)) {
                                 continue;
                             }
-                            slot.addClass('col-' + display + '-' + widths[display]);
+                            slot.addClass(`col-${display}-${widths[display]}`);
                         }
                     }
                     slot.addClass(widths.css);
@@ -122,17 +122,17 @@ const portal = {
             return function(src) {
                 $(src).parents('.dropdown').dropdown('hide');
                 MyAMS.ajax.post('add-template-row.json', {}).then((result) => {
-                    const row_id = result.row_id;
+                    const rowId = result.row_id;
                     const rows = $('.rows', '#portal_config');
                     $('<div></div>')
                         .addClass('row context-menu')
-                        .attr('data-ams-row-id', row_id)
+                        .attr('data-ams-row-id', rowId)
                         .append($('<strong></strong>')
                             .addClass('row_id badge badge-danger pull-left')
-                            .text(row_id+1))
+                            .text(rowId+1))
                         .append($('<strong></strong>')
                             .addClass('row_id badge badge-danger pull-right')
-                            .text(row_id+1))
+                            .text(rowId+1))
                         .append($('<div></div>')
                             .addClass('slots')
                             .sortable({
@@ -166,7 +166,7 @@ const portal = {
             ui.draggable.tooltip('hide');
             ui.draggable.addClass('already-dropped');
             MyAMS.ajax.post('add-template-row.json', {}).then((result) => {
-                const row_id = result.row_id;
+                const rowId = result.row_id;
                 const rows = $('.rows', '#portal_config');
                 ui.draggable
                     .removeClassPrefix('btn')
@@ -177,14 +177,14 @@ const portal = {
                     .removeAttr('data-original-title')
                     .removeAttr('style')
                     .addClass('row context-menu')
-                    .attr('data-ams-row-id', row_id)
+                    .attr('data-ams-row-id', rowId)
                     .empty()
                     .append($('<strong></strong>')
                         .addClass('row_id badge badge-danger pull-left')
-                        .text(row_id+1))
+                        .text(rowId+1))
                     .append($('<strong></strong>')
                         .addClass('row_id badge badge-danger pull-right')
-                        .text(row_id+1))
+                        .text(rowId+1))
                     .append($('<div></div>')
                         .addClass('slots')
                         .addClass('width-100')
@@ -295,17 +295,17 @@ const portal = {
         addSlotCallback: (form, result) => {
             const
                 slots = $('.slots', `.row[data-ams-row-id="${result.row_id}"]`),
-                slot_name = result.slot_name,
+                slotName = result.slot_name,
                 device = $('#device_selector').val(),
-                new_slot = $('<div></div>')
+                newSlot = $('<div></div>')
                     .addClass(`slot px-0 col col-12 col-${device}-12 resizable`)
-                    .attr('data-ams-slot-name', slot_name)
+                    .attr('data-ams-slot-name', slotName)
                     .append($('<div></div>')
                         .addClass('header px-1 d-flex align-items-center')
                         .append('<i class="action mr-1 fa fa-fw fa-minus-square pull-right padding-top-2" ' +
                                 '   data-ams-click-handler="MyAMS.portal.template.switchSlot"></i>')
                         .append($('<span class="flex-grow-1"></span>')
-                            .append(slot_name)
+                            .append(slotName)
                             .append('<i class="action ml-2 fa fa-fw fa-eye" ' +
                                     '   data-ams-click-handler="MyAMS.portal.template.switchSlotVisibility"></i>'))
                         .append('<i class="action fa fa-fw fa-edit float-right"' +
@@ -328,15 +328,15 @@ const portal = {
                         }))
                     .append($('<div></div>')
                         .addClass('clearfix'));
-            const slot_button = $('.btn-slot', slots);
-            if (slot_button.exists()) {  // Slot added via drag & drop
-                slot_button.replaceWith(new_slot);
+            const slotButton = $('.btn-slot', slots);
+            if (slotButton.exists()) {  // Slot added via drag & drop
+                slotButton.replaceWith(newSlot);
                 $('.slot', slots).each((idx, elt) => {
                     $(elt).removeData();
                 });
                 MyAMS.portal.template.sortSlots();
             } else {
-                new_slot.appendTo(slots);
+                newSlot.appendTo(slots);
             }
             $('.slot', slots).resizable({
                 start: MyAMS.portal.template.startSlotResize,
@@ -356,8 +356,8 @@ const portal = {
             }
             ui.draggable.addClass('already-dropped');
             MyAMS.require('modal').then(() => {
-                const row_id = ui.helper.parents('.row:first').data('ams-row-id');
-                MyAMS.modal.open(`add-template-slot.html?form.widgets.row_id=${row_id}`).then((modal) => {
+                const rowId = ui.helper.parents('.row:first').data('ams-row-id');
+                MyAMS.modal.open(`add-template-slot.html?form.widgets.row_id=${rowId}`).then((modal) => {
                     $('.hint').tooltip('hide');
                     modal.on('hide.bs.modal', (evt) => {
                         const form = $('form', modal);
@@ -419,8 +419,8 @@ const portal = {
                 }).then((result) => {
                     slot.removeClassPrefix('col-');
                     slot.removeAttr('style');
-                    const slot_name = slot.data('ams-slot-name');
-                    const widths = result[slot_name];
+                    const slotName = slot.data('ams-slot-name');
+                    const widths = result[slotName];
                     slot.addClass(`col-${widths[device]}`)
                         .addClass(`col-${device}-${widths[device]}`)
                         .addClass(widths.css);
@@ -449,13 +449,13 @@ const portal = {
             slot.attr('class', 'slot px-0 col');
             const device = $('#device_selector').val();
             if (device) {
-                slot.addClass('col-' + result.width[device]);
+                slot.addClass(`col-${result.width[device]}`);
             } else {
-                for (let device in result.width) {
+                for (const device in result.width) {
                     if (!result.width.hasOwnProperty(device)) {
                         continue;
                     }
-                    slot.addClass('col-' + device + '-' + result.width[device]);
+                    slot.addClass(`col-${device}-${result.width[device]}`);
                 }
             }
             slot.addClass(result.css);
@@ -483,11 +483,11 @@ const portal = {
             const order = {};
             $('.row', config).each((idx, elt) => {
                 const row = $(elt);
-                const row_config = [];
+                const rowConfig = [];
                 $('.slot', row).each((idx, slot) => {
-                    row_config.push($(slot).data('ams-slot-name'));
+                    rowConfig.push($(slot).data('ams-slot-name'));
                 });
-                order[parseInt(row.attr('data-ams-row-id'))] = row_config;
+                order[parseInt(row.attr('data-ams-row-id'))] = rowConfig;
             });
             MyAMS.require('ajax').then(() => {
                 MyAMS.ajax.post('set-template-slot-order.json',
@@ -515,10 +515,9 @@ const portal = {
          * Slot visibility switch
          */
         switchSlotVisibility: (evt) => {
-            let
-                target = $(evt.currentTarget),
-                icon = target.objectOrParentWithClass('action'),
-                slot = icon.objectOrParentWithClass('slot');
+            const target = $(evt.currentTarget);
+            let icon = target.objectOrParentWithClass('action');
+            const slot = icon.objectOrParentWithClass('slot');
             icon.tooltip('hide');
             icon.replaceWith('<i class="action ml-2 fas fa-fw fa-spinner fa-spin"></i>');
             MyAMS.require('ajax').then(() => {
@@ -597,9 +596,9 @@ const portal = {
                     .attr('data-ams-portlet-id', result.portlet_id)
                     .append(result.preview || '');
             MyAMS.core.initContent($('.preview', portlet)).then(() => {
-                const portlet_button = $('.btn-portlet', portlets);
-                if (portlet_button.exists()) {  // Portlet added via drag & drop
-                    portlet_button.replaceWith(portlet);
+                const portletButton = $('.btn-portlet', portlets);
+                if (portletButton.exists()) {  // Portlet added via drag & drop
+                    portletButton.replaceWith(portlet);
                     $('.portlet', portlets).each((idx, elt) => {
                         $(elt).removeData();
                     });
@@ -658,7 +657,7 @@ const portal = {
         editPortlet: (evt) => {
             MyAMS.require('modal').then(() => {
                 const portlet = $(evt.currentTarget).objectOrParentWithClass('portlet');
-                MyAMS.modal.open('portlet-properties.html?form.widgets.portlet_id=' + portlet.data('ams-portlet-id'));
+                MyAMS.modal.open(`portlet-properties.html?form.widgets.portlet_id=${portlet.data('ams-portlet-id')}`);
             });
         },
 
@@ -666,7 +665,7 @@ const portal = {
             if (result.preview) {
                 const
                     config = $('#portal_config'),
-                    portlet = $('.portlet[data-ams-portlet-id="' + result.portlet_id + '"]', config);
+                    portlet = $(`.portlet[data-ams-portlet-id="${result.portlet_id}"]`, config);
                 portlet.html(result.preview);
                 MyAMS.core.initContent($('.preview', portlet));
             }
@@ -685,13 +684,13 @@ const portal = {
             }
             const
                 portlet = ui.item,
-                to_slot = portlet.parents('.slot'),
-                to_portlets = $('.portlet', to_slot),
+                toSlot = portlet.parents('.slot'),
+                toPortlets = $('.portlet', toSlot),
                 order = {
                     from: portlet.data('ams-portlet-id'),
                     to: {
-                        slot: to_slot.data('ams-slot-name'),
-                        portlet_ids: to_portlets.listattr('data-ams-portlet-id')
+                        slot: toSlot.data('ams-slot-name'),
+                        portlet_ids: toPortlets.listattr('data-ams-portlet-id')
                     }
                 };
             MyAMS.ajax.post('set-template-portlet-order.json', {
@@ -731,13 +730,13 @@ const portal = {
             });
         },
 
-        doDeletePortlet: (portlet_id) => {
+        doDeletePortlet: (portletId) => {
             MyAMS.require('ajax').then(() => {
                 MyAMS.ajax.post('delete-template-portlet.json', {
-                    portlet_id: portlet_id
+                    portlet_id: portletId
                 }).then((result) => {
                     if (result.status === 'success') {
-                        const portlet = $(`.portlet[data-ams-portlet-id="${portlet_id}"]`);
+                        const portlet = $(`.portlet[data-ams-portlet-id="${portletId}"]`);
                         portlet.remove();
                         $('.portlet', '#portal_config').each(function() {
                             $(this).removeData();
