@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.4
+-----
+ - clear portlets cache after configuration or renderer settings update
+
 1.0.3
 -----
  - updated layout offset classes for XS devices
