@@ -133,7 +133,7 @@ Let's create a new slot:
     True
 
     >>> config.get_slots_width()
-    {'Slot 1': {'xs': 12, 'sm': 12, 'md': 12, 'lg': 12, 'xl': 12, 'css': 'col  col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12', 'visible': True}}
+    {'Slot 1': {'xs': 12, 'sm': 12, 'md': 12, 'lg': 12, 'xl': 12, 'css': 'col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12', 'visible': True}}
     >>> config.set_slot_width('Slot 1', 'md', 6)
     >>> config.get_slots_width('md')
     {'Slot 1': {'md': 6, 'css': 'col  col-md-6', 'visible': True}}
@@ -602,7 +602,7 @@ workflow status is checked and where cache can be used.
               <div class="row m-0">
                 <div class="slots w-100">
                   <div>
-                    <div class="slot col  col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="slot col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                       <div class="portlets">
                         <div class="portlet ">
                         </div>
@@ -637,7 +637,7 @@ workflow status is checked and where cache can be used.
               <div class="row m-0">
                 <div class="slots w-100">
                   <div>
-                    <div class="slot col  col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="slot col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                       <div class="portlets">
                         <div class="portlet ">
                         </div>
@@ -679,7 +679,7 @@ Let's try to use several renderers on another portlet:
               <div class="row m-0">
                 <div class="slots w-100">
                   <div>
-                    <div class="slot col  col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="slot col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                       <div class="portlets">
                         <div class="portlet ">
                         </div>
@@ -717,7 +717,7 @@ Let's try to use several renderers on another portlet:
               <div class="row m-0">
                 <div class="slots w-100">
                   <div>
-                    <div class="slot col  col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="slot col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                       <div class="portlets">
                         <div class="portlet ">
                         </div>
@@ -754,7 +754,7 @@ Let's try to use several renderers on another portlet:
               <div class="row m-0">
                 <div class="slots w-100">
                   <div>
-                    <div class="slot col  col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="slot col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                       <div class="portlets">
                         <div class="portlet ">
                         </div>

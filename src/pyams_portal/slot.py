@@ -87,7 +87,10 @@ class SlotConfiguration(Persistent, Contained):
         result = ['col', self.css_class or '']
         for attr in device:
             width = getattr(self, attr + '_width')
-            result.append('col-{0}-{1}'.format(attr, width))
+            if attr == 'xs':
+                result.append('col-{}'.format(width))
+            else:
+                result.append('col-{0}-{1}'.format(attr, width))
         return ' '.join(result)
 
     def get_width(self, device=None):

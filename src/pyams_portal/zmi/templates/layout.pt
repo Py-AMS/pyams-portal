@@ -101,7 +101,7 @@
 							<tal:loop repeat="slot_name template_config.get_slots(row)">
 								<div tal:define="config template_config.get_slot_configuration(slot_name);
 												 css_class config.get_css_class('md');"
-									 class="slot px-0 col ${css_class.replace('-md', '')} ${css_class} ${'resizable' if can_change else ''}"
+									 class="slot px-0 ${css_class} ${'resizable' if can_change else ''}"
 									 data-ams-resizable-start="MyAMS.portal.template.startSlotResize"
 									 data-ams-resizable-resize="MyAMS.portal.template.resizeSlot"
 									 data-ams-resizable-stop="MyAMS.portal.template.stopSlotResize"

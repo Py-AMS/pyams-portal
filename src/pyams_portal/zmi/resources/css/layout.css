@@ -256,131 +256,131 @@
       width: 0 !important; } }
   #portal_config.container-xs {
     max-width: 575px !important; }
-    #portal_config.container-xs .slot.offset-xs-11 {
+    #portal_config.container-xs .slot.offset-11 {
       margin-left: 91.66666667% !important; }
-    #portal_config.container-xs .slot.offset-xs-10 {
+    #portal_config.container-xs .slot.offset-10 {
       margin-left: 83.33333333% !important; }
-    #portal_config.container-xs .slot.offset-xs-9 {
+    #portal_config.container-xs .slot.offset-9 {
       margin-left: 75% !important; }
-    #portal_config.container-xs .slot.offset-xs-8 {
+    #portal_config.container-xs .slot.offset-8 {
       margin-left: 66.66666667% !important; }
-    #portal_config.container-xs .slot.offset-xs-7 {
+    #portal_config.container-xs .slot.offset-7 {
       margin-left: 58.33333333% !important; }
-    #portal_config.container-xs .slot.offset-xs-6 {
+    #portal_config.container-xs .slot.offset-6 {
       margin-left: 50% !important; }
-    #portal_config.container-xs .slot.offset-xs-5 {
+    #portal_config.container-xs .slot.offset-5 {
       margin-left: 41.66666667% !important; }
-    #portal_config.container-xs .slot.offset-xs-4 {
+    #portal_config.container-xs .slot.offset-4 {
       margin-left: 33.33333333% !important; }
-    #portal_config.container-xs .slot.offset-xs-3 {
+    #portal_config.container-xs .slot.offset-3 {
       margin-left: 25% !important; }
-    #portal_config.container-xs .slot.offset-xs-2 {
+    #portal_config.container-xs .slot.offset-2 {
       margin-left: 16.66666667% !important; }
-    #portal_config.container-xs .slot.offset-xs-1 {
+    #portal_config.container-xs .slot.offset-1 {
       margin-left: 8.33333333% !important; }
-    #portal_config.container-xs .slot.offset-xs-0 {
+    #portal_config.container-xs .slot.offset-0 {
       margin-left: 0 !important; }
   #portal_config.container-sm {
     width: 576px !important; }
-    #portal_config.container-sm .slot.offset-xs-11, #portal_config.container-sm .slot.offset-sm-11 {
+    #portal_config.container-sm .slot.offset-11, #portal_config.container-sm .slot.offset-sm-11 {
       margin-left: 91.66666667% !important; }
-    #portal_config.container-sm .slot.offset-xs-10, #portal_config.container-sm .slot.offset-sm-10 {
+    #portal_config.container-sm .slot.offset-10, #portal_config.container-sm .slot.offset-sm-10 {
       margin-left: 83.33333333% !important; }
-    #portal_config.container-sm .slot.offset-xs-9, #portal_config.container-sm .slot.offset-sm-9 {
+    #portal_config.container-sm .slot.offset-9, #portal_config.container-sm .slot.offset-sm-9 {
       margin-left: 75% !important; }
-    #portal_config.container-sm .slot.offset-xs-8, #portal_config.container-sm .slot.offset-sm-8 {
+    #portal_config.container-sm .slot.offset-8, #portal_config.container-sm .slot.offset-sm-8 {
       margin-left: 66.66666667% !important; }
-    #portal_config.container-sm .slot.offset-xs-7, #portal_config.container-sm .slot.offset-sm-7 {
+    #portal_config.container-sm .slot.offset-7, #portal_config.container-sm .slot.offset-sm-7 {
       margin-left: 58.33333333% !important; }
-    #portal_config.container-sm .slot.offset-xs-6, #portal_config.container-sm .slot.offset-sm-6 {
+    #portal_config.container-sm .slot.offset-6, #portal_config.container-sm .slot.offset-sm-6 {
       margin-left: 50% !important; }
-    #portal_config.container-sm .slot.offset-xs-5, #portal_config.container-sm .slot.offset-sm-5 {
+    #portal_config.container-sm .slot.offset-5, #portal_config.container-sm .slot.offset-sm-5 {
       margin-left: 41.66666667% !important; }
-    #portal_config.container-sm .slot.offset-xs-4, #portal_config.container-sm .slot.offset-sm-4 {
+    #portal_config.container-sm .slot.offset-4, #portal_config.container-sm .slot.offset-sm-4 {
       margin-left: 33.33333333% !important; }
-    #portal_config.container-sm .slot.offset-xs-3, #portal_config.container-sm .slot.offset-sm-3 {
+    #portal_config.container-sm .slot.offset-3, #portal_config.container-sm .slot.offset-sm-3 {
       margin-left: 25% !important; }
-    #portal_config.container-sm .slot.offset-xs-2, #portal_config.container-sm .slot.offset-sm-2 {
+    #portal_config.container-sm .slot.offset-2, #portal_config.container-sm .slot.offset-sm-2 {
       margin-left: 16.66666667% !important; }
-    #portal_config.container-sm .slot.offset-xs-1, #portal_config.container-sm .slot.offset-sm-1 {
+    #portal_config.container-sm .slot.offset-1, #portal_config.container-sm .slot.offset-sm-1 {
       margin-left: 8.33333333% !important; }
-    #portal_config.container-sm .slot.offset-xs-0, #portal_config.container-sm .slot.offset-sm-0 {
+    #portal_config.container-sm .slot.offset-0, #portal_config.container-sm .slot.offset-sm-0 {
       margin-left: 0 !important; }
   #portal_config.container-md {
     width: 768px !important; }
-    #portal_config.container-md .slot.offset-xs-11, #portal_config.container-md .slot.offset-sm-11, #portal_config.container-md .slot.offset-md-11 {
+    #portal_config.container-md .slot.offset-11, #portal_config.container-md .slot.offset-sm-11, #portal_config.container-md .slot.offset-md-11 {
       margin-left: 91.66666667% !important; }
-    #portal_config.container-md .slot.offset-xs-10, #portal_config.container-md .slot.offset-sm-10, #portal_config.container-md .slot.offset-md-10 {
+    #portal_config.container-md .slot.offset-10, #portal_config.container-md .slot.offset-sm-10, #portal_config.container-md .slot.offset-md-10 {
       margin-left: 83.33333333% !important; }
-    #portal_config.container-md .slot.offset-xs-9, #portal_config.container-md .slot.offset-sm-9, #portal_config.container-md .slot.offset-md-9 {
+    #portal_config.container-md .slot.offset-9, #portal_config.container-md .slot.offset-sm-9, #portal_config.container-md .slot.offset-md-9 {
       margin-left: 75% !important; }
-    #portal_config.container-md .slot.offset-xs-8, #portal_config.container-md .slot.offset-sm-8, #portal_config.container-md .slot.offset-md-8 {
+    #portal_config.container-md .slot.offset-8, #portal_config.container-md .slot.offset-sm-8, #portal_config.container-md .slot.offset-md-8 {
       margin-left: 66.66666667% !important; }
-    #portal_config.container-md .slot.offset-xs-7, #portal_config.container-md .slot.offset-sm-7, #portal_config.container-md .slot.offset-md-7 {
+    #portal_config.container-md .slot.offset-7, #portal_config.container-md .slot.offset-sm-7, #portal_config.container-md .slot.offset-md-7 {
       margin-left: 58.33333333% !important; }
-    #portal_config.container-md .slot.offset-xs-6, #portal_config.container-md .slot.offset-sm-6, #portal_config.container-md .slot.offset-md-6 {
+    #portal_config.container-md .slot.offset-6, #portal_config.container-md .slot.offset-sm-6, #portal_config.container-md .slot.offset-md-6 {
       margin-left: 50% !important; }
-    #portal_config.container-md .slot.offset-xs-5, #portal_config.container-md .slot.offset-sm-5, #portal_config.container-md .slot.offset-md-5 {
+    #portal_config.container-md .slot.offset-5, #portal_config.container-md .slot.offset-sm-5, #portal_config.container-md .slot.offset-md-5 {
       margin-left: 41.66666667% !important; }
-    #portal_config.container-md .slot.offset-xs-4, #portal_config.container-md .slot.offset-sm-4, #portal_config.container-md .slot.offset-md-4 {
+    #portal_config.container-md .slot.offset-4, #portal_config.container-md .slot.offset-sm-4, #portal_config.container-md .slot.offset-md-4 {
       margin-left: 33.33333333% !important; }
-    #portal_config.container-md .slot.offset-xs-3, #portal_config.container-md .slot.offset-sm-3, #portal_config.container-md .slot.offset-md-3 {
+    #portal_config.container-md .slot.offset-3, #portal_config.container-md .slot.offset-sm-3, #portal_config.container-md .slot.offset-md-3 {
       margin-left: 25% !important; }
-    #portal_config.container-md .slot.offset-xs-2, #portal_config.container-md .slot.offset-sm-2, #portal_config.container-md .slot.offset-md-2 {
+    #portal_config.container-md .slot.offset-2, #portal_config.container-md .slot.offset-sm-2, #portal_config.container-md .slot.offset-md-2 {
       margin-left: 16.66666667% !important; }
-    #portal_config.container-md .slot.offset-xs-1, #portal_config.container-md .slot.offset-sm-1, #portal_config.container-md .slot.offset-md-1 {
+    #portal_config.container-md .slot.offset-1, #portal_config.container-md .slot.offset-sm-1, #portal_config.container-md .slot.offset-md-1 {
       margin-left: 8.33333333% !important; }
-    #portal_config.container-md .slot.offset-xs-0, #portal_config.container-md .slot.offset-sm-0, #portal_config.container-md .slot.offset-md-0 {
+    #portal_config.container-md .slot.offset-0, #portal_config.container-md .slot.offset-sm-0, #portal_config.container-md .slot.offset-md-0 {
       margin-left: 0 !important; }
   #portal_config.container-lg {
     width: 992px !important; }
-    #portal_config.container-lg .slot.offset-xs-11, #portal_config.container-lg .slot.offset-sm-11, #portal_config.container-lg .slot.offset-md-11, #portal_config.container-lg .slot.offset-lg-11 {
+    #portal_config.container-lg .slot.offset-11, #portal_config.container-lg .slot.offset-sm-11, #portal_config.container-lg .slot.offset-md-11, #portal_config.container-lg .slot.offset-lg-11 {
       margin-left: 91.66666667% !important; }
-    #portal_config.container-lg .slot.offset-xs-10, #portal_config.container-lg .slot.offset-sm-10, #portal_config.container-lg .slot.offset-md-10, #portal_config.container-lg .slot.offset-lg-10 {
+    #portal_config.container-lg .slot.offset-10, #portal_config.container-lg .slot.offset-sm-10, #portal_config.container-lg .slot.offset-md-10, #portal_config.container-lg .slot.offset-lg-10 {
       margin-left: 83.33333333% !important; }
-    #portal_config.container-lg .slot.offset-xs-9, #portal_config.container-lg .slot.offset-sm-9, #portal_config.container-lg .slot.offset-md-9, #portal_config.container-lg .slot.offset-lg-9 {
+    #portal_config.container-lg .slot.offset-9, #portal_config.container-lg .slot.offset-sm-9, #portal_config.container-lg .slot.offset-md-9, #portal_config.container-lg .slot.offset-lg-9 {
       margin-left: 75% !important; }
-    #portal_config.container-lg .slot.offset-xs-8, #portal_config.container-lg .slot.offset-sm-8, #portal_config.container-lg .slot.offset-md-8, #portal_config.container-lg .slot.offset-lg-8 {
+    #portal_config.container-lg .slot.offset-8, #portal_config.container-lg .slot.offset-sm-8, #portal_config.container-lg .slot.offset-md-8, #portal_config.container-lg .slot.offset-lg-8 {
       margin-left: 66.66666667% !important; }
-    #portal_config.container-lg .slot.offset-xs-7, #portal_config.container-lg .slot.offset-sm-7, #portal_config.container-lg .slot.offset-md-7, #portal_config.container-lg .slot.offset-lg-7 {
+    #portal_config.container-lg .slot.offset-7, #portal_config.container-lg .slot.offset-sm-7, #portal_config.container-lg .slot.offset-md-7, #portal_config.container-lg .slot.offset-lg-7 {
       margin-left: 58.33333333% !important; }
-    #portal_config.container-lg .slot.offset-xs-6, #portal_config.container-lg .slot.offset-sm-6, #portal_config.container-lg .slot.offset-md-6, #portal_config.container-lg .slot.offset-lg-6 {
+    #portal_config.container-lg .slot.offset-6, #portal_config.container-lg .slot.offset-sm-6, #portal_config.container-lg .slot.offset-md-6, #portal_config.container-lg .slot.offset-lg-6 {
       margin-left: 50% !important; }
-    #portal_config.container-lg .slot.offset-xs-5, #portal_config.container-lg .slot.offset-sm-5, #portal_config.container-lg .slot.offset-md-5, #portal_config.container-lg .slot.offset-lg-5 {
+    #portal_config.container-lg .slot.offset-5, #portal_config.container-lg .slot.offset-sm-5, #portal_config.container-lg .slot.offset-md-5, #portal_config.container-lg .slot.offset-lg-5 {
       margin-left: 41.66666667% !important; }
-    #portal_config.container-lg .slot.offset-xs-4, #portal_config.container-lg .slot.offset-sm-4, #portal_config.container-lg .slot.offset-md-4, #portal_config.container-lg .slot.offset-lg-4 {
+    #portal_config.container-lg .slot.offset-4, #portal_config.container-lg .slot.offset-sm-4, #portal_config.container-lg .slot.offset-md-4, #portal_config.container-lg .slot.offset-lg-4 {
       margin-left: 33.33333333% !important; }
-    #portal_config.container-lg .slot.offset-xs-3, #portal_config.container-lg .slot.offset-sm-3, #portal_config.container-lg .slot.offset-md-3, #portal_config.container-lg .slot.offset-lg-3 {
+    #portal_config.container-lg .slot.offset-3, #portal_config.container-lg .slot.offset-sm-3, #portal_config.container-lg .slot.offset-md-3, #portal_config.container-lg .slot.offset-lg-3 {
       margin-left: 25% !important; }
-    #portal_config.container-lg .slot.offset-xs-2, #portal_config.container-lg .slot.offset-sm-2, #portal_config.container-lg .slot.offset-md-2, #portal_config.container-lg .slot.offset-lg-2 {
+    #portal_config.container-lg .slot.offset-2, #portal_config.container-lg .slot.offset-sm-2, #portal_config.container-lg .slot.offset-md-2, #portal_config.container-lg .slot.offset-lg-2 {
       margin-left: 16.66666667% !important; }
-    #portal_config.container-lg .slot.offset-xs-1, #portal_config.container-lg .slot.offset-sm-1, #portal_config.container-lg .slot.offset-md-1, #portal_config.container-lg .slot.offset-lg-1 {
+    #portal_config.container-lg .slot.offset-1, #portal_config.container-lg .slot.offset-sm-1, #portal_config.container-lg .slot.offset-md-1, #portal_config.container-lg .slot.offset-lg-1 {
       margin-left: 8.33333333% !important; }
-    #portal_config.container-lg .slot.offset-xs-0, #portal_config.container-lg .slot.offset-sm-0, #portal_config.container-lg .slot.offset-md-0, #portal_config.container-lg .slot.offset-lg-0 {
+    #portal_config.container-lg .slot.offset-0, #portal_config.container-lg .slot.offset-sm-0, #portal_config.container-lg .slot.offset-md-0, #portal_config.container-lg .slot.offset-lg-0 {
       margin-left: 0 !important; }
   #portal_config.container-xl {
     width: 1200px !important; }
-    #portal_config.container-xl .slot.offset-xs-11, #portal_config.container-xl .slot.offset-sm-11, #portal_config.container-xl .slot.offset-md-11, #portal_config.container-xl .slot.offset-lg-11, #portal_config.container-xl .slot.offset-xl-11 {
+    #portal_config.container-xl .slot.offset-11, #portal_config.container-xl .slot.offset-sm-11, #portal_config.container-xl .slot.offset-md-11, #portal_config.container-xl .slot.offset-lg-11, #portal_config.container-xl .slot.offset-xl-11 {
       margin-left: 91.66666667% !important; }
-    #portal_config.container-xl .slot.offset-xs-10, #portal_config.container-xl .slot.offset-sm-10, #portal_config.container-xl .slot.offset-md-10, #portal_config.container-xl .slot.offset-lg-10, #portal_config.container-xl .slot.offset-xl-10 {
+    #portal_config.container-xl .slot.offset-10, #portal_config.container-xl .slot.offset-sm-10, #portal_config.container-xl .slot.offset-md-10, #portal_config.container-xl .slot.offset-lg-10, #portal_config.container-xl .slot.offset-xl-10 {
       margin-left: 83.33333333% !important; }
-    #portal_config.container-xl .slot.offset-xs-9, #portal_config.container-xl .slot.offset-sm-9, #portal_config.container-xl .slot.offset-md-9, #portal_config.container-xl .slot.offset-lg-9, #portal_config.container-xl .slot.offset-xl-9 {
+    #portal_config.container-xl .slot.offset-9, #portal_config.container-xl .slot.offset-sm-9, #portal_config.container-xl .slot.offset-md-9, #portal_config.container-xl .slot.offset-lg-9, #portal_config.container-xl .slot.offset-xl-9 {
       margin-left: 75% !important; }
-    #portal_config.container-xl .slot.offset-xs-8, #portal_config.container-xl .slot.offset-sm-8, #portal_config.container-xl .slot.offset-md-8, #portal_config.container-xl .slot.offset-lg-8, #portal_config.container-xl .slot.offset-xl-8 {
+    #portal_config.container-xl .slot.offset-8, #portal_config.container-xl .slot.offset-sm-8, #portal_config.container-xl .slot.offset-md-8, #portal_config.container-xl .slot.offset-lg-8, #portal_config.container-xl .slot.offset-xl-8 {
       margin-left: 66.66666667% !important; }
-    #portal_config.container-xl .slot.offset-xs-7, #portal_config.container-xl .slot.offset-sm-7, #portal_config.container-xl .slot.offset-md-7, #portal_config.container-xl .slot.offset-lg-7, #portal_config.container-xl .slot.offset-xl-7 {
+    #portal_config.container-xl .slot.offset-7, #portal_config.container-xl .slot.offset-sm-7, #portal_config.container-xl .slot.offset-md-7, #portal_config.container-xl .slot.offset-lg-7, #portal_config.container-xl .slot.offset-xl-7 {
       margin-left: 58.33333333% !important; }
-    #portal_config.container-xl .slot.offset-xs-6, #portal_config.container-xl .slot.offset-sm-6, #portal_config.container-xl .slot.offset-md-6, #portal_config.container-xl .slot.offset-lg-6, #portal_config.container-xl .slot.offset-xl-6 {
+    #portal_config.container-xl .slot.offset-6, #portal_config.container-xl .slot.offset-sm-6, #portal_config.container-xl .slot.offset-md-6, #portal_config.container-xl .slot.offset-lg-6, #portal_config.container-xl .slot.offset-xl-6 {
       margin-left: 50% !important; }
-    #portal_config.container-xl .slot.offset-xs-5, #portal_config.container-xl .slot.offset-sm-5, #portal_config.container-xl .slot.offset-md-5, #portal_config.container-xl .slot.offset-lg-5, #portal_config.container-xl .slot.offset-xl-5 {
+    #portal_config.container-xl .slot.offset-5, #portal_config.container-xl .slot.offset-sm-5, #portal_config.container-xl .slot.offset-md-5, #portal_config.container-xl .slot.offset-lg-5, #portal_config.container-xl .slot.offset-xl-5 {
       margin-left: 41.66666667% !important; }
-    #portal_config.container-xl .slot.offset-xs-4, #portal_config.container-xl .slot.offset-sm-4, #portal_config.container-xl .slot.offset-md-4, #portal_config.container-xl .slot.offset-lg-4, #portal_config.container-xl .slot.offset-xl-4 {
+    #portal_config.container-xl .slot.offset-4, #portal_config.container-xl .slot.offset-sm-4, #portal_config.container-xl .slot.offset-md-4, #portal_config.container-xl .slot.offset-lg-4, #portal_config.container-xl .slot.offset-xl-4 {
       margin-left: 33.33333333% !important; }
-    #portal_config.container-xl .slot.offset-xs-3, #portal_config.container-xl .slot.offset-sm-3, #portal_config.container-xl .slot.offset-md-3, #portal_config.container-xl .slot.offset-lg-3, #portal_config.container-xl .slot.offset-xl-3 {
+    #portal_config.container-xl .slot.offset-3, #portal_config.container-xl .slot.offset-sm-3, #portal_config.container-xl .slot.offset-md-3, #portal_config.container-xl .slot.offset-lg-3, #portal_config.container-xl .slot.offset-xl-3 {
       margin-left: 25% !important; }
-    #portal_config.container-xl .slot.offset-xs-2, #portal_config.container-xl .slot.offset-sm-2, #portal_config.container-xl .slot.offset-md-2, #portal_config.container-xl .slot.offset-lg-2, #portal_config.container-xl .slot.offset-xl-2 {
+    #portal_config.container-xl .slot.offset-2, #portal_config.container-xl .slot.offset-sm-2, #portal_config.container-xl .slot.offset-md-2, #portal_config.container-xl .slot.offset-lg-2, #portal_config.container-xl .slot.offset-xl-2 {
       margin-left: 16.66666667% !important; }
-    #portal_config.container-xl .slot.offset-xs-1, #portal_config.container-xl .slot.offset-sm-1, #portal_config.container-xl .slot.offset-md-1, #portal_config.container-xl .slot.offset-lg-1, #portal_config.container-xl .slot.offset-xl-1 {
+    #portal_config.container-xl .slot.offset-1, #portal_config.container-xl .slot.offset-sm-1, #portal_config.container-xl .slot.offset-md-1, #portal_config.container-xl .slot.offset-lg-1, #portal_config.container-xl .slot.offset-xl-1 {
       margin-left: 8.33333333% !important; }
-    #portal_config.container-xl .slot.offset-xs-0, #portal_config.container-xl .slot.offset-sm-0, #portal_config.container-xl .slot.offset-md-0, #portal_config.container-xl .slot.offset-lg-0, #portal_config.container-xl .slot.offset-xl-0 {
+    #portal_config.container-xl .slot.offset-0, #portal_config.container-xl .slot.offset-sm-0, #portal_config.container-xl .slot.offset-md-0, #portal_config.container-xl .slot.offset-lg-0, #portal_config.container-xl .slot.offset-xl-0 {
       margin-left: 0 !important; }
