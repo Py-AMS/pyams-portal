@@ -410,7 +410,7 @@ class IPortalTemplate(ILocalTemplateHandler):
     """
 
     name = TextLine(title=_("Template name"),
-                    description=_("Two registered templates can't share the same name..."),
+                    description=_("Explicit name given to portal template"),
                     required=True)
 
 
