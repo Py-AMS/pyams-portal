@@ -18,10 +18,17 @@ This module defines all components required to handle layout of portal templates
 import json
 
 from pyramid.decorator import reify
+from pyramid.httpexceptions import HTTPForbidden
 from pyramid.renderers import render
 from pyramid.view import view_config
+from zope.copy import copy
 from zope.interface import Interface, implementer
 
+from pyams_form.ajax import ajax_form_config
+from pyams_form.button import Buttons, handler
+from pyams_form.field import Fields
+from pyams_form.interfaces.form import IAJAXFormRenderer
+from pyams_i18n.interfaces import II18n
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_pagelet.pagelet import pagelet_config
 from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortletsConfiguration, \
@@ -29,15 +36,23 @@ from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortlets
     IPortalTemplateContainerConfiguration, IPortlet, IPortletPreviewer, LOCAL_TEMPLATE_NAME, \
     MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.page import check_local_template
-from pyams_skin.interfaces.viewlet import IBreadcrumbItem
+from pyams_security.interfaces import IViewContextPermissionChecker
+from pyams_security.interfaces.base import FORBIDDEN_PERMISSION
+from pyams_security.permission import get_edit_permission
+from pyams_skin.interfaces.viewlet import IBreadcrumbItem, IHelpViewletManager
+from pyams_skin.schema.button import CloseButton, SubmitButton
+from pyams_skin.viewlet.help import AlertMessage
 from pyams_skin.viewlet.menu import MenuItem
 from pyams_template.template import template_config
-from pyams_utils.adapter import adapter_config
+from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
+from pyams_utils.interfaces.intids import IUniqueID
 from pyams_utils.registry import query_utility
 from pyams_utils.traversing import get_parent
 from pyams_viewlet.viewlet import viewlet_config
+from pyams_zmi.form import AdminModalAddForm
 from pyams_zmi.interfaces import IAdminLayer, IInnerAdminView
-from pyams_zmi.interfaces.viewlet import IContentManagementMenu, IContextAddingsViewletManager, \
+from pyams_zmi.interfaces.viewlet import IActionsViewletManager, IContentManagementMenu, \
+    IContextAddingsViewletManager, \
     IMenuHeader, IPropertiesMenu, ISiteManagementMenu
 from pyams_zmi.zmi.viewlet.breadcrumb import AdminLayerBreadcrumbItem
 from pyams_zmi.zmi.viewlet.menu import NavigationMenuItem
@@ -248,3 +263,125 @@ def delete_template_row(request):
     config = IPortalTemplateConfiguration(context)
     config.delete_row(int(request.params.get('row_id')))
     return {'status': 'success'}
+
+
+#
+# Convert local template to shared template
+#
+
+@viewlet_config(name='share-template.menu',
+                context=IPortalContext, layer=IAdminLayer, view=PortalTemplateLayoutView,
+                manager=IActionsViewletManager, weight=10,
+                permission=MANAGE_TEMPLATE_PERMISSION)
+class LocalTemplateShareMenu(MenuItem):
+    """Local template share menu"""
+
+    def __new__(cls, context, request, view, manager):
+        page = IPortalPage(context, None)
+        if (page is None) or not page.use_local_template:
+            return None
+        templates = query_utility(IPortalTemplateContainer)
+        if templates is None:
+            return None
+        if not request.has_permission(MANAGE_TEMPLATE_PERMISSION, context=templates):
+            return None
+        return MenuItem.__new__(cls)
+
+    label = _("Share template")
+    icon_class = 'fas fa-share'
+
+    href = 'share-template.html'
+    modal_target = True
+
+
+class ILocalTemplateShareFormButtons(Interface):
+    """Local template share form buttons"""
+
+    share = SubmitButton(name='share',
+                         title=_("Share template"))
+
+    close = CloseButton(name='close',
+                        title=_("Close"))
+
+
+@ajax_form_config(name='share-template.html',
+                  context=IPortalContext, layer=IPyAMSLayer,
+                  permission=MANAGE_TEMPLATE_PERMISSION)
+class PortalContextTemplateShareForm(AdminModalAddForm):
+    """Local template share form"""
+
+    @property
+    def title(self):
+        return II18n(self.context).query_attribute('title', request=self.request)
+
+    legend = _("Share local template")
+
+    fields = Fields(IPortalTemplate).select('name')
+    buttons = Buttons(ILocalTemplateShareFormButtons)
+
+    @property
+    def edit_permission(self):
+        return get_edit_permission(self.request, self.context, self, 'share')
+
+    @handler(ILocalTemplateShareFormButtons['share'])
+    def handle_share(self, action):
+        """Share form button handler"""
+        super().handle_add(self, action)
+
+    def create(self, data):
+        page = IPortalPage(self.context)
+        return copy(page.local_template)
+
+    def add(self, obj):
+        templates = query_utility(IPortalTemplateContainer)
+        oid = IUniqueID(obj).oid
+        templates[oid] = obj
+        page = IPortalPage(self.context)
+        page.use_local_template = False
+        page.shared_template = oid
+
+
+@adapter_config(name='share',
+                required=(IPortalContext, IAdminLayer, PortalContextTemplateShareForm),
+                provides=IViewContextPermissionChecker)
+class PortalContextTemplateSharePermissionChecker(ContextRequestViewAdapter):
+    """Portal context share permission checker"""
+
+    @property
+    def edit_permission(self):
+        """Edit permission getter"""
+        page = IPortalPage(self.context, None)
+        if (page is None) or not page.use_local_template:
+            return FORBIDDEN_PERMISSION
+        templates = query_utility(IPortalTemplateContainer)
+        if templates is None:
+            return FORBIDDEN_PERMISSION
+        if not self.request.has_permission(MANAGE_TEMPLATE_PERMISSION, context=templates):
+            return FORBIDDEN_PERMISSION
+        return MANAGE_TEMPLATE_PERMISSION
+
+
+@viewlet_config(name='share-template.help',
+                context=IPortalContext, layer=IAdminLayer, view=PortalContextTemplateShareForm,
+                manager=IHelpViewletManager, weight=100)
+class PortalContextTemplateShareFormHelp(AlertMessage):
+    """Portal context local template share form help"""
+
+    status = 'info'
+    _message = _("Sharing a local template will make a copy of it in shared templates utility.\n"
+                 "Your page will then be configured to use this template, but your previous "
+                 "local template will not be lost...")
+
+
+@adapter_config(required=(IPortalContext, IAdminLayer, PortalContextTemplateShareForm),
+                provides=IAJAXFormRenderer)
+class PortalContextTemplateShareFormRenderer(ContextRequestViewAdapter):
+    """Portal context template share form renderer"""
+
+    def render(self, changes):
+        """AJAX form renderer"""
+        if changes is None:
+            return None
+        return {
+            'status': 'reload'
+        }
