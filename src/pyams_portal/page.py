@@ -32,6 +32,7 @@ from pyams_portal.interfaces import ILocalTemplateHandler, IPortalContext, IPort
 from pyams_portal.portlet import PortalPortletsConfiguration
 from pyams_utils.adapter import ContextAdapter, adapter_config, get_annotation_adapter
 from pyams_utils.factory import factory_config, get_object_factory
+from pyams_utils.interfaces.intids import IUniqueID
 from pyams_utils.registry import get_pyramid_registry, query_utility
 from pyams_utils.zodb import volatile_property
 
@@ -144,7 +145,7 @@ class PortalPage(Persistent, Contained):
         """Shared template setter"""
         if not self.inherit_parent:
             if IPortalTemplate.providedBy(value):
-                value = value.name
+                value = IUniqueID(value).oid
             self._shared_template = value
 
     @property
