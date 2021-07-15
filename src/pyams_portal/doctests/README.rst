@@ -379,7 +379,7 @@ Choosing to inherit has no effect when you can't inherit:
 
     >>> page.use_shared_template = True
 
-    >>> page.shared_template = IUniqueID(template).oid
+    >>> page.shared_template = template
     >>> page.shared_template == IUniqueID(template).oid
     True
     >>> page.use_shared_template
