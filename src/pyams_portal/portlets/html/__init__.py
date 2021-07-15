@@ -20,7 +20,6 @@ from zope.schema.fieldproperty import FieldProperty
 
 from pyams_portal.portlet import Portlet, PortletSettings, portlet_config
 from pyams_portal.portlets.html.interfaces import IHTMLPortletSettings, IRawPortletSettings
-from pyams_security.interfaces.base import VIEW_PERMISSION
 from pyams_utils.factory import factory_config
 
 
@@ -44,7 +43,7 @@ class RawPortletSettings(PortletSettings):
     body = FieldProperty(IRawPortletSettings['body'])
 
 
-@portlet_config(permission=VIEW_PERMISSION)
+@portlet_config(permission=None)
 class RawPortlet(Portlet):
     """Raw HTML code portlet"""
 
@@ -69,7 +68,7 @@ class HTMLPortletSettings(PortletSettings):
     body = FieldProperty(IHTMLPortletSettings['body'])
 
 
-@portlet_config(permission=VIEW_PERMISSION)
+@portlet_config(permission=None)
 class HTMLPortlet(Portlet):
     """Rich text portlet"""
 

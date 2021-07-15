@@ -28,7 +28,6 @@ from pyams_portal.interfaces import MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.portlet import Portlet, PortletSettings, portlet_config
 from pyams_portal.portlets.carousel.interfaces import ICarouselImage, ICarouselPortletSettings
 from pyams_security.interfaces import IViewContextPermissionChecker
-from pyams_security.interfaces.base import VIEW_PERMISSION
 from pyams_utils.adapter import ContextAdapter, adapter_config
 from pyams_utils.container import SimpleContainerMixin
 from pyams_utils.factory import factory_config
@@ -96,7 +95,7 @@ class CarouselPortletSettings(SimpleContainerMixin, OrderedContainer, PortletSet
         yield from filter(lambda x: x.visible, self.values())
 
 
-@portlet_config(permission=VIEW_PERMISSION)
+@portlet_config(permission=None)
 class CarouselPortlet(Portlet):
     """Carousel portlet"""
 

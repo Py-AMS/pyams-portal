@@ -21,7 +21,6 @@ from pyams_file.interfaces import IImageFile, IResponsiveImage
 from pyams_file.property import FileProperty
 from pyams_portal.portlet import Portlet, PortletSettings, portlet_config
 from pyams_portal.portlets.image.interfaces import IImagePortletSettings
-from pyams_security.interfaces.base import VIEW_PERMISSION
 from pyams_utils.factory import factory_config
 
 
@@ -52,7 +51,7 @@ class ImagePortletSettings(PortletSettings):
             alsoProvides(self._image, IResponsiveImage)
 
 
-@portlet_config(permission=VIEW_PERMISSION)
+@portlet_config(permission=None)
 class ImagePortlet(Portlet):
     """Image portlet"""
 

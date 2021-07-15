@@ -28,7 +28,6 @@ from pyams_portal.interfaces import MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.portlet import Portlet, PortletSettings, portlet_config
 from pyams_portal.portlets.cards.interfaces import ICard, ICardsPortletSettings
 from pyams_security.interfaces import IViewContextPermissionChecker
-from pyams_security.interfaces.base import VIEW_PERMISSION
 from pyams_sequence.reference import InternalReferenceMixin
 from pyams_utils.adapter import ContextAdapter, adapter_config
 from pyams_utils.container import SimpleContainerMixin
@@ -102,7 +101,7 @@ class CardsPortletSettings(SimpleContainerMixin, OrderedContainer, PortletSettin
         yield from filter(lambda x: x.visible, self.values())
 
 
-@portlet_config(permission=VIEW_PERMISSION)
+@portlet_config(permission=None)
 class CardsPortlet(Portlet):
     """Cards portlet"""
 

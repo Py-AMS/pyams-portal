@@ -17,7 +17,6 @@ Spacer portlet module components.
 
 from pyams_portal.portlet import Portlet, PortletSettings, portlet_config
 from pyams_portal.portlets.spacer.interfaces import ISpacerPortletSettings
-from pyams_security.interfaces.base import VIEW_PERMISSION
 from pyams_utils.factory import factory_config
 
 
@@ -34,7 +33,7 @@ class SpacerPortletSettings(PortletSettings):
     """Spacer portlet settings"""
 
 
-@portlet_config(permission=VIEW_PERMISSION)
+@portlet_config(permission=None)
 class SpacerPortlet(Portlet):
     """Spacer portlet"""
 

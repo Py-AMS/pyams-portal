@@ -19,7 +19,6 @@ from zope.schema.fieldproperty import FieldProperty
 
 from pyams_portal.portlet import Portlet, PortletSettings, portlet_config
 from pyams_portal.portlets.jumbotron.interfaces import IJumbotronPortletSettings
-from pyams_security.interfaces.base import VIEW_PERMISSION
 from pyams_sequence.reference import InternalReferenceMixin
 from pyams_utils.factory import factory_config
 
@@ -46,7 +45,7 @@ class JumbotronPortletSettings(InternalReferenceMixin, PortletSettings):
     button_status = FieldProperty(IJumbotronPortletSettings['button_status'])
 
 
-@portlet_config(permission=VIEW_PERMISSION)
+@portlet_config(permission=None)
 class JumbotronPortlet(Portlet):
     """Jumbotron portlet"""
 

@@ -15,11 +15,12 @@
 """
 
 from pyramid.view import view_config
-from zope.interface import Interface
+from zope.interface import Interface, implementer
 
 from pyams_form.ajax import ajax_form_config
 from pyams_form.field import Fields
-from pyams_form.interfaces.form import IAJAXFormRenderer
+from pyams_form.group import Group
+from pyams_form.interfaces.form import IAJAXFormRenderer, IGroup
 from pyams_i18n.interfaces import II18n
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortletPreviewer, MANAGE_TEMPLATE_PERMISSION
@@ -35,7 +36,7 @@ from pyams_template.template import template_config
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
 from pyams_utils.data import ObjectDataManagerMixin
 from pyams_viewlet.viewlet import viewlet_config
-from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm
+from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm, FormGroupSwitcher
 from pyams_zmi.helper.container import delete_container_element, switch_element_attribute
 from pyams_zmi.helper.event import get_json_table_row_add_callback, \
     get_json_table_row_refresh_callback
@@ -226,9 +227,14 @@ class CardAddMenu(ContextAction):
     modal_target = True
 
 
+class ICardForm(Interface):
+    """Card form marker interface"""
+
+
 @ajax_form_config(name='add-card.html',
                   context=ICardsPortletSettings, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
+@implementer(ICardForm)
 class CardAddForm(AdminModalAddForm):
     """Card add form"""
 
@@ -236,7 +242,7 @@ class CardAddForm(AdminModalAddForm):
     legend = _("New card properties")
     modal_class = 'modal-xl'
 
-    fields = Fields(ICard).omit('__name__', '__parent__', 'visible')
+    fields = Fields(ICard).select('title', 'illustration', 'body', 'css_class')
     content_factory = ICard
 
     def add(self, obj):
@@ -270,6 +276,7 @@ class CardElementEditor(TableElementEditor):
 @ajax_form_config(name='properties.html',
                   context=ICard, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
+@implementer(ICardForm)
 class CardEditForm(AdminModalEditForm):
     """Card properties edit form"""
 
@@ -281,7 +288,7 @@ class CardEditForm(AdminModalEditForm):
     legend = _("Card properties")
     modal_class = 'modal-xl'
 
-    fields = Fields(ICard).omit('__name__', '__parent__', 'visible')
+    fields = Fields(ICard).select('title', 'illustration', 'body', 'css_class')
 
 
 @adapter_config(required=(ICard, IAdminLayer, CardEditForm),
@@ -299,3 +306,14 @@ class CardEditFormRenderer(ContextRequestViewAdapter):
                                                     CardsTable, self.context)
             ]
         }
+
+
+@adapter_config(name='button',
+                required=(Interface, IAdminLayer, ICardForm),
+                provides=IGroup)
+class CardFormButtonEditForm(FormGroupSwitcher):
+    """Card form button edit form"""
+
+    legend = _("Action button")
+
+    fields = Fields(ICard).select('reference', 'target_url', 'button_label', 'button_status')
