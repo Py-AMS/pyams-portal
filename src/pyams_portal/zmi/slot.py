@@ -34,7 +34,7 @@ from pyams_skin.viewlet.menu import MenuItem
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm
-from pyams_zmi.interfaces import IAdminLayer, IPageTitle
+from pyams_zmi.interfaces import IAdminLayer
 from pyams_zmi.interfaces.viewlet import IContextAddingsViewletManager
 
 
@@ -90,8 +90,7 @@ class PortalTemplateSlotAddForm(AdminModalAddForm):  # pylint: disable=abstract-
         translate = self.request.localizer.translate
         if IPortalTemplate.providedBy(self.context):
             return translate(_("« {} »  portal template")).format(self.context.name)
-        title = IPageTitle(self.context, None)
-        return translate(_("« {} » local template")).format(title or self.context.__name__)
+        return translate(_("Local template"))
 
     legend = _("Add slot")
 

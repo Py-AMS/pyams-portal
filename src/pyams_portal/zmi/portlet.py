@@ -43,6 +43,7 @@ from pyams_skin.viewlet.menu import MenuDivider, MenuItem
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
 from pyams_utils.cache import get_cache
 from pyams_utils.dict import merge_dict
+from pyams_utils.traversing import get_parent
 from pyams_utils.url import absolute_url
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm, FormGroupChecker
@@ -121,8 +122,7 @@ class PortalTemplatePortletAddForm(AdminModalAddForm):  # pylint: disable=abstra
         translate = self.request.localizer.translate
         if IPortalTemplate.providedBy(self.context):
             return translate(_("« {} »  portal template")).format(self.context.name)
-        title = IPageTitle(self.context, None)
-        return translate(_("« {} » local template")).format(title or self.context.__name__)
+        return translate(_("Local template"))
 
     legend = _("Add template portlet")
 
@@ -240,7 +240,20 @@ class PortalTemplatePortletEditForm(AdminModalEditForm):
     def title(self):
         """Title getter"""
         translate = self.request.localizer.translate
-        return translate(_("Portlet configuration: {}")).format(translate(self.portlet.label))
+        if IPortalTemplate.providedBy(self.context):
+            title = translate(_("« {} »  portal template")).format(self.context.name)
+        else:
+            context = get_parent(self.context, IPortalContext)
+            page = IPortalPage(context)
+            if page.use_shared_template:
+                title = translate(_("« {} » shared template")).format(page.template.name)
+            else:
+                title = translate(_("Local template"))
+            if page.inherit_parent:
+                title = translate(_("{} (inherited from parent)")).format(title)
+        return '<small>{}</small><br />{}'.format(
+            title,
+            translate(_("Portlet configuration: « {} »")).format(translate(self.portlet.label)))
 
     @property
     def fields(self):
@@ -349,7 +362,7 @@ class PortletConfigurationEditForm(InnerEditForm):
         """Legend getter"""
         if IGroup.providedBy(self.parent_form):
             return None
-        return _("Portlet configuration")
+        return _("Portlet settings")
 
     border_class = ''
 
@@ -451,9 +464,9 @@ class PortletRendererSettingsEditForm(AdminModalEditForm):
     def title(self):
         """Title getter"""
         translate = self.request.localizer.translate
-        return translate(_("{portlet}: « {renderer} » renderer")).format(
-            portlet=translate(self.renderer.portlet.label),
-            renderer=translate(self.renderer.label))
+        return translate(_("<small>Portlet: {portlet}</small><br />« {renderer} » renderer")) \
+            .format(portlet=translate(self.renderer.portlet.label),
+                    renderer=translate(self.renderer.label))
 
     legend = _("Edit renderer settings")
     modal_class = 'modal-xl'
