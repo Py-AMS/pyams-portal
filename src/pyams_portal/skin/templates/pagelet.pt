@@ -7,7 +7,7 @@
 					<div tal:define="slot_config template_config.get_slot_configuration(slot_name)"
 						 tal:condition="slot_config.visible"
 						 class="${slot_config.container_css_class}">
-						<div class="slot ${slot_config.get_css_class()} px-0">
+						<div class="slot float-left ${slot_config.get_css_class()} px-0">
 							<div class="portlets">
 								<div class="portlet ${view.get_portlet_css_class(portlet_id)}"
 									 tal:repeat="portlet_id template_config.slot_config[slot_name].portlet_ids">
