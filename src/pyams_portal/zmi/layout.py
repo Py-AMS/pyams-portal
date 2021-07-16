@@ -18,7 +18,6 @@ This module defines all components required to handle layout of portal templates
 import json
 
 from pyramid.decorator import reify
-from pyramid.httpexceptions import HTTPForbidden
 from pyramid.renderers import render
 from pyramid.view import view_config
 from zope.copy import copy
@@ -28,7 +27,6 @@ from pyams_form.ajax import ajax_form_config
 from pyams_form.button import Buttons, handler
 from pyams_form.field import Fields
 from pyams_form.interfaces.form import IAJAXFormRenderer
-from pyams_i18n.interfaces import II18n
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_pagelet.pagelet import pagelet_config
 from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortletsConfiguration, \
@@ -52,8 +50,8 @@ from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm
 from pyams_zmi.interfaces import IAdminLayer, IInnerAdminView
 from pyams_zmi.interfaces.viewlet import IActionsViewletManager, IContentManagementMenu, \
-    IContextAddingsViewletManager, \
-    IMenuHeader, IPropertiesMenu, ISiteManagementMenu
+    IContextAddingsViewletManager, IMenuHeader, IPropertiesMenu, ISiteManagementMenu
+from pyams_zmi.utils import get_object_label
 from pyams_zmi.zmi.viewlet.breadcrumb import AdminLayerBreadcrumbItem
 from pyams_zmi.zmi.viewlet.menu import NavigationMenuItem
 
@@ -312,7 +310,7 @@ class PortalContextTemplateShareForm(AdminModalAddForm):
 
     @property
     def title(self):
-        return II18n(self.context).query_attribute('title', request=self.request)
+        return get_object_label(self.context, self.request, self)
 
     legend = _("Share local template")
 
