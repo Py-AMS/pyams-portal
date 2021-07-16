@@ -22,6 +22,7 @@
       #portal_config .row > .row_id.pull-right {
         right: 0.3em; }
     #portal_config .row .slot {
+      float: left;
       margin: 0;
       border: 1px solid rgba(51, 122, 183, 0.6);
       border-bottom-width: 5px;
