@@ -387,6 +387,16 @@ Choosing to inherit has no effect when you can't inherit:
     >>> page.template is template
     True
 
+The *check_local_template* function is available to check actions that can only be applied
+on a local template:
+
+    >>> from pyams_portal.page import check_local_template
+    >>> check_local_template(app)
+    Traceback (most recent call last):
+    ...
+    pyramid.httpexceptions.HTTPBadRequest: Action can be done only on local templates!
+
+
 A portal page is then getting it's slots configuration from it's selected template, but each
 portlet can override it's configuration:
 
@@ -448,6 +458,8 @@ Instead of using a shared template, we can always choose to use a local template
     False
     >>> page.template.__name__
     '++template++'
+
+    >>> check_local_template(app)
 
     >>> app_template = IPortalTemplateConfiguration(app)
     >>> app_template
@@ -602,7 +614,7 @@ workflow status is checked and where cache can be used.
               <div class="row m-0">
                 <div class="slots w-100">
                   <div>
-                    <div class="slot col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                       <div class="portlets">
                         <div class="portlet ">
                         </div>
@@ -637,7 +649,7 @@ workflow status is checked and where cache can be used.
               <div class="row m-0">
                 <div class="slots w-100">
                   <div>
-                    <div class="slot col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                       <div class="portlets">
                         <div class="portlet ">
                         </div>
@@ -679,7 +691,7 @@ Let's try to use several renderers on another portlet:
               <div class="row m-0">
                 <div class="slots w-100">
                   <div>
-                    <div class="slot col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                       <div class="portlets">
                         <div class="portlet ">
                         </div>
@@ -717,7 +729,7 @@ Let's try to use several renderers on another portlet:
               <div class="row m-0">
                 <div class="slots w-100">
                   <div>
-                    <div class="slot col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                       <div class="portlets">
                         <div class="portlet ">
                         </div>
@@ -754,7 +766,7 @@ Let's try to use several renderers on another portlet:
               <div class="row m-0">
                 <div class="slots w-100">
                   <div>
-                    <div class="slot col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                       <div class="portlets">
                         <div class="portlet ">
                         </div>

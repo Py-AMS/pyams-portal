@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.2.0
+-----
+ - added Bootstrap float classes to slots
+ - updated Javascript layout handler
+
 1.1.0
 -----
  - added feature to create a shared template from a local one
