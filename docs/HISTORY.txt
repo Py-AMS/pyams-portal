@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.2.2
+-----
+ - package version mismatch
+
 1.2.1
 -----
  - updated portlets inner settings forms label
