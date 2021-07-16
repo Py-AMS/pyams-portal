@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.2.1
+-----
+ - updated portlets inner settings forms label
+ - use IObjectLabel adapter in local template share form
+
 1.2.0
 -----
  - added Bootstrap float classes to slots
