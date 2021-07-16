@@ -94,12 +94,12 @@ const portal = {
                     config.addClass(`container-${device}`);
                 }
                 $('.slot', config).removeClassPrefix('col-');
-                for (const slot_name in result) {
-                    if (!result.hasOwnProperty(slot_name)) {
+                for (const slotName in result) {
+                    if (!result.hasOwnProperty(slotName)) {
                         continue;
                     }
-                    const widths = result[slot_name];
-                    const slot = $(`.slot[data-ams-slot-name="${slot_name}"]`, config);
+                    const widths = result[slotName];
+                    const slot = $(`.slot[data-ams-slot-name="${slotName}"]`, config);
                     if (device) {
                         slot.addClass(`col-${widths[device]}`);
                     } else {
@@ -397,7 +397,6 @@ const portal = {
                 device = $('#device_selector').val();
             slot.removeClassPrefix('col-')
                 .removeAttr('style')
-                .addClass(`col-${width}`)
                 .addClass(`col-${device}-${width}`);
         },
 
@@ -421,8 +420,7 @@ const portal = {
                     slot.removeAttr('style');
                     const slotName = slot.data('ams-slot-name');
                     const widths = result[slotName];
-                    slot.addClass(`col-${widths[device]}`)
-                        .addClass(`col-${device}-${widths[device]}`)
+                    slot.addClass(`col-${device}-${widths[device]}`)
                         .addClass(widths.css);
                 });
             });
