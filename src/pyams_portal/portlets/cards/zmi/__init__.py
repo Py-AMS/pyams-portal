@@ -19,9 +19,7 @@ from zope.interface import Interface, implementer
 
 from pyams_form.ajax import ajax_form_config
 from pyams_form.field import Fields
-from pyams_form.group import Group
 from pyams_form.interfaces.form import IAJAXFormRenderer, IGroup
-from pyams_i18n.interfaces import II18n
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortletPreviewer, MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.portlets.cards import ICard, ICardsPortletSettings
@@ -283,7 +281,7 @@ class CardEditForm(AdminModalEditForm):
     @property
     def title(self):
         """Title getter"""
-        return II18n(self.context).query_attribute('title', request=self.request)
+        return get_object_label(self.context, self.request, self)
 
     legend = _("Card properties")
     modal_class = 'modal-xl'

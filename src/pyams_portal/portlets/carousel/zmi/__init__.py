@@ -43,6 +43,7 @@ from pyams_zmi.interfaces.table import ITableElementEditor
 from pyams_zmi.interfaces.viewlet import IToolbarViewletManager
 from pyams_zmi.table import IconColumn, InnerTableAdminView, JsActionColumn, NameColumn, \
     ReorderColumn, Table, TableElementEditor, TrashColumn, get_ordered_data_attributes
+from pyams_zmi.utils import get_object_label
 
 
 __docformat__ = 'restructuredtext'
@@ -267,7 +268,7 @@ class CarouselImageEditForm(AdminModalEditForm):
     @property
     def title(self):
         """Title getter"""
-        return II18n(self.context).query_attribute('title', request=self.request)
+        return get_object_label(self.context, self.request, self)
 
     legend = _("Carousel image properties")
     modal_class = 'modal-xl'
