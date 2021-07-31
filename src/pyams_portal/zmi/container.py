@@ -32,7 +32,7 @@ from pyams_viewlet.manager import viewletmanager_config
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminEditForm
 from pyams_zmi.helper.container import delete_container_element
-from pyams_zmi.interfaces import IAdminLayer
+from pyams_zmi.interfaces import IAdminLayer, IObjectLabel
 from pyams_zmi.interfaces.table import ITableElementEditor
 from pyams_zmi.interfaces.viewlet import IMenuHeader, IPropertiesMenu, ISiteManagementMenu
 from pyams_zmi.table import NameColumn, Table, TableAdminView, TableElementEditor, TrashColumn
@@ -43,6 +43,13 @@ from pyams_zmi.zmi.viewlet.menu import NavigationMenuItem
 __docformat__ = 'restructuredtext'
 
 from pyams_portal import _  # pylint: disable=ungrouped-imports
+
+
+@adapter_config(required=(IPortalTemplateContainer, IAdminLayer, Interface),
+                provides=IObjectLabel)
+def portal_template_container_label(context, request, view):
+    """Portal template label getter"""
+    return request.localizer.translate(_("Portal templates"))
 
 
 @adapter_config(required=(IPortalTemplateContainer, IAdminLayer, Interface, ISiteManagementMenu),
