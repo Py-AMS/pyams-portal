@@ -39,6 +39,7 @@
       margin: 1px;
       padding: 0;
       border: 1px solid rgba(98, 120, 128, 0.65);
+      background-color: white;
       min-height: 20px !important; }
       #portal_config .row .portlet > .header {
         background-color: rgba(92, 109, 128, 0.65);
@@ -50,13 +51,14 @@
   #portal_config .row-highlight {
     margin: 5px 0;
     border: 1px solid #c75100;
+    background-color: #ffdec7 !important;
     min-height: 40px; }
   #portal_config .slots {
     min-height: 15px; }
   #portal_config .slot-highlight {
     margin: 3px 0;
-    border: 1px solid #7b939c !important;
-    background-color: #a4c3ce !important;
+    border: 1px solid rgba(159, 196, 228, 0.6) !important;
+    background-color: rgba(159, 196, 228, 0.6) !important;
     min-height: 40px;
     width: 100%; }
   #portal_config .portlets {
@@ -67,7 +69,8 @@
       background-color: silver; }
   #portal_config .portlet-highlight {
     margin: 3px 0;
-    border: 1px solid #7b939c;
+    border: 1px solid rgba(175, 186, 198, 0.65) !important;
+    background-color: rgba(175, 186, 198, 0.65) !important;
     min-height: 40px;
     width: calc(100% - 4px); }
   #portal_config .wrapper-image,

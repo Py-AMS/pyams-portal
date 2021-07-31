@@ -56,6 +56,7 @@
 			margin: 1px;
 			padding: 0;
 			border: 1px solid rgba(98, 120, 128, 0.65);
+			background-color: white;
 			min-height: 20px !important;
 
 			>.header {
@@ -75,6 +76,7 @@
 	.row-highlight {
 		margin: 5px 0;
 		border: 1px solid #c75100;
+		background-color: lighten(#c75100, 50%) !important;
 		min-height: 40px;
 	}
 
@@ -83,8 +85,8 @@
 	}
 	.slot-highlight {
 		margin: 3px 0;
-		border: 1px solid #7b939c !important;
-		background-color: #a4c3ce !important;
+		border: 1px solid lighten(rgba(51, 122, 183, 0.6), 30%) !important;
+		background-color: lighten(rgba(51, 122, 183, 0.6), 30%) !important;
 		min-height: 40px;
 		width: 100%;
 	}
@@ -101,7 +103,8 @@
 	}
 	.portlet-highlight {
 		margin: 3px 0;
-		border: 1px solid #7b939c;
+		border: 1px solid lighten(rgba(92, 109, 128, 0.65), 30%) !important;
+		background-color: lighten(rgba(92, 109, 128, 0.65), 30%) !important;
 		min-height: 40px;
 		width: calc(100% - 4px);
 	}
