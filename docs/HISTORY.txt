@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.2.3
+-----
+ - small template layout CSS updates
+ - added templates label adapter
+ - updated add and edit forms title
+
 1.2.2
 -----
  - package version mismatch
