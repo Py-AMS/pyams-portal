@@ -27,20 +27,40 @@ from pyams_form.interfaces import HIDDEN_MODE
 from pyams_form.interfaces.form import IAJAXFormRenderer, IDataExtractedEvent
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalTemplate, \
-    IPortalTemplateConfiguration, ISlot, ISlotConfiguration, MANAGE_TEMPLATE_PERMISSION
+    IPortalTemplateConfiguration, IPortalTemplateContainer, ISlot, ISlotConfiguration, \
+    MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.page import check_local_template
 from pyams_portal.zmi.layout import PortalTemplateLayoutView
 from pyams_skin.viewlet.menu import MenuItem
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
+from pyams_utils.registry import get_utility
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm
 from pyams_zmi.interfaces import IAdminLayer
 from pyams_zmi.interfaces.viewlet import IContextAddingsViewletManager
+from pyams_zmi.utils import get_object_label
 
 
 __docformat__ = 'restructuredtext'
 
 from pyams_portal import _  # pylint: disable=ungrouped-imports
+
+
+class PortalTemplateSlotMixinForm:
+    """Portal template slot mixin form"""
+
+    @property
+    def title(self):
+        """Title getter"""
+        translate = self.request.localizer.translate
+        if IPortalTemplate.providedBy(self.context):
+            container = get_utility(IPortalTemplateContainer)
+            return '<small>{}</small><br />{}'.format(
+                get_object_label(container, self.request, self),
+                translate(_("« {} »  portal template")).format(self.context.name))
+        return '<small>{}</small><br />{}'.format(
+            get_object_label(self.context, self.request, self),
+            translate(_("Local template")))
 
 
 @viewlet_config(name='add-template-slot.menu',
@@ -77,20 +97,12 @@ class PortalContextTemplateSlotAddMenu(PortalTemplateSlotAddMenu):
 @ajax_form_config(name='add-template-slot.html',
                   context=IPortalContext, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
-class PortalTemplateSlotAddForm(AdminModalAddForm):  # pylint: disable=abstract-method
+class PortalTemplateSlotAddForm(PortalTemplateSlotMixinForm, AdminModalAddForm):  # pylint: disable=abstract-method
     """Portal template slot add form"""
 
     def __init__(self, context, request):
         check_local_template(context)
         super().__init__(context, request)
-
-    @property
-    def title(self):
-        """Title getter"""
-        translate = self.request.localizer.translate
-        if IPortalTemplate.providedBy(self.context):
-            return translate(_("« {} »  portal template")).format(self.context.name)
-        return translate(_("Local template"))
 
     legend = _("Add slot")
 
@@ -167,16 +179,8 @@ class PortalTemplateSlotAddFormAJAXRenderer(ContextRequestViewAdapter):
 @ajax_form_config(name='slot-properties.html',
                   context=IPortalContext, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
-class PortalTemplateSlotPropertiesEditForm(AdminModalEditForm):
+class PortalTemplateSlotPropertiesEditForm(PortalTemplateSlotMixinForm, AdminModalEditForm):
     """Portal template slot properties edit form"""
-
-    @property
-    def title(self):
-        """Title getter"""
-        translate = self.request.localizer.translate
-        if IPortalTemplate.providedBy(self.context):
-            return translate(_("« {} »  portal template")).format(self.context.name)
-        return translate(_("Local template"))
 
     @property
     def legend(self):
