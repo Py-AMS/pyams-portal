@@ -29,6 +29,7 @@ from pyams_skin.viewlet.actions import ContextAction
 from pyams_table.interfaces import IColumn
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
 from pyams_utils.interfaces.intids import IUniqueID
+from pyams_utils.registry import get_utility
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm
 from pyams_zmi.helper.event import get_json_table_row_add_callback
@@ -36,6 +37,7 @@ from pyams_zmi.interfaces import IAdminLayer, IObjectLabel
 from pyams_zmi.interfaces.table import ITableElementEditor
 from pyams_zmi.interfaces.viewlet import IToolbarViewletManager
 from pyams_zmi.table import ActionColumn, TableElementEditor
+from pyams_zmi.utils import get_object_label
 
 
 __docformat__ = 'restructuredtext'
@@ -69,7 +71,15 @@ class PortalTemplateAddMenu(ContextAction):
 class PortalTemplateAddForm(AdminModalAddForm):
     """Portal template add form"""
 
-    title = _("Add new portal template")
+    @property
+    def title(self):
+        """Form title getter"""
+        translate = self.request.localizer.translate
+        manager = get_utility(IPortalTemplateContainer)
+        return '<small>{}</small><br />{}'.format(
+            get_object_label(manager, self.request, self),
+            translate(_("Add new portal template")))
+
     legend = _("New template properties")
 
     fields = Fields(IPortalTemplate)
