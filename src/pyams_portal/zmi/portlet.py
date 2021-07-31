@@ -48,8 +48,9 @@ from pyams_utils.url import absolute_url
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm, FormGroupChecker
 from pyams_zmi.helper.event import get_json_widget_refresh_callback
-from pyams_zmi.interfaces import IAdminLayer, IPageTitle
+from pyams_zmi.interfaces import IAdminLayer
 from pyams_zmi.interfaces.viewlet import IContextAddingsViewletManager
+from pyams_zmi.utils import get_object_label
 
 
 __docformat__ = 'restructuredtext'
@@ -122,7 +123,9 @@ class PortalTemplatePortletAddForm(AdminModalAddForm):  # pylint: disable=abstra
         translate = self.request.localizer.translate
         if IPortalTemplate.providedBy(self.context):
             return translate(_("« {} »  portal template")).format(self.context.name)
-        return translate(_("Local template"))
+        return '<small>{}</small><br />{}'.format(
+            get_object_label(self.context, self.request, self),
+            translate(_("Local template")))
 
     legend = _("Add template portlet")
 
@@ -251,6 +254,9 @@ class PortalTemplatePortletEditForm(AdminModalEditForm):
                 title = translate(_("Local template"))
             if page.inherit_parent:
                 title = translate(_("{} (inherited from parent)")).format(title)
+            if IPortalContext.providedBy(self.initial_context):
+                title = '{} - {}'.format(
+                    get_object_label(self.initial_context, self.request, self), title)
         return '<small>{}</small><br />{}'.format(
             title,
             translate(_("Portlet configuration: « {} »")).format(translate(self.portlet.label)))
