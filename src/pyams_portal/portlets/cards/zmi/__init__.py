@@ -236,7 +236,15 @@ class ICardForm(Interface):
 class CardAddForm(AdminModalAddForm):
     """Card add form"""
 
-    title = _("Add new card")
+    @property
+    def title(self):
+        translate = self.request.localizer.translate
+        portlet = self.context.configuration.get_portlet()
+        return '<small>{}</small><br />{}'.format(
+            translate(_("Portlet configuration: « {} »")).format(portlet.label),
+            translate(_("Add new card"))
+        )
+
     legend = _("New card properties")
     modal_class = 'modal-xl'
 
@@ -280,8 +288,12 @@ class CardEditForm(AdminModalEditForm):
 
     @property
     def title(self):
-        """Title getter"""
-        return get_object_label(self.context, self.request, self)
+        translate = self.request.localizer.translate
+        portlet = self.context.__parent__.configuration.get_portlet()
+        return '<small>{}</small><br />{}'.format(
+            translate(_("Portlet configuration: « {} »")).format(portlet.label),
+            translate(_("Card: {}")).format(get_object_label(self.context, self.request, self))
+        )
 
     legend = _("Card properties")
     modal_class = 'modal-xl'

@@ -224,7 +224,15 @@ class CarouselImageAddMenu(ContextAction):
 class CarouselImageAddForm(AdminModalAddForm):
     """Carousel image add form"""
 
-    title = _("Add new image")
+    @property
+    def title(self):
+        translate = self.request.localizer.translate
+        portlet = self.context.configuration.get_portlet()
+        return '<small>{}</small><br />{}'.format(
+            translate(_("Portlet configuration: « {} »")).format(portlet.label),
+            translate(_("Add new image"))
+        )
+
     legend = _("New image properties")
     modal_class = 'modal-xl'
 
@@ -267,8 +275,12 @@ class CarouselImageEditForm(AdminModalEditForm):
 
     @property
     def title(self):
-        """Title getter"""
-        return get_object_label(self.context, self.request, self)
+        translate = self.request.localizer.translate
+        portlet = self.context.__parent__.configuration.get_portlet()
+        return '<small>{}</small><br />{}'.format(
+            translate(_("Portlet configuration: « {} »")).format(portlet.label),
+            translate(_("Image: {}")).format(get_object_label(self.context, self.request, self))
+        )
 
     legend = _("Carousel image properties")
     modal_class = 'modal-xl'
