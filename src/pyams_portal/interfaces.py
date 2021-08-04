@@ -413,6 +413,11 @@ class IPortalTemplate(ILocalTemplateHandler):
                     description=_("Explicit name given to portal template"),
                     required=True)
 
+    css_class = TextLine(title=_("CSS class"),
+                         description=_("This CSS class will be used as main template container "
+                                       "CSS class"),
+                         required=False)
+
 
 class IPortalTemplateContainer(IContainer, IAttributeAnnotatable):
     """Portal template container interface"""
