@@ -31,13 +31,14 @@ from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
 from pyams_utils.interfaces.intids import IUniqueID
 from pyams_utils.registry import get_utility
 from pyams_viewlet.viewlet import viewlet_config
-from pyams_zmi.form import AdminModalAddForm
+from pyams_zmi.form import AdminEditForm, AdminModalAddForm
 from pyams_zmi.helper.event import get_json_table_row_add_callback
 from pyams_zmi.interfaces import IAdminLayer, IObjectLabel
 from pyams_zmi.interfaces.table import ITableElementEditor
-from pyams_zmi.interfaces.viewlet import IToolbarViewletManager
+from pyams_zmi.interfaces.viewlet import IPropertiesMenu, IToolbarViewletManager
 from pyams_zmi.table import ActionColumn, TableElementEditor
 from pyams_zmi.utils import get_object_label
+from pyams_zmi.zmi.viewlet.menu import NavigationMenuItem
 
 
 __docformat__ = 'restructuredtext'
@@ -159,4 +160,48 @@ class PortalTemplateAddFormRenderer(ContextRequestViewAdapter):
                 get_json_table_row_add_callback(self.context, self.request,
                                                 PortalTemplatesContainerTable, changes)
             ]
+        }
+
+
+@viewlet_config(name='properties.menu',
+                context=IPortalTemplate, layer=IAdminLayer,
+                manager=IPropertiesMenu, weight=10,
+                permission=MANAGE_TEMPLATE_PERMISSION)
+class PortalTemplatePropertiesMenuItem(NavigationMenuItem):
+    """Portal template properties menu item"""
+
+    label = _("Properties")
+    href = '#properties.html'
+
+
+@ajax_form_config(name='properties.html',
+                  context=IPortalTemplate, layer=IPyAMSLayer,
+                  permission=MANAGE_TEMPLATE_PERMISSION)
+class PortalTemplatePropertiesEditForm(AdminEditForm):
+    """Portal template properties edit form"""
+
+    @property
+    def title(self):
+        """Title getter"""
+        translate = self.request.localizer.translate
+        return translate(_("Template « {} »")).format(self.context.name)
+
+    legend = _("Template properties")
+
+    fields = Fields(IPortalTemplate)
+    _edit_permission = MANAGE_TEMPLATE_PERMISSION
+
+
+@adapter_config(required=(IPortalTemplate, IAdminLayer, PortalTemplatePropertiesEditForm),
+                provides=IAJAXFormRenderer)
+class PortalTemplatePropertiesEditFormRenderer(ContextRequestViewAdapter):
+    """Portal template properties edit form renderer"""
+
+    def render(self, changes):
+        """Form renderer"""
+        if not changes:
+            return None
+        return {
+            'status': 'redirect',
+            'message': self.request.localizer.translate(self.view.success_message)
         }
