@@ -46,6 +46,7 @@ from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
 from pyams_utils.interfaces.intids import IUniqueID
 from pyams_utils.registry import query_utility
 from pyams_utils.traversing import get_parent
+from pyams_viewlet.manager import viewletmanager_config
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm
 from pyams_zmi.interfaces import IAdminLayer, IInnerAdminView
@@ -68,11 +69,11 @@ def portal_template_menu_header(context, request, view, manager):  # pylint: dis
     return _("Portal template")
 
 
-@viewlet_config(name='layout.menu',
-                context=IPortalTemplate, layer=IAdminLayer,
-                manager=IContentManagementMenu, weight=10,
-                provides=IPropertiesMenu,
-                permission=MANAGE_TEMPLATE_PERMISSION)
+@viewletmanager_config(name='layout.menu',
+                       context=IPortalTemplate, layer=IAdminLayer,
+                       manager=IContentManagementMenu, weight=10,
+                       provides=IPropertiesMenu,
+                       permission=MANAGE_TEMPLATE_PERMISSION)
 class PortalTemplateLayoutMenu(NavigationMenuItem):
     """Portal template layout menu"""
 
@@ -103,6 +104,7 @@ class PortalTemplateLayoutView:
     @property
     def title(self):
         """View title getter"""
+        translate = self.request.localizer.translate
         container = get_parent(self.context, IPortalTemplateContainer)
         if container is None:
             context = get_parent(self.context, IPortalContext)
@@ -111,9 +113,8 @@ class PortalTemplateLayoutView:
                 return _("Local template configuration")
             if page.template.name == LOCAL_TEMPLATE_NAME:
                 return _("Inherited local template configuration")
-            translate = self.request.localizer.translate
-            return translate(_("Shared template configuration ({0})")).format(page.template.name)
-        return _("Template configuration")
+            return translate(_("« {} » shared template configuration")).format(page.template.name)
+        return translate(_("« {} » template configuration")).format(self.context.name)
 
     def get_template(self):
         """Template getter"""
