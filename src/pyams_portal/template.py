@@ -51,7 +51,8 @@ __docformat__ = 'restructuredtext'
 #
 
 @factory_config(IPortalTemplateContainer)
-class PortalTemplateContainer(Folder):
+@implementer(IDefaultProtectionPolicy)
+class PortalTemplateContainer(ProtectedObjectMixin, Folder):
     """Portal templates container"""
 
     last_portlet_id = FieldProperty(IPortalTemplateContainer['last_portlet_id'])
@@ -60,6 +61,30 @@ class PortalTemplateContainer(Folder):
         """New portlet ID getter"""
         self.last_portlet_id += 1
         return self.last_portlet_id
+
+
+@implementer(IPortalTemplateContainerRoles)
+class PortalTemplateContainerRoles(ProtectedObjectRoles):
+    """Portal template container roles"""
+
+    designers = RolePrincipalsFieldProperty(IPortalTemplateContainerRoles['designers'])
+
+
+@adapter_config(required=IPortalTemplateContainer,
+                provides=IPortalTemplateContainerRoles)
+def portal_template_container_roles_adapter(context):
+    """Portal template container roles adapter"""
+    return PortalTemplateContainerRoles(context)
+
+
+@adapter_config(name='template_container_roles',
+                required=IPortalTemplateContainer,
+                provides=IRolesPolicy)
+class PortalTemplateContainerRolesPolicy(ContextAdapter):
+    """Portal template container roles policy"""
+
+    roles_interface = IPortalTemplateContainerRoles
+    weight = 20
 
 
 @factory_config(IPortalTemplateContainerConfiguration)

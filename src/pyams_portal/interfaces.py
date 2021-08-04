@@ -24,7 +24,7 @@ from zope.location import ILocation
 from zope.location.interfaces import IContained
 from zope.schema import Bool, Choice, Int, List, Object, TextLine
 
-from pyams_security.schema import PermissionField
+from pyams_security.schema import PermissionField, PrincipalsSetField
 from pyams_utils.schema import PersistentListField, PersistentMappingField
 
 from pyams_portal import _  # pylint: disable=ungrouped-imports
@@ -431,6 +431,16 @@ class IPortalTemplateContainer(IContainer, IAttributeAnnotatable):
 
     def get_portlet_id(self):
         """Get new portlet ID"""
+
+
+class IPortalTemplateContainerRoles(Interface):
+    """Portal templates container roles interface"""
+
+    designers = PrincipalsSetField(title=_("Designers"),
+                                   description=_("List of designers allowed to manage "
+                                                 "presentation templates"),
+                                   role_id=DESIGNER_ROLE,
+                                   required=False)
 
 
 class IPortalTemplateContainerConfiguration(Interface):
