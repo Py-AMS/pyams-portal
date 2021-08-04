@@ -126,7 +126,7 @@ def handle_added_template(event):
 @subscriber(IObjectRemovedEvent, context_selector=IPortalTemplate)
 def handle_removed_template(event):
     """Unregister removed template"""
-    sm = get_parent(event.newParent, ISiteRoot)  # pylint: disable=invalid-name
+    sm = get_parent(event.oldParent, ISiteRoot)  # pylint: disable=invalid-name
     if sm is not None:
         template = event.object
         sm.getSiteManager().unregisterUtility(template, IPortalTemplate,
