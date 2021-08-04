@@ -19,6 +19,7 @@ __docformat__ = 'restructuredtext'
 
 from pyramid.decorator import reify
 from pyramid.exceptions import NotFound
+from zope.interface import Interface
 
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_pagelet.pagelet import pagelet_config
@@ -26,7 +27,10 @@ from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortlets
     IPortalTemplateConfiguration, IPortlet, IPortletCSSClass, IPortletRenderer, PREVIEW_MODE
 from pyams_security.interfaces.base import VIEW_SYSTEM_PERMISSION
 from pyams_template.template import layout_config, template_config
+from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
+from pyams_utils.interfaces.tales import ITALESExtension
 from pyams_utils.request import get_annotations
+from pyams_utils.traversing import get_parent
 from pyams_workflow.interfaces import IWorkflowPublicationInfo
 
 
@@ -117,3 +121,23 @@ class PortalContextPreviewPage(PortalContextIndexPage):
         # Bypass publication status in preview
         get_annotations(self.request)[PREVIEW_MODE] = True  # pylint: disable=no-member
         super(PortalContextIndexPage, self).update()  # pylint: disable=bad-super-call
+
+
+@adapter_config(name='template_container_class',
+                required=(Interface, IPyAMSLayer, Interface),
+                provides=ITALESExtension)
+class TemplateContainerClassTTALESExtension(ContextRequestViewAdapter):
+    """Template class TALES extension"""
+
+    def render(self, context=None, default=''):
+        """Extension renderer"""
+        if context is None:
+            context = self.context
+        result = default
+        parent = get_parent(context, IPortalContext)
+        page = IPortalPage(parent, None)
+        if page is not None:
+            template = page.template
+            if template is not None:
+                result = template.css_class or result
+        return result

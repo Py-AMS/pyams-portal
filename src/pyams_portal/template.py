@@ -21,6 +21,7 @@ from persistent.mapping import PersistentMapping
 from pyramid.events import subscriber
 from zope.container.contained import Contained
 from zope.container.folder import Folder
+from zope.interface import implementer
 from zope.lifecycleevent import IObjectAddedEvent, IObjectRemovedEvent
 from zope.location import locate
 from zope.schema.fieldproperty import FieldProperty
@@ -28,11 +29,15 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.traversing.interfaces import ITraversable
 
 from pyams_portal.interfaces import IPortalPortletsConfiguration, IPortalTemplate, \
-    IPortalTemplateConfiguration, IPortalTemplateContainer, \
-    IPortalTemplateContainerConfiguration, IPortlet, IPortletConfiguration, \
-    PORTAL_TEMPLATES_VOCABULARY, PORTLETS_CONFIGURATION_KEY, TEMPLATE_CONFIGURATION_KEY, \
-    TEMPLATE_CONTAINER_CONFIGURATION_KEY, TEMPLATE_SLOTS_VOCABULARY
+    IPortalTemplateConfiguration, IPortalTemplateContainer, IPortalTemplateContainerConfiguration, \
+    IPortalTemplateContainerRoles, IPortlet, IPortletConfiguration, \
+    MANAGE_TEMPLATE_PERMISSION, PORTAL_TEMPLATES_VOCABULARY, PORTLETS_CONFIGURATION_KEY, \
+    TEMPLATE_CONFIGURATION_KEY, TEMPLATE_CONTAINER_CONFIGURATION_KEY, TEMPLATE_SLOTS_VOCABULARY
 from pyams_portal.slot import SlotConfiguration
+from pyams_security.interfaces import IDefaultProtectionPolicy, IRolesPolicy, \
+    IViewContextPermissionChecker
+from pyams_security.property import RolePrincipalsFieldProperty
+from pyams_security.security import ProtectedObjectMixin, ProtectedObjectRoles
 from pyams_site.interfaces import ISiteRoot
 from pyams_utils.adapter import ContextAdapter, adapter_config, get_annotation_adapter
 from pyams_utils.factory import factory_config
@@ -111,6 +116,7 @@ class PortalTemplate(Persistent, Contained):
     """Portal template class"""
 
     name = FieldProperty(IPortalTemplate['name'])
+    css_class = FieldProperty(IPortalTemplate['css_class'])
 
 
 @subscriber(IObjectAddedEvent, context_selector=IPortalTemplate)

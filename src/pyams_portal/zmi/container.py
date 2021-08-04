@@ -140,7 +140,9 @@ class PortalTemplatesContainerListView(TableAdminView):
     @property
     def back_url(self):
         """Form back URL getter"""
-        return absolute_url(self.request.root, self.request, 'utilities.html')
+        return absolute_url(self.request.root, self.request, 'admin#utilities.html')
+
+    back_url_target = None
 
 
 @view_config(name='delete-element.json',

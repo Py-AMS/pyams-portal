@@ -99,6 +99,10 @@ class PortalContextPresentationEditForm(AdminEditForm):
             elif template_mode == TEMPLATE_LOCAL_MODE:
                 page.shared_template = None
                 page.use_local_template = True
+                template = page.local_template
+                if template is not None:
+                    template.css_class = params.get(
+                        '{}{}css_class'.format(self.prefix, self.widgets.prefix))
         return {
             IPortalPage: ('inherit_parent', 'use_local_template', 'shared_template')
         }
@@ -156,6 +160,16 @@ class PortalContextPresentationTemplateEditForm(InnerEditForm):
     def get_content(self):
         return IPortalPage(self.context)
 
+    @property
+    def template_css_class(self):
+        """Template CSS class getter"""
+        result = None
+        page = IPortalPage(self.context)
+        template = page.local_template
+        if template is not None:
+            return template.css_class
+        return result
+
     def update_widgets(self, prefix=None):
         super().update_widgets(prefix)
         template = self.widgets.get('shared_template')
@@ -169,7 +183,7 @@ class PortalContextPresentationTemplateEditForm(InnerEditForm):
             alsoProvides(template, IObjectData)
 
 
-@viewlet_config(name='image-resize.help',
+@viewlet_config(name='presentation-template.help',
                 context=IPortalContext, layer=IAdminLayer,
                 view=PortalContextPresentationEditForm, manager=IHelpViewletManager, weight=10)
 class PortalContextPresentationEditFormHelp(AlertMessage):

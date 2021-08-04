@@ -6,6 +6,7 @@
 				<tal:loop repeat="slot_name template_config.get_slots(row)">
 					<div tal:define="slot_config template_config.get_slot_configuration(slot_name)"
 						 tal:condition="slot_config.visible"
+						 tal:omit-tag="not:slot_config.container_css_class"
 						 class="${slot_config.container_css_class}">
 						<div class="slot float-left ${slot_config.get_css_class()} px-0">
 							<div class="portlets">

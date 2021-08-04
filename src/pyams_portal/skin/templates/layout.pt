@@ -7,8 +7,13 @@
 		<i tal:omit-tag="">${tales:resources}</i>
 	</head>
 	<body>
-		<div class="${tales:container_class}">
-			${structure:provider:pagelet}
+		<div tal:define="skin_class tales:skin_container_class"
+			 tal:omit-tag="not:skin_class"
+			 class="${skin_class}">
+			<div tal:define="template_class tales:template_container_class"
+				 class="${template_class or 'container'}">
+				${structure:provider:pagelet}
+			</div>
 		</div>
 	</body>
 </html>

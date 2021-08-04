@@ -27,7 +27,7 @@
 				<div class="input mt-2">${structure:view.widgets['shared_template'].render()}</div>
 			</div>
 		</div>
-		<div class="form-group m-3">
+		<div class="form-group m-3 mt-5">
 			<div class="custom-control custom-radio">
 				<input type="radio"
 					   id="local_template_mode" name="template_mode"
@@ -36,6 +36,23 @@
 				<label class="custom-control-label" for="local_template_mode" i18n:translate="">
 					Use local template
 				</label>
+				<div class="form-group widget-group row">
+					<label for="form-widgets-css_class"
+						   class="col-form-label text-sm-right col-sm-2">
+						<i18n:var translate="">CSS class</i18n:var>
+						<i class="fa fa-question-circle hint"
+						   data-original-title="This CSS class will be used as main template container CSS class"
+						   i18n:attributes="data-original-title"></i>
+					</label>
+					<div class="col-sm-4 col-md-3">
+						<div class="form-widget">
+							<input type="text" id="form-widgets-css_class"
+								   name="${view.prefix}${view.widgets.prefix}css_class"
+								   class="form-control text-widget textline-field"
+								   value="${view.template_css_class}">
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<i tal:omit-tag="">${structure:suffix}</i>
