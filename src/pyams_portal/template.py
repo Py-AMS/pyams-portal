@@ -133,6 +133,13 @@ def handle_removed_template(event):
                                               name=IUniqueID(template).oid)
 
 
+@adapter_config(required=IPortalTemplate, provides=IViewContextPermissionChecker)
+class PortalTemplatePermissionChecker(ContextAdapter):
+    """Portal template permission checker"""
+
+    edit_permission = MANAGE_TEMPLATE_PERMISSION
+
+
 @vocabulary_config(name=PORTAL_TEMPLATES_VOCABULARY)
 class PortalTemplatesVocabulary(LocalUtilitiesVocabulary):
     """Portal templates vocabulary"""
