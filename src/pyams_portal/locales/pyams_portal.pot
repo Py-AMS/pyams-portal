@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2021-07-30 14:07+0200\n"
+"POT-Creation-Date: 2021-08-04 12:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,7 +132,7 @@ msgid ""
 "pixels); set to 0 to hide the slot"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:293
+#: ./src/pyams_portal/interfaces.py:293 ./src/pyams_portal/interfaces.py:416
 #: ./src/pyams_portal/portlets/carousel/skin/interfaces.py:33
 #: ./src/pyams_portal/portlets/cards/interfaces.py:76
 #: ./src/pyams_portal/portlets/cards/skin/interfaces.py:34
@@ -152,59 +152,63 @@ msgstr ""
 msgid "Explicit name given to portal template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:434
+#: ./src/pyams_portal/interfaces.py:417
+msgid "This CSS class will be used as main template container CSS class"
+msgstr ""
+
+#: ./src/pyams_portal/interfaces.py:440
 msgid "Toolbar portlets"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:435
+#: ./src/pyams_portal/interfaces.py:441
 msgid ""
 "These portlets will be directly available in templates configuration page "
 "toolbar"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:464
+#: ./src/pyams_portal/interfaces.py:470
 msgid "Inherit parent template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:465
+#: ./src/pyams_portal/interfaces.py:471
 msgid "Should we reuse parent template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:469
+#: ./src/pyams_portal/interfaces.py:475
 msgid "Override parent template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:470
+#: ./src/pyams_portal/interfaces.py:476
 msgid "Should we override parent template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:474
+#: ./src/pyams_portal/interfaces.py:480
 msgid "Use local template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:475
+#: ./src/pyams_portal/interfaces.py:481
 msgid ""
 "If 'yes', you can define a custom local template instead of a shared template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:480 ./src/pyams_portal/zmi/slot.py:63
+#: ./src/pyams_portal/interfaces.py:486 ./src/pyams_portal/zmi/slot.py:63
 #: ./src/pyams_portal/zmi/portlet.py:128 ./src/pyams_portal/zmi/portlet.py:254
 msgid "Local template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:485
+#: ./src/pyams_portal/interfaces.py:491
 msgid "Use shared template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:486
+#: ./src/pyams_portal/interfaces.py:492
 msgid "If 'yes', you can select a shared template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:490
+#: ./src/pyams_portal/interfaces.py:496
 msgid "Page template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:491
+#: ./src/pyams_portal/interfaces.py:497
 msgid "Template used for this page"
 msgstr ""
 
@@ -301,7 +305,7 @@ msgid ""
 msgstr ""
 
 #: ./src/pyams_portal/zmi/presentation.py:197
-#: ./src/pyams_portal/zmi/layout.py:79
+#: ./src/pyams_portal/zmi/layout.py:80
 msgid "Page layout"
 msgstr ""
 
@@ -357,55 +361,56 @@ msgstr ""
 msgid "Edit renderer settings"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/layout.py:68
+#: ./src/pyams_portal/zmi/layout.py:69
 msgid "Portal template"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/layout.py:111
+#: ./src/pyams_portal/zmi/layout.py:113
 msgid "Local template configuration"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/layout.py:113
+#: ./src/pyams_portal/zmi/layout.py:115
 msgid "Inherited local template configuration"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/layout.py:115
-#, python-format
-msgid "Shared template configuration ({0})"
-msgstr ""
-
 #: ./src/pyams_portal/zmi/layout.py:116
-msgid "Template configuration"
+#, python-format
+msgid "« {} » shared template configuration"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/layout.py:159
+#: ./src/pyams_portal/zmi/layout.py:117
+#, python-format
+msgid "« {} » template configuration"
+msgstr ""
+
+#: ./src/pyams_portal/zmi/layout.py:160
 #, python-format
 msgid ""
 "Add component: {0}<br />Drag and drop button to page template to position new"
 " row"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/layout.py:168
+#: ./src/pyams_portal/zmi/layout.py:169
 msgid "{{ missing portlet }}"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/layout.py:202
+#: ./src/pyams_portal/zmi/layout.py:203
 msgid "Add row..."
 msgstr ""
 
-#: ./src/pyams_portal/zmi/layout.py:288 ./src/pyams_portal/zmi/layout.py:299
+#: ./src/pyams_portal/zmi/layout.py:289 ./src/pyams_portal/zmi/layout.py:300
 msgid "Share template"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/layout.py:302
+#: ./src/pyams_portal/zmi/layout.py:303
 msgid "Close"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/layout.py:315
+#: ./src/pyams_portal/zmi/layout.py:316
 msgid "Share local template"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/layout.py:369
+#: ./src/pyams_portal/zmi/layout.py:370
 msgid ""
 "Sharing a local template will make a copy of it in shared templates utility.\n"
 "Your page will then be configured to use this template, but your previous local template will not be lost..."
@@ -415,24 +420,37 @@ msgstr ""
 msgid "Renderer:"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/template.py:61
+#: ./src/pyams_portal/zmi/template.py:62
 msgid "Add template"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/template.py:81
+#: ./src/pyams_portal/zmi/template.py:82
 msgid "Add new portal template"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/template.py:83
+#: ./src/pyams_portal/zmi/template.py:84
 msgid "New template properties"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/template.py:115
+#: ./src/pyams_portal/zmi/template.py:116
 msgid "Clone template"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/template.py:136
+#: ./src/pyams_portal/zmi/template.py:137
 msgid "Clone portal template"
+msgstr ""
+
+#: ./src/pyams_portal/zmi/template.py:173
+msgid "Properties"
+msgstr ""
+
+#: ./src/pyams_portal/zmi/template.py:187
+#, python-format
+msgid "Template « {} »"
+msgstr ""
+
+#: ./src/pyams_portal/zmi/template.py:189
+msgid "Template properties"
 msgstr ""
 
 #: ./src/pyams_portal/zmi/templates/renderer-input.pt:49
