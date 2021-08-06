@@ -49,6 +49,9 @@ This package is composed of a set of utility functions, usable into any Pyramid 
     Upgrading PyAMS security to generation 2...
     Upgrading PyAMS portal to generation 1...
 
+    >>> from pyramid_chameleon.zpt import renderer_factory
+    >>> config.add_renderer('.pt', renderer_factory)
+
     >>> from pyramid.threadlocal import manager
     >>> from pyams_portal.interfaces import IPortalContext
 
@@ -535,6 +538,46 @@ configuration in the inherited template:
     >>> folder_portlets[6].settings.body = {'en': '<p>This is a test!</p>'}
 
 
+Previewing portlets
+-------------------
+
+Portlets preview is used to display main settings of a given portlet in the management
+interface; it's not a "real" preview, as the final look essentially depends on the
+graphical theme which will be applied.
+
+    >>> from pyams_portal.interfaces import IPortletPreviewer
+
+    >>> settings = folder_portlets[5].settings
+    >>> previewer = request.registry.queryMultiAdapter((folder, request, None, settings), IPortletPreviewer)
+    >>> previewer
+    <pyams_portal.portlets.html.zmi.HTMLPortletPreviewer object at 0x...>
+
+    >>> previewer.slot_configuration
+    <pyams_portal.slot.SlotConfiguration object at 0x...>
+
+    >>> print(previewer.get_setting(settings, 'body'))
+    <div>
+        <small><strong>Body :</strong></small> --
+    </div>
+
+    >>> print(previewer())
+    <div class="text-info text-truncate border-bottom mb-1">    <small>Renderer:</small>    Rich text (default)</div>
+    --
+
+    >>> settings = folder_portlets[6].settings
+    >>> previewer = request.registry.queryMultiAdapter((folder, request, None, settings), IPortletPreviewer)
+
+    >>> print(previewer.get_setting(settings, 'body'))
+    <div class="text-truncate">
+        <small><strong>Body :</strong></small>
+        <p>This is a test!</p>
+    </div>
+
+    >>> print(previewer())
+    <div class="text-info text-truncate border-bottom mb-1">    <small>Renderer:</small>    Rich text (default)</div>
+    <p>This is a test!</p>
+
+
 Rendering portlets
 ------------------
 
@@ -608,19 +651,17 @@ workflow status is checked and where cache can be used.
       <head>
       </head>
       <body>
-        <div class="">
+        <div class="container">
           <div>
             <div class="rows">
               <div class="row m-0">
                 <div class="slots w-100">
-                  <div>
-                    <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
-                      <div class="portlets">
-                        <div class="portlet ">
-                        </div>
-                        <div class="portlet ">
-                          <p>This is a test!</p>
-                        </div>
+                  <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="portlets">
+                      <div class="portlet ">
+                      </div>
+                      <div class="portlet ">
+                        <p>This is a test!</p>
                       </div>
                     </div>
                   </div>
@@ -643,19 +684,17 @@ workflow status is checked and where cache can be used.
       <head>
       </head>
       <body>
-        <div class="">
+        <div class="container">
           <div>
             <div class="rows">
               <div class="row m-0">
                 <div class="slots w-100">
-                  <div>
-                    <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
-                      <div class="portlets">
-                        <div class="portlet ">
-                        </div>
-                        <div class="portlet ">
-                          <p>This is a test!</p>
-                        </div>
+                  <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="portlets">
+                      <div class="portlet ">
+                      </div>
+                      <div class="portlet ">
+                        <p>This is a test!</p>
                       </div>
                     </div>
                   </div>
@@ -685,23 +724,21 @@ Let's try to use several renderers on another portlet:
       <head>
       </head>
       <body>
-        <div class="">
+        <div class="container">
           <div>
             <div class="rows">
               <div class="row m-0">
                 <div class="slots w-100">
-                  <div>
-                    <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
-                      <div class="portlets">
-                        <div class="portlet ">
-                        </div>
-                        <div class="portlet ">
-                          <p>This is a test!</p>
-                        </div>
-                        <div class="portlet ">
-                          <div class="source"><pre><span></span><span class="linenos">1</span>*This* is my code
-                            </pre></div>
-                        </div>
+                  <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="portlets">
+                      <div class="portlet ">
+                      </div>
+                      <div class="portlet ">
+                        <p>This is a test!</p>
+                      </div>
+                      <div class="portlet ">
+                        <div class="source"><pre><span></span><span class="linenos">1</span>*This* is my code
+                          </pre></div>
                       </div>
                     </div>
                   </div>
@@ -723,22 +760,20 @@ Let's try to use several renderers on another portlet:
       <head>
       </head>
       <body>
-        <div class="">
+        <div class="container">
           <div>
             <div class="rows">
               <div class="row m-0">
                 <div class="slots w-100">
-                  <div>
-                    <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
-                      <div class="portlets">
-                        <div class="portlet ">
-                        </div>
-                        <div class="portlet ">
-                          <p>This is a test!</p>
-                        </div>
-                        <div class="portlet ">
-                          <p><em>This</em> is my code</p>
-                        </div>
+                  <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="portlets">
+                      <div class="portlet ">
+                      </div>
+                      <div class="portlet ">
+                        <p>This is a test!</p>
+                      </div>
+                      <div class="portlet ">
+                        <p><em>This</em> is my code</p>
                       </div>
                     </div>
                   </div>
@@ -760,22 +795,20 @@ Let's try to use several renderers on another portlet:
       <head>
       </head>
       <body>
-        <div class="">
+        <div class="container">
           <div>
             <div class="rows">
               <div class="row m-0">
                 <div class="slots w-100">
-                  <div>
-                    <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
-                      <div class="portlets">
-                        <div class="portlet ">
-                        </div>
-                        <div class="portlet ">
-                          <p>This is a test!</p>
-                        </div>
-                        <div class="portlet ">
-                          <p><em>This</em> is my code</p>
-                        </div>
+                  <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                    <div class="portlets">
+                      <div class="portlet ">
+                      </div>
+                      <div class="portlet ">
+                        <p>This is a test!</p>
+                      </div>
+                      <div class="portlet ">
+                        <p><em>This</em> is my code</p>
                       </div>
                     </div>
                   </div>
