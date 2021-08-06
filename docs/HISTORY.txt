@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.3.0
+-----
+ - added template container CSS class (with custom TALES extension and updated layout)
+ - added support for designer role to portal templates container
+ - added template properties edit form
+ - updated doctests
+
 1.2.3
 -----
  - small template layout CSS updates
