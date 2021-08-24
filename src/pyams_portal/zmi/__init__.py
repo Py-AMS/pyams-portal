@@ -69,11 +69,11 @@ class PortletPreviewer(PortletContentProvider):
         _slot_id, slot_name = config.get_portlet_slot(self.settings.configuration.portlet_id)
         return config.get_slot_configuration(slot_name)
 
-    def render(self):
+    def render(self, template_name=''):
         """Preview portlet content"""
         if self.settings.renderer == 'hidden':
             return render('templates/portlet-hidden.pt', {}, request=self.request)
-        result = super().render()
+        result = super().render(template_name)
         renderer = self.settings.get_renderer()
         translate = self.request.localizer.translate
         result = PREVIEW_PREFIX.format(label=translate(_("Renderer:")),

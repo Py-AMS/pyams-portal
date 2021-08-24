@@ -15,6 +15,7 @@
 This modules defines the main portlets rendering components.
 """
 
+from zope.component import ComponentLookupError
 from zope.interface import Interface, implementer
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.traversing.interfaces import ITraversable
@@ -24,6 +25,7 @@ from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalTemplate
     IPortlet, IPortletRenderer, IPortletRendererSettings, IPortletSettings, \
     PORTLET_RENDERERS_VOCABULARY, PORTLET_RENDERER_SETTINGS_KEY, PREVIEW_MODE
 from pyams_portal.portlet import LOGGER
+from pyams_template.template import get_view_template
 from pyams_utils.adapter import ContextAdapter, adapter_config, get_adapter_weight, \
     get_annotation_adapter
 from pyams_utils.cache import get_cache
@@ -60,14 +62,19 @@ class PortletContentProvider(ViewContentProvider):
         """Renderer settings getter"""
         return IPortletRendererSettings(self.settings, None)
 
-    def render(self):
+    def render(self, template_name=''):
         """Render portlet content"""
         if self.portlet is None:
             return ''
         if self.portlet.permission and \
                 not self.request.has_permission(self.portlet.permission, context=self.context):
             return ''
-        return super().render()
+        template = get_view_template(name=template_name)
+        try:
+            return template(self)
+        except ComponentLookupError:
+            template = get_view_template()
+            return template(self)
 
 
 @implementer(IPortletRenderer)
@@ -103,33 +110,35 @@ class PortletRenderer(PortletContentProvider):
         """Cache key getter"""
         display_context = get_display_context(self.request)
         if display_context is None:
-            return PORTLETS_CACHE_KEY.format(portlet=ICacheKeyValue(self.settings),
-                                             hostname=self.request.host,
+            return PORTLETS_CACHE_KEY.format(hostname=self.request.host,
+                                             portlet=ICacheKeyValue(self.settings),
                                              context=ICacheKeyValue(self.context),
                                              lang=self.request.locale_name)
-        return PORTLETS_CACHE_DISPLAY_CONTEXT_KEY.format(portlet=ICacheKeyValue(self.settings),
-                                                         hostname=self.request.host,
+        return PORTLETS_CACHE_DISPLAY_CONTEXT_KEY.format(hostname=self.request.host,
+                                                         portlet=ICacheKeyValue(self.settings),
                                                          context=ICacheKeyValue(self.context),
                                                          display=ICacheKeyValue(display_context),
                                                          lang=self.request.locale_name)
 
-    def render(self):
+    def render(self, template_name=''):
         """Render portlet content"""
         preview_mode = get_annotations(self.request).get(PREVIEW_MODE, False)
         if preview_mode or not self.use_portlets_cache:
-            return super().render()
+            return super().render(template_name)
         portlets_cache = get_cache(PORTLETS_CACHE_NAME, PORTLETS_CACHE_REGION,
                                    PORTLETS_CACHE_NAMESPACE)
         cache_key = self.get_cache_key()
+        if template_name:
+            cache_key = '{}::{}'.format(cache_key, template_name)
         if self.use_authentication:
-            cache_key = '{0}::{1}'.format(cache_key, self.request.principal.id)
+            cache_key = '{}::{}'.format(cache_key, self.request.principal.id)
         # load rendered content from cache, or create output and store it in cache
         try:
             result = portlets_cache.get_value(cache_key)
             LOGGER.debug("Retrieving portlet content from cache key {0}".format(cache_key))
         except KeyError:
             self.update()
-            result = super().render()
+            result = super().render(template_name)
             portlets_cache.set_value(cache_key, result)
             LOGGER.debug("Storing portlet content to cache key {0}".format(cache_key))
         return result
@@ -185,5 +194,5 @@ class HiddenPortletRenderer(PortletRenderer):
     label = _("Hidden portlet")
     weight = 9999
 
-    def render(self):
+    def render(self, template_name=''):
         return ''

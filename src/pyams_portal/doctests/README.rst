@@ -630,6 +630,43 @@ The 'hidden' renderer just returns an empty string:
     >>> folder_portlets[6].settings.override_parent = False
 
 
+Custom renderer template
+------------------------
+
+You can provide a specific template name when rendering a portlet; if this specific template
+is not registered for this renderer, the default template is used:
+
+    >>> folder_portlets[6].settings.get_renderer().render(template_name='custom')
+    '\n\t<p>This is a test!</p>\n'
+
+Let's provide a custom template:
+
+    >>> import os, tempfile
+    >>> temp_dir = tempfile.mkdtemp()
+
+    >>> custom_template = os.path.join(temp_dir, 'custom-template.pt')
+    >>> with open(custom_template, 'w') as file:
+    ...     _ = file.write('<div>This is a custom template!</div>')
+
+    >>> from pyams_template.template import override_template
+    >>> from pyams_portal.portlets.html.skin import HTMLPortletDefaultRenderer
+
+    >>> override_template(HTMLPortletDefaultRenderer, name='custom',
+    ...                   template=custom_template, layer=IPyAMSLayer)
+
+    >>> folder_portlets[6].settings.get_renderer().render(template_name='custom')
+    '\n\t<p>This is a test!</p>\n'
+
+Why don't we get custom template content? This is because our renderer is using the cache, which
+was set on first render, before the custom template was registered!
+
+We can disable the cache by defining a "preview mode" on the request:
+
+    >>> get_annotations(request)['PREVIEW_MODE'] = True
+    >>> folder_portlets[6].settings.get_renderer().render(template_name='custom')
+    '<div>This is a custom template!</div>'
+
+
 Rendering portal page
 ---------------------
 
