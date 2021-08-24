@@ -19,9 +19,9 @@ const portal = {
     init: () => {
         let css = $('[data-ams-portal-css]').data('ams-portal-css');
         if (!css) {
-            css = '/--static--/myams_portal/css/layout.css';
+            css = '/--static--/pyams_portal/css/layout.css';
         }
-        MyAMS.core.getCSS(css, 'pyams_portal_layout').catch(() => {
+        MyAMS.core.getCSS(css, 'pyams_portal').catch(() => {
             console.warning(`Can't load portal CSS: ${css}`);
         });
     },
