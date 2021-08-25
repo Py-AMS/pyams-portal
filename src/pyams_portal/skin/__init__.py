@@ -15,7 +15,6 @@
 This modules defines the main portlets rendering components.
 """
 
-from zope.component import ComponentLookupError
 from zope.interface import Interface, implementer
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.traversing.interfaces import ITraversable
@@ -25,7 +24,6 @@ from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalTemplate
     IPortlet, IPortletRenderer, IPortletRendererSettings, IPortletSettings, \
     PORTLET_RENDERERS_VOCABULARY, PORTLET_RENDERER_SETTINGS_KEY, PREVIEW_MODE
 from pyams_portal.portlet import LOGGER
-from pyams_template.template import get_view_template
 from pyams_utils.adapter import ContextAdapter, adapter_config, get_adapter_weight, \
     get_annotation_adapter
 from pyams_utils.cache import get_cache
@@ -69,12 +67,7 @@ class PortletContentProvider(ViewContentProvider):
         if self.portlet.permission and \
                 not self.request.has_permission(self.portlet.permission, context=self.context):
             return ''
-        template = get_view_template(name=template_name)
-        try:
-            return template(self)
-        except ComponentLookupError:
-            template = get_view_template()
-            return template(self)
+        return super().render(template_name)
 
 
 @implementer(IPortletRenderer)

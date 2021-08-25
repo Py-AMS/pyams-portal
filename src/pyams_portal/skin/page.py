@@ -89,12 +89,12 @@ class BasePortalContextIndexPage:
                                                       IPortletCSSClass, default='')
         return None
 
-    def render_portlet(self, portlet_id):
+    def render_portlet(self, portlet_id, template_name=''):
         """Render given portlet"""
         renderer = self.portlets.get(portlet_id)
         if renderer is None:
             return ''
-        return renderer.render()
+        return renderer.render(template_name)
 
 
 @pagelet_config(name='',
@@ -126,7 +126,7 @@ class PortalContextPreviewPage(PortalContextIndexPage):
 @adapter_config(name='template_container_class',
                 required=(Interface, IPyAMSLayer, Interface),
                 provides=ITALESExtension)
-class TemplateContainerClassTTALESExtension(ContextRequestViewAdapter):
+class TemplateContainerClassTALESExtension(ContextRequestViewAdapter):
     """Template class TALES extension"""
 
     def render(self, context=None, default=''):
