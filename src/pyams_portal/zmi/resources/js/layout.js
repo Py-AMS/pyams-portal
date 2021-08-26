@@ -550,7 +550,7 @@ const portal = {
                     MyAMS.alert.messageBox({
                         status: 'error',
                         title: MyAMS.i18n.ERROR_OCCURED,
-                        content: MyAMS.portal.i18n.CANT_DELETE_ROW_WITH_PORTLETS
+                        content: MyAMS.portal.i18n.CANT_DELETE_SLOT_WITH_PORTLETS
                     });
                 } else {
                     MyAMS.alert.bigBox({
