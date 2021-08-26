@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.3.2
+-----
+ - added check for missing portlet renderer in preview
+ - updated translation string name in layout management script
+
 1.3.1
 -----
  - updated content provider rendering API, adding new "template_name" argument to
