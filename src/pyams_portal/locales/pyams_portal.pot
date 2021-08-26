@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2021-08-04 12:56+0200\n"
+"POT-Creation-Date: 2021-08-26 12:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -133,6 +133,7 @@ msgid ""
 msgstr ""
 
 #: ./src/pyams_portal/interfaces.py:293 ./src/pyams_portal/interfaces.py:416
+#: ./src/pyams_portal/zmi/templates/presentation-template.pt:42
 #: ./src/pyams_portal/portlets/carousel/skin/interfaces.py:33
 #: ./src/pyams_portal/portlets/cards/interfaces.py:76
 #: ./src/pyams_portal/portlets/cards/skin/interfaces.py:34
@@ -153,62 +154,71 @@ msgid "Explicit name given to portal template"
 msgstr ""
 
 #: ./src/pyams_portal/interfaces.py:417
+#: ./src/pyams_portal/zmi/templates/presentation-template.pt:44
 msgid "This CSS class will be used as main template container CSS class"
 msgstr ""
 
+#: ./src/pyams_portal/interfaces.py:439
+msgid "Designers"
+msgstr ""
+
 #: ./src/pyams_portal/interfaces.py:440
+msgid "List of designers allowed to manage presentation templates"
+msgstr ""
+
+#: ./src/pyams_portal/interfaces.py:449
 msgid "Toolbar portlets"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:441
+#: ./src/pyams_portal/interfaces.py:450
 msgid ""
 "These portlets will be directly available in templates configuration page "
 "toolbar"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:470
+#: ./src/pyams_portal/interfaces.py:479
 msgid "Inherit parent template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:471
+#: ./src/pyams_portal/interfaces.py:480
 msgid "Should we reuse parent template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:475
+#: ./src/pyams_portal/interfaces.py:484
 msgid "Override parent template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:476
+#: ./src/pyams_portal/interfaces.py:485
 msgid "Should we override parent template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:480
+#: ./src/pyams_portal/interfaces.py:489
 msgid "Use local template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:481
+#: ./src/pyams_portal/interfaces.py:490
 msgid ""
 "If 'yes', you can define a custom local template instead of a shared template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:486 ./src/pyams_portal/zmi/slot.py:63
+#: ./src/pyams_portal/interfaces.py:495 ./src/pyams_portal/zmi/slot.py:63
 #: ./src/pyams_portal/zmi/portlet.py:128 ./src/pyams_portal/zmi/portlet.py:254
 msgid "Local template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:491
+#: ./src/pyams_portal/interfaces.py:500
 msgid "Use shared template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:492
+#: ./src/pyams_portal/interfaces.py:501
 msgid "If 'yes', you can select a shared template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:496
+#: ./src/pyams_portal/interfaces.py:505
 msgid "Page template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:497
+#: ./src/pyams_portal/interfaces.py:506
 msgid "Template used for this page"
 msgstr ""
 
@@ -259,15 +269,15 @@ msgstr ""
 msgid "List of portal templates"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/container.py:165
+#: ./src/pyams_portal/zmi/container.py:167
 msgid "Portlets configuration"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/container.py:176
+#: ./src/pyams_portal/zmi/container.py:178
 msgid "Templates container"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/container.py:177
+#: ./src/pyams_portal/zmi/container.py:179
 msgid "Template selected portlets"
 msgstr ""
 
@@ -279,32 +289,32 @@ msgstr ""
 msgid "Page template configuration"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/presentation.py:120
+#: ./src/pyams_portal/zmi/presentation.py:124
 msgid ""
 "You must choose between using a shared template or a local template if you "
 "don't inherit from parent template!"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/presentation.py:126
+#: ./src/pyams_portal/zmi/presentation.py:130
 msgid "You must select a template when setting shared template mode!"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/presentation.py:163
+#: ./src/pyams_portal/zmi/presentation.py:177
 msgid "No selected template"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/presentation.py:164
-#: ./src/pyams_portal/zmi/presentation.py:165
+#: ./src/pyams_portal/zmi/presentation.py:178
+#: ./src/pyams_portal/zmi/presentation.py:179
 msgid "Please select template..."
 msgstr ""
 
-#: ./src/pyams_portal/zmi/presentation.py:179
+#: ./src/pyams_portal/zmi/presentation.py:193
 msgid ""
 "If you select a shared template or choose to inherit from parent configuration, you can adjust settings of each portlet but can't change page configuration.\n"
 "If you choose to use a local template, it's configuration will only be reusable in sub-levels which will choose to inherit from it."
 msgstr ""
 
-#: ./src/pyams_portal/zmi/presentation.py:197
+#: ./src/pyams_portal/zmi/presentation.py:211
 #: ./src/pyams_portal/zmi/layout.py:80
 msgid "Page layout"
 msgstr ""
@@ -418,6 +428,10 @@ msgstr ""
 
 #: ./src/pyams_portal/zmi/__init__.py:79
 msgid "Renderer:"
+msgstr ""
+
+#: ./src/pyams_portal/zmi/__init__.py:81
+msgid "!! MISSING RENDERER !!"
 msgstr ""
 
 #: ./src/pyams_portal/zmi/template.py:62
@@ -542,7 +556,7 @@ msgstr ""
 msgid "Use local template"
 msgstr ""
 
-#: ./src/pyams_portal/skin/__init__.py:185
+#: ./src/pyams_portal/skin/__init__.py:187
 msgid "Hidden portlet"
 msgstr ""
 

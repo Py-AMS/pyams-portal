@@ -73,11 +73,13 @@ class PortletPreviewer(PortletContentProvider):
         """Preview portlet content"""
         if self.settings.renderer == 'hidden':
             return render('templates/portlet-hidden.pt', {}, request=self.request)
-        result = super().render(template_name)
-        renderer = self.settings.get_renderer()
         translate = self.request.localizer.translate
-        result = PREVIEW_PREFIX.format(label=translate(_("Renderer:")),
-                                       renderer=translate(renderer.label)) + result
+        renderer = self.settings.get_renderer()
+        result = PREVIEW_PREFIX.format(
+            label=translate(_("Renderer:")),
+            renderer=translate(renderer.label if renderer is not None
+                               else _("!! MISSING RENDERER !!")))
+        result += super().render(template_name)
         return result
 
     def get_setting(self, source, name, renderer=None, visible=True, icon=None):  # pylint: disable=too-many-arguments

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2021-08-04 12:56+0200\n"
+"POT-Creation-Date: 2021-08-26 12:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -149,6 +149,7 @@ msgstr ""
 "sur ce type de périphérique..."
 
 #: src/pyams_portal/interfaces.py:293 src/pyams_portal/interfaces.py:416
+#: src/pyams_portal/zmi/templates/presentation-template.pt:42
 #: src/pyams_portal/portlets/carousel/skin/interfaces.py:33
 #: src/pyams_portal/portlets/cards/interfaces.py:76
 #: src/pyams_portal/portlets/cards/skin/interfaces.py:34
@@ -169,16 +170,25 @@ msgid "Explicit name given to portal template"
 msgstr "Nom explicite du modèle de présentation"
 
 #: src/pyams_portal/interfaces.py:417
+#: src/pyams_portal/zmi/templates/presentation-template.pt:44
 msgid "This CSS class will be used as main template container CSS class"
 msgstr ""
 "Cette classe CSS sera appliquée comme classe principale du conteneur du "
 "modèle de présentation, lors du rendu en front-office"
 
+#: src/pyams_portal/interfaces.py:439
+msgid "Designers"
+msgstr "Designers"
+
 #: src/pyams_portal/interfaces.py:440
+msgid "List of designers allowed to manage presentation templates"
+msgstr "Liste des mandataires hbailités à gérer les modèles de présentation"
+
+#: src/pyams_portal/interfaces.py:449
 msgid "Toolbar portlets"
 msgstr "Composants de la barre d'outils"
 
-#: src/pyams_portal/interfaces.py:441
+#: src/pyams_portal/interfaces.py:450
 msgid ""
 "These portlets will be directly available in templates configuration page "
 "toolbar"
@@ -186,53 +196,53 @@ msgstr ""
 "Les composants sélectionnés seront accessibles directement dans la barre "
 "d'outils de configuration des modèles de présentation"
 
-#: src/pyams_portal/interfaces.py:470
+#: src/pyams_portal/interfaces.py:479
 msgid "Inherit parent template?"
 msgstr "Hériter du modèle du parent ?"
 
-#: src/pyams_portal/interfaces.py:471
+#: src/pyams_portal/interfaces.py:480
 msgid "Should we reuse parent template?"
 msgstr "Si 'oui', le même modèle que le niveau parent sera utilisé"
 
-#: src/pyams_portal/interfaces.py:475
+#: src/pyams_portal/interfaces.py:484
 msgid "Override parent template?"
 msgstr "Redéfinir le modèle de présentation"
 
-#: src/pyams_portal/interfaces.py:476
+#: src/pyams_portal/interfaces.py:485
 msgid "Should we override parent template?"
 msgstr "Si 'oui', le modèle du niveau parent ne sera pas utilisé"
 
-#: src/pyams_portal/interfaces.py:480
+#: src/pyams_portal/interfaces.py:489
 msgid "Use local template?"
 msgstr "Utiliser un modèle spécifique"
 
-#: src/pyams_portal/interfaces.py:481
+#: src/pyams_portal/interfaces.py:490
 msgid ""
 "If 'yes', you can define a custom local template instead of a shared template"
 msgstr ""
 "Si 'oui', vous pouvez choisir d'utiliser un modèle de présentation propre à "
 "ce contexte plutôt qu'un modèle de présentation partagé"
 
-#: src/pyams_portal/interfaces.py:486 src/pyams_portal/zmi/slot.py:63
+#: src/pyams_portal/interfaces.py:495 src/pyams_portal/zmi/slot.py:63
 #: src/pyams_portal/zmi/portlet.py:128 src/pyams_portal/zmi/portlet.py:254
 msgid "Local template"
 msgstr "Modèle de présentation spécifique"
 
-#: src/pyams_portal/interfaces.py:491
+#: src/pyams_portal/interfaces.py:500
 msgid "Use shared template?"
 msgstr "Utiliser un modèle partagé"
 
-#: src/pyams_portal/interfaces.py:492
+#: src/pyams_portal/interfaces.py:501
 msgid "If 'yes', you can select a shared template"
 msgstr ""
 "Si 'oui', vous pouvez sélectionner un modèle de présentation partagé pour "
 "prendre en charge la présentation de ce contexte"
 
-#: src/pyams_portal/interfaces.py:496
+#: src/pyams_portal/interfaces.py:505
 msgid "Page template"
 msgstr "Modèle de présentation"
 
-#: src/pyams_portal/interfaces.py:497
+#: src/pyams_portal/interfaces.py:506
 msgid "Template used for this page"
 msgstr "Modèle de présentation utilisé pour ce contexte"
 
@@ -281,15 +291,15 @@ msgstr "Liste des modèles"
 msgid "List of portal templates"
 msgstr "Liste des modèles de présentation"
 
-#: src/pyams_portal/zmi/container.py:165
+#: src/pyams_portal/zmi/container.py:167
 msgid "Portlets configuration"
 msgstr "Sélection des composants"
 
-#: src/pyams_portal/zmi/container.py:176
+#: src/pyams_portal/zmi/container.py:178
 msgid "Templates container"
 msgstr "Modèles de présentation"
 
-#: src/pyams_portal/zmi/container.py:177
+#: src/pyams_portal/zmi/container.py:179
 msgid "Template selected portlets"
 msgstr "Composants proposés"
 
@@ -301,7 +311,7 @@ msgstr "Présentation"
 msgid "Page template configuration"
 msgstr "Choix du modèle de présentation"
 
-#: src/pyams_portal/zmi/presentation.py:120
+#: src/pyams_portal/zmi/presentation.py:124
 msgid ""
 "You must choose between using a shared template or a local template if you "
 "don't inherit from parent template!"
@@ -309,22 +319,22 @@ msgstr ""
 "Vous devez choisir un modèle partagé ou un modèle spécifique si vous "
 "n'héritez pas du modèle de présentation du parent !"
 
-#: src/pyams_portal/zmi/presentation.py:126
+#: src/pyams_portal/zmi/presentation.py:130
 msgid "You must select a template when setting shared template mode!"
 msgstr ""
 "Vous devez choisir un modèle lorsque vous souhaitez utiliser un modèle "
 "partagé !"
 
-#: src/pyams_portal/zmi/presentation.py:163
+#: src/pyams_portal/zmi/presentation.py:177
 msgid "No selected template"
 msgstr "Pas de modèle sélectionné"
 
-#: src/pyams_portal/zmi/presentation.py:164
-#: src/pyams_portal/zmi/presentation.py:165
+#: src/pyams_portal/zmi/presentation.py:178
+#: src/pyams_portal/zmi/presentation.py:179
 msgid "Please select template..."
 msgstr "Veuillez choisir un modèle de présentation..."
 
-#: src/pyams_portal/zmi/presentation.py:179
+#: src/pyams_portal/zmi/presentation.py:193
 msgid ""
 "If you select a shared template or choose to inherit from parent "
 "configuration, you can adjust settings of each portlet but can't change page "
@@ -340,7 +350,7 @@ msgstr ""
 "aurez toute liberté pour paramétrer ce modèle, mais il ne sera réutilisable "
 "que dans les sous-niveaux qui choisiront d'en hériter."
 
-#: src/pyams_portal/zmi/presentation.py:197 src/pyams_portal/zmi/layout.py:80
+#: src/pyams_portal/zmi/presentation.py:211 src/pyams_portal/zmi/layout.py:80
 msgid "Page layout"
 msgstr "Mise en page"
 
@@ -470,6 +480,10 @@ msgstr ""
 msgid "Renderer:"
 msgstr "Mode de rendu :"
 
+#: src/pyams_portal/zmi/__init__.py:81
+msgid "!! MISSING RENDERER !!"
+msgstr "!! INCONNU !!"
+
 #: src/pyams_portal/zmi/template.py:62
 msgid "Add template"
 msgstr "Ajouter un modèle de présentation"
@@ -598,7 +612,7 @@ msgstr "Utiliser un modèle de présentation partagé"
 msgid "Use local template"
 msgstr "Utiliser un modèle de présentation spécifique"
 
-#: src/pyams_portal/skin/__init__.py:185
+#: src/pyams_portal/skin/__init__.py:187
 msgid "Hidden portlet"
 msgstr "Composant non affiché"
 
