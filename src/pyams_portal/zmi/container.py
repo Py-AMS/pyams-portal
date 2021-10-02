@@ -20,13 +20,18 @@ from zope.interface import Interface
 
 from pyams_form.ajax import ajax_form_config
 from pyams_form.field import Fields
+from pyams_form.interfaces.form import IInnerSubForm
+from pyams_form.subform import InnerEditForm
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_pagelet.pagelet import pagelet_config
 from pyams_portal.interfaces import IPortalTemplateContainer, \
     IPortalTemplateContainerConfiguration, MANAGE_TEMPLATE_PERMISSION
+from pyams_security.interfaces.base import VIEW_SYSTEM_PERMISSION
+from pyams_site.interfaces import ISiteRoot
 from pyams_skin.interfaces.viewlet import IBreadcrumbItem
 from pyams_table.interfaces import IColumn, IValues
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
+from pyams_utils.registry import get_utility, query_utility
 from pyams_utils.url import absolute_url
 from pyams_viewlet.manager import viewletmanager_config
 from pyams_viewlet.viewlet import viewlet_config
@@ -34,7 +39,8 @@ from pyams_zmi.form import AdminEditForm
 from pyams_zmi.helper.container import delete_container_element
 from pyams_zmi.interfaces import IAdminLayer, IObjectLabel
 from pyams_zmi.interfaces.table import ITableElementEditor
-from pyams_zmi.interfaces.viewlet import IMenuHeader, IPropertiesMenu, ISiteManagementMenu
+from pyams_zmi.interfaces.viewlet import IControlPanelMenu, IMenuHeader, IPropertiesMenu, \
+    ISiteManagementMenu
 from pyams_zmi.table import NameColumn, Table, TableAdminView, TableElementEditor, TrashColumn
 from pyams_zmi.zmi.viewlet.breadcrumb import AdminLayerBreadcrumbItem
 from pyams_zmi.zmi.viewlet.menu import NavigationMenuItem
@@ -43,6 +49,30 @@ from pyams_zmi.zmi.viewlet.menu import NavigationMenuItem
 __docformat__ = 'restructuredtext'
 
 from pyams_portal import _  # pylint: disable=ungrouped-imports
+
+
+@viewlet_config(name='portal-templates.menu',
+                context=ISiteRoot, layer=IAdminLayer,
+                manager=IControlPanelMenu, weight=50,
+                permission=VIEW_SYSTEM_PERMISSION)
+class PortalTemplatesMenu(NavigationMenuItem):
+    """Portal templates menu"""
+
+    label = _("Portal templates")
+    icon_class = 'fas fa-table'
+
+    def __new__(cls, context, request, view, manager):  # pylint: disable=unused-arguments
+        container = query_utility(IPortalTemplateContainer)
+        if (container is None) or not container.show_home_menu:
+            return None
+        if not request.has_permission(MANAGE_TEMPLATE_PERMISSION, context=container):
+            return None
+        return NavigationMenuItem.__new__(cls)
+
+    def get_href(self):
+        """Menu URL getter"""
+        container = get_utility(IPortalTemplateContainer)
+        return absolute_url(container, self.request, 'admin')
 
 
 @adapter_config(required=(IPortalTemplateContainer, IAdminLayer, Interface),
@@ -164,8 +194,8 @@ def delete_portal_template(request):
 class PortalTemplateContainerConfigurationMenu(NavigationMenuItem):
     """Portal template container configuration menu"""
 
-    label = _("Portlets configuration")
-    icon_class = 'fas fa-thumbtack'
+    label = _("Configuration")
+
     href = '#configuration.html'
 
 
@@ -179,3 +209,15 @@ class PortalTemplateContainerConfigurationForm(AdminEditForm):
     legend = _("Template selected portlets")
 
     fields = Fields(IPortalTemplateContainerConfiguration)
+
+
+@adapter_config(name='home-menu',
+                required=(IPortalTemplateContainer, IAdminLayer,
+                          PortalTemplateContainerConfigurationForm),
+                provides=IInnerSubForm)
+class PortalTemplateContainerPropertiesEditForm(InnerEditForm):
+    """Portal template container properties edit form"""
+
+    legend = _("Management interface")
+
+    fields = Fields(IPortalTemplateContainer['show_home_menu'])

@@ -424,6 +424,12 @@ class IPortalTemplateContainer(IContainer, IAttributeAnnotatable):
 
     contains(IPortalTemplate)
 
+    show_home_menu = Bool(title=_("Access menu from home"),
+                          description=_("If 'yes', a menu will be displayed to get access to "
+                                        "portal templates container from site admin home page"),
+                          required=True,
+                          default=False)
+
     last_portlet_id = Int(title="Last portlet ID",
                           required=True,
                           default=1,

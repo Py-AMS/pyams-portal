@@ -60,6 +60,7 @@ __docformat__ = 'restructuredtext'
 class PortalTemplateContainer(ProtectedObjectMixin, Folder):
     """Portal templates container"""
 
+    show_home_menu = FieldProperty(IPortalTemplateContainer['show_home_menu'])
     last_portlet_id = FieldProperty(IPortalTemplateContainer['last_portlet_id'])
 
     def get_portlet_id(self):

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2021-08-26 12:03+0200\n"
+"POT-Creation-Date: 2021-09-29 16:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -176,19 +176,31 @@ msgstr ""
 "Cette classe CSS sera appliquée comme classe principale du conteneur du "
 "modèle de présentation, lors du rendu en front-office"
 
-#: src/pyams_portal/interfaces.py:439
+#: src/pyams_portal/interfaces.py:427
+msgid "Access menu from home"
+msgstr "Ajouter un accès depuis l'accueil"
+
+#: src/pyams_portal/interfaces.py:428
+msgid ""
+"If 'yes', a menu will be displayed to get access to portal templates "
+"container from site admin home page"
+msgstr ""
+"Si 'oui', un menu d'accès au gestionnaire de modèles de présentation sera "
+"ajouté depuis la page d'accueil de l'interface d'administration du site"
+
+#: src/pyams_portal/interfaces.py:445
 msgid "Designers"
 msgstr "Designers"
 
-#: src/pyams_portal/interfaces.py:440
+#: src/pyams_portal/interfaces.py:446
 msgid "List of designers allowed to manage presentation templates"
 msgstr "Liste des mandataires hbailités à gérer les modèles de présentation"
 
-#: src/pyams_portal/interfaces.py:449
+#: src/pyams_portal/interfaces.py:455
 msgid "Toolbar portlets"
 msgstr "Composants de la barre d'outils"
 
-#: src/pyams_portal/interfaces.py:450
+#: src/pyams_portal/interfaces.py:456
 msgid ""
 "These portlets will be directly available in templates configuration page "
 "toolbar"
@@ -196,53 +208,53 @@ msgstr ""
 "Les composants sélectionnés seront accessibles directement dans la barre "
 "d'outils de configuration des modèles de présentation"
 
-#: src/pyams_portal/interfaces.py:479
+#: src/pyams_portal/interfaces.py:485
 msgid "Inherit parent template?"
 msgstr "Hériter du modèle du parent ?"
 
-#: src/pyams_portal/interfaces.py:480
+#: src/pyams_portal/interfaces.py:486
 msgid "Should we reuse parent template?"
 msgstr "Si 'oui', le même modèle que le niveau parent sera utilisé"
 
-#: src/pyams_portal/interfaces.py:484
+#: src/pyams_portal/interfaces.py:490
 msgid "Override parent template?"
 msgstr "Redéfinir le modèle de présentation"
 
-#: src/pyams_portal/interfaces.py:485
+#: src/pyams_portal/interfaces.py:491
 msgid "Should we override parent template?"
 msgstr "Si 'oui', le modèle du niveau parent ne sera pas utilisé"
 
-#: src/pyams_portal/interfaces.py:489
+#: src/pyams_portal/interfaces.py:495
 msgid "Use local template?"
 msgstr "Utiliser un modèle spécifique"
 
-#: src/pyams_portal/interfaces.py:490
+#: src/pyams_portal/interfaces.py:496
 msgid ""
 "If 'yes', you can define a custom local template instead of a shared template"
 msgstr ""
 "Si 'oui', vous pouvez choisir d'utiliser un modèle de présentation propre à "
 "ce contexte plutôt qu'un modèle de présentation partagé"
 
-#: src/pyams_portal/interfaces.py:495 src/pyams_portal/zmi/slot.py:63
+#: src/pyams_portal/interfaces.py:501 src/pyams_portal/zmi/slot.py:63
 #: src/pyams_portal/zmi/portlet.py:128 src/pyams_portal/zmi/portlet.py:254
 msgid "Local template"
 msgstr "Modèle de présentation spécifique"
 
-#: src/pyams_portal/interfaces.py:500
+#: src/pyams_portal/interfaces.py:506
 msgid "Use shared template?"
 msgstr "Utiliser un modèle partagé"
 
-#: src/pyams_portal/interfaces.py:501
+#: src/pyams_portal/interfaces.py:507
 msgid "If 'yes', you can select a shared template"
 msgstr ""
 "Si 'oui', vous pouvez sélectionner un modèle de présentation partagé pour "
 "prendre en charge la présentation de ce contexte"
 
-#: src/pyams_portal/interfaces.py:505
+#: src/pyams_portal/interfaces.py:511
 msgid "Page template"
 msgstr "Modèle de présentation"
 
-#: src/pyams_portal/interfaces.py:506
+#: src/pyams_portal/interfaces.py:512
 msgid "Template used for this page"
 msgstr "Modèle de présentation utilisé pour ce contexte"
 
@@ -278,30 +290,35 @@ msgstr "Le numéro de ligne doit être compris entre 1 et {} !"
 msgid "« {} » slot properties"
 msgstr "Propriétés du bloc « {} »"
 
-#: src/pyams_portal/zmi/container.py:52 src/pyams_portal/zmi/container.py:59
-#: src/pyams_portal/zmi/container.py:67 src/pyams_portal/zmi/container.py:136
+#: src/pyams_portal/zmi/container.py:61 src/pyams_portal/zmi/container.py:82
+#: src/pyams_portal/zmi/container.py:89 src/pyams_portal/zmi/container.py:97
+#: src/pyams_portal/zmi/container.py:166
 msgid "Portal templates"
 msgstr "Modèles de présentation"
 
-#: src/pyams_portal/zmi/container.py:92
+#: src/pyams_portal/zmi/container.py:122
 msgid "Templates list"
 msgstr "Liste des modèles"
 
-#: src/pyams_portal/zmi/container.py:138
+#: src/pyams_portal/zmi/container.py:168
 msgid "List of portal templates"
 msgstr "Liste des modèles de présentation"
 
-#: src/pyams_portal/zmi/container.py:167
-msgid "Portlets configuration"
-msgstr "Sélection des composants"
+#: src/pyams_portal/zmi/container.py:197
+msgid "Configuration"
+msgstr "Configuration"
 
-#: src/pyams_portal/zmi/container.py:178
+#: src/pyams_portal/zmi/container.py:208
 msgid "Templates container"
 msgstr "Modèles de présentation"
 
-#: src/pyams_portal/zmi/container.py:179
+#: src/pyams_portal/zmi/container.py:209
 msgid "Template selected portlets"
 msgstr "Composants proposés"
+
+#: src/pyams_portal/zmi/container.py:221
+msgid "Management interface"
+msgstr "Interface d'administration"
 
 #: src/pyams_portal/zmi/presentation.py:62
 msgid "Presentation"
@@ -1066,14 +1083,17 @@ msgstr "Image sélectionnée"
 msgid "Image renderer (default)"
 msgstr "Image responsive (par défaut)"
 
+#~ msgid "Interface d'administration"
+#~ msgstr "Gérer les modèles de présentation"
+
+#~ msgid "Portlets configuration"
+#~ msgstr "Sélection des composants"
+
 #~ msgid "Shared template configuration ({0})"
 #~ msgstr "Configuration d'un modèle de présentation partagé ({0})"
 
 #~ msgid "Template configuration"
 #~ msgstr "Mise en page du modèle de présentation"
-
-#~ msgid "Portlet configuration"
-#~ msgstr "Configuration du composant"
 
 #~ msgid "Two registered templates can't share the same name..."
 #~ msgstr "Deux modèles partagés ne peuvent pas partager le même nom !"
