@@ -238,6 +238,7 @@ class CardAddForm(AdminModalAddForm):
 
     @property
     def title(self):
+        """Form title getter"""
         translate = self.request.localizer.translate
         portlet = self.context.configuration.get_portlet()
         return '<small>{}</small><br />{}'.format(
@@ -288,6 +289,7 @@ class CardEditForm(AdminModalEditForm):
 
     @property
     def title(self):
+        """Form title getter"""
         translate = self.request.localizer.translate
         portlet = self.context.__parent__.configuration.get_portlet()
         return '<small>{}</small><br />{}'.format(

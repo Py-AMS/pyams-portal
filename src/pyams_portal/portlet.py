@@ -79,7 +79,7 @@ class portlet_config:  # pylint: disable=invalid-name
             if permission is not None:
                 ob.permission = permission
 
-            if type(ob) is type:
+            if type(ob) is type:  # pylint: disable=unidiomatic-typecheck
                 factory = ob
                 component = None
             else:

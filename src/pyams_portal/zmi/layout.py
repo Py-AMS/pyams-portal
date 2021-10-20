@@ -98,7 +98,7 @@ class PortalTemplateBreadcrumbItem(AdminLayerBreadcrumbItem):
                 permission=MANAGE_TEMPLATE_PERMISSION)
 @template_config(template='templates/layout.pt', layer=IAdminLayer)
 @implementer(IInnerAdminView)
-class PortalTemplateLayoutView:
+class PortalTemplateLayoutView:  # pylint: disable=no-member
     """Portal template layout view"""
 
     @property
@@ -275,7 +275,7 @@ def delete_template_row(request):
 class LocalTemplateShareMenu(MenuItem):
     """Local template share menu"""
 
-    def __new__(cls, context, request, view, manager):
+    def __new__(cls, context, request, view, manager):  # pylint: disable=unused-argument
         page = IPortalPage(context, None)
         if (page is None) or not page.use_local_template:
             return None
@@ -311,6 +311,7 @@ class PortalContextTemplateShareForm(AdminModalAddForm):
 
     @property
     def title(self):
+        """Form title getter"""
         return get_object_label(self.context, self.request, self)
 
     legend = _("Share local template")
@@ -377,7 +378,8 @@ class PortalContextTemplateShareFormHelp(AlertMessage):
 class PortalContextTemplateShareFormRenderer(ContextRequestViewAdapter):
     """Portal context template share form renderer"""
 
-    def render(self, changes):
+    @staticmethod
+    def render(changes):
         """AJAX form renderer"""
         if changes is None:
             return None

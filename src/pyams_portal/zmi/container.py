@@ -61,7 +61,7 @@ class PortalTemplatesMenu(NavigationMenuItem):
     label = _("Portal templates")
     icon_class = 'fas fa-table'
 
-    def __new__(cls, context, request, view, manager):  # pylint: disable=unused-arguments
+    def __new__(cls, context, request, view, manager):  # pylint: disable=unused-argument
         container = query_utility(IPortalTemplateContainer)
         if (container is None) or not container.show_home_menu:
             return None
