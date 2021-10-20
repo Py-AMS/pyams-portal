@@ -45,6 +45,8 @@ class SlotConfiguration(Persistent, Contained):
     lg_width = FieldProperty(ISlotConfiguration['lg_width'])
     xl_width = FieldProperty(ISlotConfiguration['xl_width'])
     css_class = FieldProperty(ISlotConfiguration['css_class'])
+    prefix = FieldProperty(ISlotConfiguration['prefix'])
+    suffix = FieldProperty(ISlotConfiguration['suffix'])
 
     def __init__(self, slot_name, **kwargs):
         self.slot_name = slot_name

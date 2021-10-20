@@ -22,7 +22,7 @@ from zope.contentprovider.interfaces import IContentProvider
 from zope.interface import Attribute, Interface
 from zope.location import ILocation
 from zope.location.interfaces import IContained
-from zope.schema import Bool, Choice, Int, List, Object, TextLine
+from zope.schema import Bool, Choice, Int, List, Object, Text, TextLine
 
 from pyams_security.schema import PermissionField, PrincipalsSetField
 from pyams_utils.schema import PersistentListField, PersistentMappingField
@@ -293,6 +293,16 @@ class ISlotConfiguration(Interface):
     css_class = TextLine(title=_("CSS class"),
                          description=_("CSS class applied to this slot"),
                          required=False)
+
+    prefix = Text(title=_("HTML prefix"),
+                  description=_("This HTML code with be included, as is, before the first "
+                                "portlet"),
+                  required=False)
+
+    suffix = Text(title=_("HTML suffix"),
+                  description=_("This HTML code will be included, as is, after the last "
+                                "portlet"),
+                  required=False)
 
     def get_css_class(self, device=None):
         """Get current CSS class"""

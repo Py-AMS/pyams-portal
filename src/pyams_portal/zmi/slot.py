@@ -19,12 +19,12 @@ import json
 
 from pyramid.events import subscriber
 from pyramid.view import view_config
-from zope.interface import Invalid
+from zope.interface import Interface, Invalid, alsoProvides
 
 from pyams_form.ajax import ajax_form_config
 from pyams_form.field import Fields
 from pyams_form.interfaces import HIDDEN_MODE
-from pyams_form.interfaces.form import IAJAXFormRenderer, IDataExtractedEvent
+from pyams_form.interfaces.form import IAJAXFormRenderer, IDataExtractedEvent, IGroup
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalTemplate, \
     IPortalTemplateConfiguration, IPortalTemplateContainer, ISlot, ISlotConfiguration, \
@@ -33,9 +33,10 @@ from pyams_portal.page import check_local_template
 from pyams_portal.zmi.layout import PortalTemplateLayoutView
 from pyams_skin.viewlet.menu import MenuItem
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
+from pyams_utils.interfaces.data import IObjectData
 from pyams_utils.registry import get_utility
 from pyams_viewlet.viewlet import viewlet_config
-from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm
+from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm, FormGroupSwitcher
 from pyams_zmi.interfaces import IAdminLayer
 from pyams_zmi.interfaces.viewlet import IContextAddingsViewletManager
 from pyams_zmi.utils import get_object_label
@@ -46,7 +47,7 @@ __docformat__ = 'restructuredtext'
 from pyams_portal import _  # pylint: disable=ungrouped-imports
 
 
-class PortalTemplateSlotMixinForm:
+class PortalTemplateSlotMixinForm:  # pylint: disable=no-member
     """Portal template slot mixin form"""
 
     @property
@@ -191,7 +192,7 @@ class PortalTemplateSlotPropertiesEditForm(PortalTemplateSlotMixinForm, AdminMod
     label_css_class = 'col-sm-6'
     input_css_class = 'col-sm-2'
 
-    fields = Fields(ISlotConfiguration).omit('visible', 'portlet_ids')
+    fields = Fields(ISlotConfiguration).omit('visible', 'portlet_ids', 'prefix', 'suffix')
 
     def __init__(self, context, request):
         check_local_template(context)
@@ -214,6 +215,29 @@ class PortalTemplateSlotPropertiesEditForm(PortalTemplateSlotMixinForm, AdminMod
         css_class = self.widgets.get('css_class')
         if css_class is not None:
             css_class.input_css_class = 'col-sm-6'
+
+
+@adapter_config(name='html-codes',
+                required=(Interface, IAdminLayer, PortalTemplateSlotPropertiesEditForm),
+                provides=IGroup)
+class PortalTemplateSlotPropertiesHTMLCodes(FormGroupSwitcher):
+    """Portal template slot properties HTML codes"""
+
+    legend = _("HTML codes")
+    fields = Fields(ISlotConfiguration).select('prefix', 'suffix')
+    switcher_mode = 'always'
+
+    def update_widgets(self, prefix=None):
+        super().update_widgets(prefix)
+        for name in ('prefix', 'suffix'):
+            widget = self.widgets.get(name)
+            if widget is not None:
+                widget.add_class('height-100')
+                widget.widget_css_class = "editor height-100px"
+                widget.object_data = {
+                    'ams-filename': 'prefix.html'
+                }
+                alsoProvides(widget, IObjectData)
 
 
 @adapter_config(required=(IPortalTemplate, IAdminLayer, PortalTemplateSlotPropertiesEditForm),

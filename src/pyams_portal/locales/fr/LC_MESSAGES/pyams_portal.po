@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2021-09-29 16:42+0200\n"
+"POT-Creation-Date: 2021-10-20 15:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -148,7 +148,7 @@ msgstr ""
 "(&gt;= 1200 pixels) ; indiquez une valeur de 0 pour ne pas afficher ce bloc "
 "sur ce type de périphérique..."
 
-#: src/pyams_portal/interfaces.py:293 src/pyams_portal/interfaces.py:416
+#: src/pyams_portal/interfaces.py:293 src/pyams_portal/interfaces.py:426
 #: src/pyams_portal/zmi/templates/presentation-template.pt:42
 #: src/pyams_portal/portlets/carousel/skin/interfaces.py:33
 #: src/pyams_portal/portlets/cards/interfaces.py:76
@@ -161,26 +161,42 @@ msgstr "Classe CSS"
 msgid "CSS class applied to this slot"
 msgstr "Classe CSS spécifique appliquée à ce bloc"
 
-#: src/pyams_portal/interfaces.py:412
+#: src/pyams_portal/interfaces.py:297
+msgid "HTML prefix"
+msgstr "Préfixe HTML"
+
+#: src/pyams_portal/interfaces.py:298
+msgid "This HTML code with be included, as is, before the first portlet"
+msgstr "Ce code HTML sera intégré dans la page, en l'état, juste avant le premier composant"
+
+#: src/pyams_portal/interfaces.py:302
+msgid "HTML suffix"
+msgstr "Suffixe HTML"
+
+#: src/pyams_portal/interfaces.py:303
+msgid "This HTML code will be included, as is, after the last portlet"
+msgstr "Ce code HTML sera intégré dans la page, en l'état, juste après le dernier composant"
+
+#: src/pyams_portal/interfaces.py:422
 msgid "Template name"
 msgstr "Nom du modèle"
 
-#: src/pyams_portal/interfaces.py:413
+#: src/pyams_portal/interfaces.py:423
 msgid "Explicit name given to portal template"
 msgstr "Nom explicite du modèle de présentation"
 
-#: src/pyams_portal/interfaces.py:417
+#: src/pyams_portal/interfaces.py:427
 #: src/pyams_portal/zmi/templates/presentation-template.pt:44
 msgid "This CSS class will be used as main template container CSS class"
 msgstr ""
 "Cette classe CSS sera appliquée comme classe principale du conteneur du "
 "modèle de présentation, lors du rendu en front-office"
 
-#: src/pyams_portal/interfaces.py:427
+#: src/pyams_portal/interfaces.py:437
 msgid "Access menu from home"
 msgstr "Ajouter un accès depuis l'accueil"
 
-#: src/pyams_portal/interfaces.py:428
+#: src/pyams_portal/interfaces.py:438
 msgid ""
 "If 'yes', a menu will be displayed to get access to portal templates "
 "container from site admin home page"
@@ -188,19 +204,19 @@ msgstr ""
 "Si 'oui', un menu d'accès au gestionnaire de modèles de présentation sera "
 "ajouté depuis la page d'accueil de l'interface d'administration du site"
 
-#: src/pyams_portal/interfaces.py:445
+#: src/pyams_portal/interfaces.py:455
 msgid "Designers"
 msgstr "Designers"
 
-#: src/pyams_portal/interfaces.py:446
+#: src/pyams_portal/interfaces.py:456
 msgid "List of designers allowed to manage presentation templates"
 msgstr "Liste des mandataires hbailités à gérer les modèles de présentation"
 
-#: src/pyams_portal/interfaces.py:455
+#: src/pyams_portal/interfaces.py:465
 msgid "Toolbar portlets"
 msgstr "Composants de la barre d'outils"
 
-#: src/pyams_portal/interfaces.py:456
+#: src/pyams_portal/interfaces.py:466
 msgid ""
 "These portlets will be directly available in templates configuration page "
 "toolbar"
@@ -208,87 +224,91 @@ msgstr ""
 "Les composants sélectionnés seront accessibles directement dans la barre "
 "d'outils de configuration des modèles de présentation"
 
-#: src/pyams_portal/interfaces.py:485
+#: src/pyams_portal/interfaces.py:495
 msgid "Inherit parent template?"
 msgstr "Hériter du modèle du parent ?"
 
-#: src/pyams_portal/interfaces.py:486
+#: src/pyams_portal/interfaces.py:496
 msgid "Should we reuse parent template?"
 msgstr "Si 'oui', le même modèle que le niveau parent sera utilisé"
 
-#: src/pyams_portal/interfaces.py:490
+#: src/pyams_portal/interfaces.py:500
 msgid "Override parent template?"
 msgstr "Redéfinir le modèle de présentation"
 
-#: src/pyams_portal/interfaces.py:491
+#: src/pyams_portal/interfaces.py:501
 msgid "Should we override parent template?"
 msgstr "Si 'oui', le modèle du niveau parent ne sera pas utilisé"
 
-#: src/pyams_portal/interfaces.py:495
+#: src/pyams_portal/interfaces.py:505
 msgid "Use local template?"
 msgstr "Utiliser un modèle spécifique"
 
-#: src/pyams_portal/interfaces.py:496
+#: src/pyams_portal/interfaces.py:506
 msgid ""
 "If 'yes', you can define a custom local template instead of a shared template"
 msgstr ""
 "Si 'oui', vous pouvez choisir d'utiliser un modèle de présentation propre à "
 "ce contexte plutôt qu'un modèle de présentation partagé"
 
-#: src/pyams_portal/interfaces.py:501 src/pyams_portal/zmi/slot.py:63
+#: src/pyams_portal/interfaces.py:511 src/pyams_portal/zmi/slot.py:65
 #: src/pyams_portal/zmi/portlet.py:128 src/pyams_portal/zmi/portlet.py:254
 msgid "Local template"
 msgstr "Modèle de présentation spécifique"
 
-#: src/pyams_portal/interfaces.py:506
+#: src/pyams_portal/interfaces.py:516
 msgid "Use shared template?"
 msgstr "Utiliser un modèle partagé"
 
-#: src/pyams_portal/interfaces.py:507
+#: src/pyams_portal/interfaces.py:517
 msgid "If 'yes', you can select a shared template"
 msgstr ""
 "Si 'oui', vous pouvez sélectionner un modèle de présentation partagé pour "
 "prendre en charge la présentation de ce contexte"
 
-#: src/pyams_portal/interfaces.py:511
+#: src/pyams_portal/interfaces.py:521
 msgid "Page template"
 msgstr "Modèle de présentation"
 
-#: src/pyams_portal/interfaces.py:512
+#: src/pyams_portal/interfaces.py:522
 msgid "Template used for this page"
 msgstr "Modèle de présentation utilisé pour ce contexte"
 
-#: src/pyams_portal/zmi/slot.py:60 src/pyams_portal/zmi/portlet.py:125
+#: src/pyams_portal/zmi/slot.py:62 src/pyams_portal/zmi/portlet.py:125
 #: src/pyams_portal/zmi/portlet.py:247
 #, python-format
 msgid "« {} »  portal template"
 msgstr "Modèle de présentation « {} »"
 
-#: src/pyams_portal/zmi/slot.py:73
+#: src/pyams_portal/zmi/slot.py:75
 msgid "Add slot..."
 msgstr "Ajouter un bloc"
 
-#: src/pyams_portal/zmi/slot.py:107
+#: src/pyams_portal/zmi/slot.py:109
 msgid "Add slot"
 msgstr "Ajouter un bloc"
 
-#: src/pyams_portal/zmi/slot.py:140
+#: src/pyams_portal/zmi/slot.py:142
 msgid "Specified name is already used!"
 msgstr "Le nom indiqué est déjà utilisé !"
 
-#: src/pyams_portal/zmi/slot.py:146
+#: src/pyams_portal/zmi/slot.py:148
 msgid "Row ID must be an integer value!"
 msgstr "Le numéro de ligne doit être un nombre entier !"
 
-#: src/pyams_portal/zmi/slot.py:150
+#: src/pyams_portal/zmi/slot.py:152
 #, python-format
 msgid "Row ID must be between 1 and {0}!"
 msgstr "Le numéro de ligne doit être compris entre 1 et {} !"
 
-#: src/pyams_portal/zmi/slot.py:189
+#: src/pyams_portal/zmi/slot.py:191
 #, python-format
 msgid "« {} » slot properties"
 msgstr "Propriétés du bloc « {} »"
+
+#: src/pyams_portal/zmi/slot.py:227
+msgid "HTML codes"
+msgstr "Codes HTML"
 
 #: src/pyams_portal/zmi/container.py:61 src/pyams_portal/zmi/container.py:82
 #: src/pyams_portal/zmi/container.py:89 src/pyams_portal/zmi/container.py:97
