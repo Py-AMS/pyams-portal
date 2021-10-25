@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.4.0
+-----
+ - added prefix and suffix HTML codes to slot configuration
+
 1.3.3
 -----
  - added option to display menu to access templates container from ZMI home page
