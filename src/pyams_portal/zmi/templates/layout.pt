@@ -1,9 +1,12 @@
 <div class="layout"
 	 tal:define="js tales:resource_path('pyams_portal.zmi:layout_js');
 				 css tales:resource_path('pyams_portal.zmi:layout_css');"
-	 data-ams-modules='{"portal": "${js}"}'
-	 data-ams-portal-css="${css}"
-	 data-ams-callback="MyAMS.portal.template.initConfig"
+	 data-ams-modules='{
+		"portal": {
+			"src": "${js}",
+			"css": "${css}"
+		}
+	 }'
 	 i18n:domain="pyams_portal">
 	<tal:var define="template_config view.template_configuration;
 					 can_change view.can_change;">

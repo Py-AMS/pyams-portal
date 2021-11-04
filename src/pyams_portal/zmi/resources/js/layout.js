@@ -16,16 +16,6 @@ const portal = {
         SWITCH_SLOT_VISIBILITY: "Show/hide slot"
     },
 
-    init: () => {
-        let css = $('[data-ams-portal-css]').data('ams-portal-css');
-        if (!css) {
-            css = '/--static--/pyams_portal/css/layout.css';
-        }
-        MyAMS.core.getCSS(css, 'pyams_portal').catch(() => {
-            console.warning(`Can't load portal CSS: ${css}`);
-        });
-    },
-
     /**
      * Global template management
      */
@@ -768,7 +758,7 @@ const portal = {
 
 
 if (window.MyAMS) {
-    MyAMS.config.modules.push('pyams_portal');
+    MyAMS.config.modules.push('portal');
     MyAMS.portal = portal;
     console.debug("MyAMS: portal module loaded...");
 

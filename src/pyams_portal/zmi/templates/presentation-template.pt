@@ -1,8 +1,12 @@
 <div tal:define="context view.get_content();
 				 js tales:resource_path('pyams_portal.zmi:layout_js');
 				 css tales:resource_path('pyams_portal.zmi:layout_css');"
-	 data-ams-modules='{"portal": "${js}"}'
-	 data-ams-portal-css="${css}"
+	 data-ams-modules='{
+		"portal": {
+			"src": "${js}",
+			"css": "${css}"
+		}
+	 }'
 	 i18n:domain="pyams_portal">
 	<i tal:omit-tag="">${structure:provider:pyams.form_header}</i>
 	<fieldset tal:define="help provider:pyams.help;
