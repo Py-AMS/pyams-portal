@@ -36,7 +36,7 @@ from pyams_portal.portlet import LOGGER
 from pyams_portal.skin import PORTLETS_CACHE_NAME, PORTLETS_CACHE_NAMESPACE, PORTLETS_CACHE_REGION
 from pyams_portal.zmi.interfaces import IPortletConfigurationEditor
 from pyams_portal.zmi.layout import PortalTemplateLayoutView
-from pyams_portal.zmi.widget import PortletRendererFieldWidget
+from pyams_portal.zmi.widget import RendererSelectFieldWidget
 from pyams_skin.interfaces.viewlet import IHeaderViewletManager
 from pyams_skin.viewlet.help import AlertMessage
 from pyams_skin.viewlet.menu import MenuDivider, MenuItem
@@ -377,7 +377,7 @@ class PortletConfigurationEditForm(InnerEditForm):
         """Form fields getter"""
         factory = self.parent_form.settings_factory
         fields = Fields(factory).omit('__name__', 'renderer') + Fields(factory).select('renderer')
-        fields['renderer'].widget_factory = PortletRendererFieldWidget
+        fields['renderer'].widget_factory = RendererSelectFieldWidget
         return fields
 
 

@@ -28,7 +28,7 @@ __docformat__ = 'restructuredtext'
 @widget_template_config(mode=INPUT_MODE,
                         template='templates/renderer-input.pt',
                         layer=IAdminLayer)
-class PortletRendererWidget(SelectWidget):
+class RendererSelectWidget(SelectWidget):
     """Portlet renderer widget"""
 
     @property
@@ -38,6 +38,6 @@ class PortletRendererWidget(SelectWidget):
         return (renderer is not None) and (renderer.settings_interface is not None)
 
 
-def PortletRendererFieldWidget(field, request):  # pylint: disable=invalid-name
+def RendererSelectFieldWidget(field, request):  # pylint: disable=invalid-name
     """Portlet renderer field widget"""
-    return FieldWidget(field, PortletRendererWidget(request))
+    return FieldWidget(field, RendererSelectWidget(request))

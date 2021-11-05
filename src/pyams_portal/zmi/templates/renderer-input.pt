@@ -40,7 +40,7 @@
 		</tal:loop>
 	</select>
 	<div tal:define="renderer context.get_renderer(request);
-					 has_settings renderer.settings_interface is not None;"
+					 has_settings (renderer is not None) and (renderer.settings_interface is not None);"
 		 class="btn btn-sm btn-primary mx-2 ${'disabled' if not has_settings else ''}"
 		 data-ams-url="${tales:absolute_url(context, 'renderer-settings.html')}"
 		 data-toggle="modal">
