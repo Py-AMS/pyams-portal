@@ -27,7 +27,7 @@ from pyams_portal.zmi import PortletPreviewer
 from pyams_portal.zmi.portlet import PortletConfigurationEditForm
 from pyams_sequence.interfaces import ISequentialIdInfo
 from pyams_skin.interfaces.viewlet import IContentSuffixViewletManager
-from pyams_skin.viewlet.actions import ContextAction
+from pyams_skin.viewlet.actions import ContextAddAction
 from pyams_table.column import GetAttrColumn
 from pyams_table.interfaces import IColumn, IValues
 from pyams_template.template import template_config
@@ -214,15 +214,11 @@ class CardsPortletPreviewer(PortletPreviewer):
                 context=ICardsPortletSettings, layer=IAdminLayer, view=CardsTable,
                 manager=IToolbarViewletManager, weight=10,
                 permission=MANAGE_TEMPLATE_PERMISSION)
-class CardAddMenu(ContextAction):
-    """Card add menu"""
+class CardAddAction(ContextAddAction):
+    """Card add action"""
 
-    status = 'success'
-    icon_class = 'fas fa-plus'
     label = _("Add card")
-
     href = 'add-card.html'
-    modal_target = True
 
 
 class ICardForm(Interface):

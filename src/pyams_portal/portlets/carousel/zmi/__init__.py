@@ -28,7 +28,7 @@ from pyams_portal.portlets.carousel import ICarouselImage, ICarouselPortletSetti
 from pyams_portal.zmi import PortletPreviewer
 from pyams_portal.zmi.portlet import PortletConfigurationEditForm
 from pyams_skin.interfaces.viewlet import IContentSuffixViewletManager
-from pyams_skin.viewlet.actions import ContextAction
+from pyams_skin.viewlet.actions import ContextAddAction
 from pyams_table.interfaces import IColumn, IValues
 from pyams_template.template import template_config
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
@@ -207,15 +207,11 @@ class CarouselPortletPreviewer(PortletPreviewer):
                 context=ICarouselPortletSettings, layer=IAdminLayer, view=CarouselItemsTable,
                 manager=IToolbarViewletManager, weight=10,
                 permission=MANAGE_TEMPLATE_PERMISSION)
-class CarouselImageAddMenu(ContextAction):
-    """Carousel image add menu"""
+class CarouselImageAddAction(ContextAddAction):
+    """Carousel image add action"""
 
-    status = 'success'
-    icon_class = 'fas fa-plus'
     label = _("Add image")
-
     href = 'add-image.html'
-    modal_target = True
 
 
 @ajax_form_config(name='add-image.html',

@@ -25,7 +25,7 @@ from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortalTemplate, IPortalTemplateContainer, \
     MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.zmi.container import PortalTemplatesContainerTable
-from pyams_skin.viewlet.actions import ContextAction
+from pyams_skin.viewlet.actions import ContextAddAction
 from pyams_table.interfaces import IColumn
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
 from pyams_utils.interfaces.intids import IUniqueID
@@ -54,15 +54,11 @@ class IPortalTemplateAddForm(IAddForm):
                 context=IPortalTemplateContainer, layer=IAdminLayer,
                 view=PortalTemplatesContainerTable, manager=IToolbarViewletManager,
                 permission=MANAGE_TEMPLATE_PERMISSION, weight=10)
-class PortalTemplateAddMenu(ContextAction):
+class PortalTemplateAddAction(ContextAddAction):
     """Portal template add action"""
 
-    status = 'success'
-    icon_class = 'fas fa-plus'
     label = _("Add template")
-
     href = 'add-portal-template.html'
-    modal_target = True
 
 
 @ajax_form_config(name='add-portal-template.html',
