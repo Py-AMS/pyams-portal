@@ -7,6 +7,7 @@
 			"css": "${css}"
 		}
 	 }'
+	 data-ams-callback="MyAMS.portal.template.initConfig"
 	 i18n:domain="pyams_portal">
 	<tal:var define="template_config view.template_configuration;
 					 can_change view.can_change;">
