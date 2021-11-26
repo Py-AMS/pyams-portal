@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.4.2
+-----
+ - restored missing callback in template layout
+
 1.4.1
 -----
  - updated MyAMS module registration
