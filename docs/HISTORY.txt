@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.4.1
+-----
+ - updated MyAMS module registration
+ - updated renderer selection widget classname
+ - use new context base add action
+
 1.4.0
 -----
  - added prefix and suffix HTML codes to slot configuration
