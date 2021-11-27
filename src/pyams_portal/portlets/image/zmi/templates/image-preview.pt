@@ -1,15 +1,14 @@
 <tal:var define="settings view.settings">
 	<tal:if condition="settings.image">
-		<a class="wrapper-image fancybox" data-toggle
+		<a class="wrapper-image fancybox" data-toggle="modal"
 		   data-ams-fancybox-type="image"
 		   tal:define="image settings.image;
 					   image_url tales:absolute_url(image);
 					   slot_config view.slot_configuration;
 					   slot_width slot_config.get_width();
 					   thumbnails tales:thumbnails(image);
-					   target python:thumbnails.get_thumbnail('800x600');
 					   timestamp tales:timestamp(image);"
-		   href="${tales:absolute_url(target)}">
+		   href="${tales:absolute_url(image, 'preview.html')}">
 			<picture>
 				<tal:var define="xs_width slot_width['xs']">
 					<tal:if condition="xs_width">
