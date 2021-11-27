@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.4.3
+-----
+ - added link to image preview in image portlet
+
 1.4.2
 -----
  - restored missing callback in template layout
