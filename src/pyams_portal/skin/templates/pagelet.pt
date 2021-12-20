@@ -11,10 +11,13 @@
 						<div class="slot float-left ${slot_config.get_css_class()} px-0">
 							<div class="portlets">
 								${structure:slot_config.prefix or ''}
-								<div class="portlet ${view.get_portlet_css_class(portlet_id)}"
-									 tal:repeat="portlet_id template_config.slot_config[slot_name].portlet_ids">
-									${structure:view.render_portlet(portlet_id)}
-								</div>
+								<tal:loop repeat="portlet_id template_config.slot_config[slot_name].portlet_ids">
+									<div tal:define="portlet view.render_portlet(portlet_id).strip()"
+										 tal:condition="portlet"
+										 class="portlet ${view.get_portlet_css_class(portlet_id)}">
+										${structure:portlet}
+									</div>
+								</tal:loop>
 								${structure:slot_config.suffix or ''}
 							</div>
 						</div>
