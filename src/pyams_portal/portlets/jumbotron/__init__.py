@@ -39,7 +39,7 @@ class JumbotronPortletSettings(InternalReferenceMixin, PortletSettings):
     lead = FieldProperty(IJumbotronPortletSettings['lead'])
     display_ruler = FieldProperty(IJumbotronPortletSettings['display_ruler'])
     body = FieldProperty(IJumbotronPortletSettings['body'])
-    reference = FieldProperty(IJumbotronPortletSettings['reference'])
+    _reference = FieldProperty(IJumbotronPortletSettings['reference'])
     target_url = FieldProperty(IJumbotronPortletSettings['target_url'])
     button_label = FieldProperty(IJumbotronPortletSettings['button_label'])
     button_status = FieldProperty(IJumbotronPortletSettings['button_status'])

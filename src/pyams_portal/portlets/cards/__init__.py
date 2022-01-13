@@ -51,7 +51,7 @@ class Card(InternalReferenceMixin, Persistent, Contained):
     title = FieldProperty(ICard['title'])
     _illustration = FileProperty(ICard['illustration'])
     body = FieldProperty(ICard['body'])
-    reference = FieldProperty(ICard['reference'])
+    _reference = FieldProperty(ICard['reference'])
     target_url = FieldProperty(ICard['target_url'])
     button_label = FieldProperty(ICard['button_label'])
     button_status = FieldProperty(ICard['button_status'])
