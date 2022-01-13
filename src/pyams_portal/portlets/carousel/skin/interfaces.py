@@ -17,10 +17,11 @@
 from zope.interface import Interface
 from zope.schema import Bool, Choice, TextLine
 
+from pyams_file.interfaces.thumbnail import THUMBNAILERS_VOCABULARY_NAME
+
 
 __docformat__ = 'restructuredtext'
 
-from pyams_file.interfaces.thumbnail import THUMBNAILERS_VOCABULARY_NAME
 from pyams_portal import _  # pylint: disable=ungrouped-imports
 
 

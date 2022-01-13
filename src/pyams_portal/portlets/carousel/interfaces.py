@@ -14,8 +14,6 @@
 
 """
 
-__docformat__ = 'restructuredtext'
-
 from zope.container.constraints import contains
 from zope.container.interfaces import IContainer
 from zope.location.interfaces import IContained
@@ -23,8 +21,12 @@ from zope.schema import Bool, Int
 
 from pyams_file.schema import ImageField
 from pyams_i18n.schema import I18nTextLineField
-from pyams_portal import _  # pylint: disable=ungrouped-imports
 from pyams_portal.interfaces import IPortletSettings
+
+
+__docformat__ = 'restructuredtext'
+
+from pyams_portal import _  # pylint: disable=ungrouped-imports
 
 
 class ICarouselItem(IContained):
