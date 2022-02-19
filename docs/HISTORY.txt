@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.4.4
+-----
+ - remove empty portlets from portal layout
+ - use new ZMI base columns classes in cards and carousel portlets management views
+
 1.4.3
 -----
  - added link to image preview in image portlet
