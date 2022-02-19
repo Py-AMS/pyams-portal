@@ -32,7 +32,6 @@ from pyams_skin.viewlet.actions import ContextAddAction
 from pyams_table.interfaces import IColumn, IValues
 from pyams_template.template import template_config
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
-from pyams_utils.data import ObjectDataManagerMixin
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm
 from pyams_zmi.helper.container import delete_container_element, switch_element_attribute
@@ -41,8 +40,8 @@ from pyams_zmi.helper.event import get_json_table_row_add_callback, \
 from pyams_zmi.interfaces import IAdminLayer
 from pyams_zmi.interfaces.table import ITableElementEditor
 from pyams_zmi.interfaces.viewlet import IToolbarViewletManager
-from pyams_zmi.table import IconColumn, InnerTableAdminView, JsActionColumn, NameColumn, \
-    ReorderColumn, Table, TableElementEditor, TrashColumn, get_ordered_data_attributes
+from pyams_zmi.table import IconColumn, InnerTableAdminView, NameColumn, ReorderColumn, Table, \
+    TableElementEditor, TrashColumn, VisibilityColumn, get_ordered_data_attributes
 from pyams_zmi.utils import get_object_label
 
 
@@ -99,27 +98,8 @@ def reorder_cards_table(request):
 @adapter_config(name='visible',
                 required=(ICarouselPortletSettings, IAdminLayer, CarouselItemsTable),
                 provides=IColumn)
-class CarouselItemsTableVisibleColumn(ObjectDataManagerMixin, JsActionColumn):
+class CarouselItemsTableVisibleColumn(VisibilityColumn):
     """Carousel items table visible column"""
-
-    hint = _("Click icon to show or hide item")
-
-    href = 'MyAMS.container.switchElementAttribute'
-    modal_target = False
-
-    object_data = {
-        'ams-modules': 'container',
-        'ams-update-target': 'switch-visible-item.json',
-        'ams-attribute-name': 'visible',
-        'ams-icon-on': 'far fa-eye',
-        'ams-icon-off': 'far fa-eye-slash'
-    }
-
-    weight = 1
-
-    def get_icon_class(self, item):
-        """Icon class getter"""
-        return 'far fa-eye' if item.visible else 'far fa-eye-slash'
 
 
 @view_config(name='switch-visible-item.json',
