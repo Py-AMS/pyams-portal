@@ -696,8 +696,6 @@ workflow status is checked and where cache can be used.
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                     <div class="portlets">
                       <div class="portlet ">
-                      </div>
-                      <div class="portlet ">
                         <p>This is a test!</p>
                       </div>
                     </div>
@@ -728,8 +726,6 @@ workflow status is checked and where cache can be used.
                 <div class="slots w-100">
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                     <div class="portlets">
-                      <div class="portlet ">
-                      </div>
                       <div class="portlet ">
                         <p>This is a test!</p>
                       </div>
@@ -769,8 +765,6 @@ Let's try to use several renderers on another portlet:
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                     <div class="portlets">
                       <div class="portlet ">
-                      </div>
-                      <div class="portlet ">
                         <p>This is a test!</p>
                       </div>
                       <div class="portlet ">
@@ -805,8 +799,6 @@ Let's try to use several renderers on another portlet:
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                     <div class="portlets">
                       <div class="portlet ">
-                      </div>
-                      <div class="portlet ">
                         <p>This is a test!</p>
                       </div>
                       <div class="portlet ">
@@ -839,8 +831,6 @@ Let's try to use several renderers on another portlet:
                 <div class="slots w-100">
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                     <div class="portlets">
-                      <div class="portlet ">
-                      </div>
                       <div class="portlet ">
                         <p>This is a test!</p>
                       </div>
