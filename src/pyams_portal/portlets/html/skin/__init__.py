@@ -82,10 +82,10 @@ class RawPortletSourceCodeRenderer(PortletRenderer):
     @property
     def body(self):
         """Formatted body getter"""
-        code = II18n(self.settings).query_attribute('body', request=self.request)
-        if code:
-            return render_source(code, self.renderer_settings)
-        return ''
+        body = II18n(self.settings).query_attribute('body', request=self.request)
+        if not body:
+            return ''
+        return render_source(body, self.renderer_settings)
 
 
 #
@@ -105,13 +105,14 @@ class RawPortletSourceRestRenderer(PortletRenderer):
     @property
     def body(self):
         """Formatted body getter"""
-        code = II18n(self.settings).query_attribute('body', request=self.request)
-        if code:
-            renderer = self.request.registry.queryMultiAdapter((code, self.request),
-                                                               IHTMLRenderer, name='rest')
-            if renderer is not None:
-                return renderer.render()
-        return ''
+        body = II18n(self.settings).query_attribute('body', request=self.request)
+        if not body:
+            return ''
+        renderer = self.request.registry.queryMultiAdapter((body, self.request),
+                                                           IHTMLRenderer, name='rest')
+        if renderer is None:
+            return ''
+        return renderer.render()
 
 
 #
@@ -131,13 +132,14 @@ class RawPortletSourceMarkdownRenderer(PortletRenderer):
     @property
     def body(self):
         """Formatted body getter"""
-        code = II18n(self.settings).query_attribute('body', request=self.request)
-        if code:
-            renderer = self.request.registry.queryMultiAdapter((code, self.request),
-                                                               IHTMLRenderer, name='markdown')
-            if renderer is not None:
-                return renderer.render()
-        return ''
+        body = II18n(self.settings).query_attribute('body', request=self.request)
+        if not body:
+            return ''
+        renderer = self.request.registry.queryMultiAdapter((body, self.request),
+                                                           IHTMLRenderer, name='markdown')
+        if renderer is None:
+            return ''
+        return renderer.render()
 
 
 #
