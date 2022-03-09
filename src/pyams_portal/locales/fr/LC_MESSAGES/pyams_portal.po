@@ -651,7 +651,7 @@ msgstr "Utiliser un modèle de présentation spécifique"
 
 #: src/pyams_portal/skin/__init__.py:187
 msgid "Hidden portlet"
-msgstr "Composant non affiché"
+msgstr "NON affiché"
 
 #: src/pyams_portal/portlets/carousel/__init__.py:103
 msgid "Bootstrap: carousel"
@@ -1042,7 +1042,7 @@ msgstr "Code source formatté"
 
 #: src/pyams_portal/portlets/html/skin/__init__.py:102
 msgid "ReStructured text"
-msgstr "Text restructuré"
+msgstr "Texte restructuré"
 
 #: src/pyams_portal/portlets/html/skin/__init__.py:128
 msgid "Markdown text"
