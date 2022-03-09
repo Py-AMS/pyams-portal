@@ -561,8 +561,7 @@ graphical theme which will be applied.
     </div>
 
     >>> print(previewer())
-    <div class="text-info text-truncate border-bottom mb-1">    <small>Renderer:</small>    Rich text (default)</div>
-    --
+    <div class="text-info text-truncate border-bottom mb-1">    <small>Renderer:</small>    Rich text (default)</div>--
 
     >>> settings = folder_portlets[6].settings
     >>> previewer = request.registry.queryMultiAdapter((folder, request, None, settings), IPortletPreviewer)
@@ -574,8 +573,7 @@ graphical theme which will be applied.
     </div>
 
     >>> print(previewer())
-    <div class="text-info text-truncate border-bottom mb-1">    <small>Renderer:</small>    Rich text (default)</div>
-    <p>This is a test!</p>
+    <div class="text-info text-truncate border-bottom mb-1">    <small>Renderer:</small>    Rich text (default)</div><p>This is a test!</p>
 
 
 Rendering portlets
@@ -612,12 +610,12 @@ Rendering portlets requires a matching cache region:
     >>> cache_regions.update({'portlets': {'type': 'memory', 'expire': 60}})
 
     >>> renderer.render()
-    '\n\t<p>This is a test!</p>\n'
+    '<p>This is a test!</p>'
 
 A second rendering should use the cache:
 
     >>> renderer.render()
-    '\n\t<p>This is a test!</p>\n'
+    '<p>This is a test!</p>'
 
 The 'hidden' renderer just returns an empty string:
 
@@ -637,7 +635,7 @@ You can provide a specific template name when rendering a portlet; if this speci
 is not registered for this renderer, the default template is used:
 
     >>> folder_portlets[6].settings.get_renderer().render(template_name='custom')
-    '\n\t<p>This is a test!</p>\n'
+    '<p>This is a test!</p>'
 
 Let's provide a custom template:
 
@@ -655,7 +653,7 @@ Let's provide a custom template:
     ...                   template=custom_template, layer=IPyAMSLayer)
 
     >>> folder_portlets[6].settings.get_renderer().render(template_name='custom')
-    '\n\t<p>This is a test!</p>\n'
+    '<p>This is a test!</p>'
 
 Why don't we get custom template content? This is because our renderer is using the cache, which
 was set on first render, before the custom template was registered!
