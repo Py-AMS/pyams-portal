@@ -198,7 +198,7 @@ class IPortletRenderer(IPortletContentProvider):
     resources = Attribute("Tuple of Fanstatic resources needed by this renderer")
 
 
-PORTLET_RENDERER_SETTINGS_KEY = 'pyams_portal.renderer.settings::{0}'
+PORTLET_RENDERER_SETTINGS_KEY = 'pyams_portal.renderer.settings'
 
 
 class IPortletRendererSettings(Interface):

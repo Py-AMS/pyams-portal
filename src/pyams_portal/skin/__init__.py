@@ -79,7 +79,7 @@ class PortletRenderer(PortletContentProvider):
     @property
     def settings_key(self):
         """Settings annotation key getter"""
-        return PORTLET_RENDERER_SETTINGS_KEY.format(self.settings.renderer)
+        return f'{PORTLET_RENDERER_SETTINGS_KEY}::{self.settings.renderer}'
 
     target_interface = None
     use_authentication = False
@@ -122,18 +122,18 @@ class PortletRenderer(PortletContentProvider):
                                    PORTLETS_CACHE_NAMESPACE)
         cache_key = self.get_cache_key()
         if template_name:
-            cache_key = '{}::{}'.format(cache_key, template_name)
+            cache_key = f'{cache_key}::{template_name}'
         if self.use_authentication:
-            cache_key = '{}::{}'.format(cache_key, self.request.principal.id)
+            cache_key = f'{cache_key}::{self.request.principal.id}'
         # load rendered content from cache, or create output and store it in cache
         try:
             result = portlets_cache.get_value(cache_key)
-            LOGGER.debug("Retrieving portlet content from cache key {0}".format(cache_key))
+            LOGGER.debug(f"Retrieving portlet content from cache key {cache_key}")
         except KeyError:
             self.update()
             result = super().render(template_name)
             portlets_cache.set_value(cache_key, result)
-            LOGGER.debug("Storing portlet content to cache key {0}".format(cache_key))
+            LOGGER.debug(f"Storing portlet content to cache key {cache_key}")
         return result
 
 
@@ -154,7 +154,8 @@ class PortletRenderersVocabulary(SimpleVocabulary):
         super().__init__(terms)
 
 
-@adapter_config(required=IPortletSettings, provides=IPortletRendererSettings)
+@adapter_config(required=IPortletSettings,
+                provides=IPortletRendererSettings)
 def portlet_renderer_settings_adapter(context):
     """Portlet renderer settings adapter"""
     renderer = context.get_renderer()
@@ -165,7 +166,8 @@ def portlet_renderer_settings_adapter(context):
 
 
 @adapter_config(name='renderer',
-                required=IPortletSettings, provides=ITraversable)
+                required=IPortletSettings,
+                provides=ITraversable)
 class PortletSettingsRendererSettingsTraverser(ContextAdapter):
     """Portlet settings traverser to renderer settings"""
 
@@ -179,13 +181,13 @@ class PortletSettingsRendererSettingsTraverser(ContextAdapter):
 #
 
 @adapter_config(name='hidden',
-                context=(IPortalContext, IPyAMSLayer, Interface, IPortletSettings),
+                required=(IPortalContext, IPyAMSLayer, Interface, IPortletSettings),
                 provides=IPortletRenderer)
 class HiddenPortletRenderer(PortletRenderer):
     """Hidden portlet renderer"""
 
     label = _("Hidden portlet")
-    weight = 9999
+    weight = -999
 
     def render(self, template_name=''):
         return ''
