@@ -102,7 +102,7 @@ class PortletPreviewer(PortletContentProvider):
                 'checked': bool(value)
             })
         if renderer is not None:
-            value = text_to_html(value, renderer)
+            value = text_to_html(value, renderer, field=field, context=source)
         return render('templates/setting-preview.pt', {
             'label': label,
             'value': value,
