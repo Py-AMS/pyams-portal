@@ -17,14 +17,17 @@ This module defines base ZMI components.
 
 from fanstatic import Library, Resource
 from pyramid.renderers import render
-from zope.interface import implementer
+from zope.interface import Interface, implementer
 from zope.schema import getFields
 from zope.schema.interfaces import IBool
 
 from pyams_i18n.schema import II18nField
+from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortalTemplate, IPortalTemplateConfiguration, \
-    IPortletPreviewer
+    IPortletPreviewer, IPortletSettings
 from pyams_portal.skin import PortletContentProvider
+from pyams_template.template import template_config
+from pyams_utils.adapter import adapter_config
 from pyams_utils.text import text_to_html
 
 
@@ -54,7 +57,9 @@ PREVIEW_PREFIX = '<div class="text-info text-truncate border-bottom mb-1">' \
                  '</div>'
 
 
-@implementer(IPortletPreviewer)
+@adapter_config(required=(Interface, IPyAMSLayer, Interface, IPortletSettings),
+                provides=IPortletPreviewer)
+@template_config(template='templates/empty.pt', layer=IPyAMSLayer)
 class PortletPreviewer(PortletContentProvider):
     """Portlet previewer adapter"""
 
