@@ -24,12 +24,16 @@ from pyams_zmi.interfaces import IAdminLayer
 
 __docformat__ = 'restructuredtext'
 
+from pyams_portal import _
+
 
 @widget_template_config(mode=INPUT_MODE,
                         template='templates/renderer-input.pt',
                         layer=IAdminLayer)
 class RendererSelectWidget(SelectWidget):
     """Portlet renderer widget"""
+
+    no_value_message = _("No selected renderer (use default)")
 
     @property
     def show_renderer_properties(self):
