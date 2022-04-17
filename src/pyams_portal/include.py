@@ -16,13 +16,12 @@ This module is used for Pyramid integration.
 """
 
 import re
-
 from zope.interface import classImplements
 
 from pyams_portal.interfaces import DESIGNER_ROLE, IPortalContext, MANAGE_TEMPLATE_PERMISSION
-from pyams_security.interfaces import ADMIN_USER_ID, SYSTEM_ADMIN_ROLE
 from pyams_security.interfaces.base import PUBLIC_PERMISSION, ROLE_ID, VIEW_PERMISSION, \
     VIEW_SYSTEM_PERMISSION
+from pyams_security.interfaces.names import ADMIN_USER_ID, SYSTEM_ADMIN_ROLE
 from pyams_site.site import BaseSiteRoot
 
 
