@@ -25,7 +25,7 @@ from zope.interface import Interface, alsoProvides, implementer
 from pyams_form.ajax import AJAXFormRenderer, ajax_form_config
 from pyams_form.field import Fields
 from pyams_form.interfaces import HIDDEN_MODE
-from pyams_form.interfaces.form import IAJAXFormRenderer, IGroup, IInnerSubForm
+from pyams_form.interfaces.form import IAJAXFormRenderer, IFormContent, IGroup, IInnerSubForm
 from pyams_form.subform import InnerEditForm
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortletsConfiguration, \
@@ -482,8 +482,12 @@ class PortletRendererSettingsEditForm(AdminModalEditForm):
         """Form fields getter"""
         return Fields(self.renderer.settings_interface or Interface)
 
-    def get_content(self):
-        return IPortletRendererSettings(self.context)
+
+@adapter_config(required=(IPortletSettings, IAdminLayer, PortletRendererSettingsEditForm),
+                provides=IFormContent)
+def get_portlet_renderer_settings_edit_form_content(context, request, form):
+    """Portlet renderer settings edit form content getter"""
+    return IPortletRendererSettings(context)
 
 
 @adapter_config(required=(Interface, IAdminLayer, PortletRendererSettingsEditForm),
