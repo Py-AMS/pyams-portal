@@ -1,6 +1,17 @@
 Changelog
 =========
 
+1.5.0
+-----
+ - added default portlet previewer
+ - added no-value message to renderer selection widget
+ - removed static resources from layout template
+ - small refactoring in raw code portlet renderers
+ - added *field* and *context* arguments to properties renderers in portlet preview
+ - use f-strings instead of format functions (requires Python >= 3.7)
+ - updated translations
+ - added support for Python 3.10
+
 1.4.4
 -----
  - remove empty portlets from portal layout
