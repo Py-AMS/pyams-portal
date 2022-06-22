@@ -41,8 +41,8 @@ from pyams_portal import _  # pylint: disable=ungrouped-imports
 PORTLETS_CACHE_NAME = 'portlets'
 PORTLETS_CACHE_REGION = 'portlets'
 PORTLETS_CACHE_NAMESPACE = 'PyAMS::portlet'
-PORTLETS_CACHE_KEY = 'portlet::{hostname}::{portlet}::{context}::{lang}'
-PORTLETS_CACHE_DISPLAY_CONTEXT_KEY = 'portlet::{hostname}::{portlet}:' \
+PORTLETS_CACHE_KEY = 'portlet::{scheme}::{hostname}::{portlet}::{context}::{lang}'
+PORTLETS_CACHE_DISPLAY_CONTEXT_KEY = 'portlet::{scheme}::{hostname}::{portlet}:' \
                                      ':{context}::{display}::{lang}'
 
 
@@ -103,11 +103,13 @@ class PortletRenderer(PortletContentProvider):
         """Cache key getter"""
         display_context = get_display_context(self.request)
         if display_context is None:
-            return PORTLETS_CACHE_KEY.format(hostname=self.request.host,
+            return PORTLETS_CACHE_KEY.format(scheme=self.request.scheme,
+                                             hostname=self.request.host,
                                              portlet=ICacheKeyValue(self.settings),
                                              context=ICacheKeyValue(self.context),
                                              lang=self.request.locale_name)
-        return PORTLETS_CACHE_DISPLAY_CONTEXT_KEY.format(hostname=self.request.host,
+        return PORTLETS_CACHE_DISPLAY_CONTEXT_KEY.format(scheme=self.request.scheme,
+                                                         hostname=self.request.host,
                                                          portlet=ICacheKeyValue(self.settings),
                                                          context=ICacheKeyValue(self.context),
                                                          display=ICacheKeyValue(display_context),
