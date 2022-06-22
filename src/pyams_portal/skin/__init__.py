@@ -130,7 +130,9 @@ class PortletRenderer(PortletContentProvider):
         # load rendered content from cache, or create output and store it in cache
         try:
             result = portlets_cache.get_value(cache_key)
-            LOGGER.debug(f"Retrieving portlet content from cache key {cache_key}")
+            LOGGER.debug(f"Retrieved portlet content from cache key {cache_key}")
+            if result:
+                self.get_resources()
         except KeyError:
             self.update()
             result = super().render(template_name)
