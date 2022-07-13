@@ -40,7 +40,7 @@ This package is composed of a set of utility functions, usable into any Pyramid 
     >>> from pyams_site.generations import upgrade_site
     >>> from pyams_layer.interfaces import IPyAMSLayer
 
-    >>> request = DummyRequest()
+    >>> request = DummyRequest(scheme='http')
     >>> alsoProvides(request, IPyAMSLayer)
 
     >>> app = upgrade_site(request)
@@ -597,7 +597,7 @@ cache is never used in preview mode.
 The cache key is based on the current hostname, on the context and on the current locale:
 
     >>> renderer.get_cache_key()
-    'portlet::example.com:80::...::1::en'
+    'portlet::http::example.com:80::...::1::en'
     >>> renderer.render()
     Traceback (most recent call last):
     ...
