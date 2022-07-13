@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.5.1
+-----
+ - include required Fanstatic resources when portlet content is loaded from cache
+ - add request protocol to portlets cache key
+
 1.5.0
 -----
  - added default portlet previewer
