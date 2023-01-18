@@ -67,8 +67,19 @@ class SpacerPortletDefaultRenderer(BaseSpacerPortletRenderer):
                 required=(IPortalContext, IPyAMSLayer, Interface, ISpacerPortletSettings),
                 provides=IPortletRenderer)
 @template_config(template='templates/spacer-double.pt', layer=IPyAMSLayer)
-class DoubleSpacerPortletDefaultRenderer(BaseSpacerPortletRenderer):
+class DoubleSpacerPortletRenderer(BaseSpacerPortletRenderer):
     """Double spacer portlet renderer"""
 
     label = _("Double spacer")
     weight = 20
+
+
+@adapter_config(name='thin-spacer',
+                required=(IPortalContext, IPyAMSLayer, Interface, ISpacerPortletSettings),
+                provides=IPortletRenderer)
+@template_config(template='templates/spacer-thin.pt', layer=IPyAMSLayer)
+class ThinSpacerPortletRenderer(BaseSpacerPortletRenderer):
+    """Thin spacer portlet renderer"""
+
+    label = _("Thin spacer")
+    weight = 30
