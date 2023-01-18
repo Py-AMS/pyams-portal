@@ -25,8 +25,9 @@ from pyams_form.subform import InnerEditForm
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_pagelet.pagelet import pagelet_config
 from pyams_portal.interfaces import IPortalContext, IPortalPage, MANAGE_TEMPLATE_PERMISSION
+from pyams_portal.utils import get_portal_page
 from pyams_portal.zmi.interfaces import IPortalContextPresentationForm, \
-    IPortalContextPresentationMenu
+    IPortalContextPresentationMenu, IPortalContextHeaderPresentationMenu, IPortalContextFooterPresentationMenu
 from pyams_portal.zmi.layout import PortalTemplateLayoutView
 from pyams_skin.interfaces.viewlet import IHelpViewletManager
 from pyams_skin.viewlet.help import AlertMessage
@@ -72,6 +73,7 @@ class PortalContextPresentationEditForm(AdminEditForm):
 
     title = _("Page template configuration")
 
+    page_name = ''
     object_data = {
         'ams-reset-handler': "MyAMS.portal.presentation.resetTemplate",
         'ams-reset-keep-default': True
@@ -79,11 +81,16 @@ class PortalContextPresentationEditForm(AdminEditForm):
 
     def __init__(self, context, request):
         super().__init__(context, request)
-        if not IPortalPage(self.context).can_inherit:
+        page = self.get_content()
+        if not page.can_inherit:
             alsoProvides(self, IPortalContextPresentationForm)
 
+    def get_content(self):
+        """Form content getter"""
+        return get_portal_page(self.context, page_name=self.page_name)
+
     def apply_changes(self, data):
-        page = IPortalPage(self.context)
+        page = self.get_content()
         params = self.request.params
         override = True
         if page.can_inherit:
@@ -108,14 +115,74 @@ class PortalContextPresentationEditForm(AdminEditForm):
         }
 
 
+#
+# Header presentation
+#
+
+@viewletmanager_config(name='header-presentation.menu',
+                       context=IPortalContext, layer=IAdminLayer,
+                       manager=IPortalContextPresentationMenu, weight=20,
+                       provides=IPortalContextHeaderPresentationMenu,
+                       permission=MANAGE_TEMPLATE_PERMISSION)
+class PortalContextHeaderPresentationMenu(NavigationMenuItem):
+    """Portal context header presentation menu"""
+
+    label = _("Header presentation")
+    icon_class = 'fas fa-arrows-up-to-line'
+    href = '#header-presentation.html'
+
+
+@ajax_form_config(name='header-presentation.html',
+                  context=IPortalContext, layer=IPyAMSLayer,
+                  permission=MANAGE_TEMPLATE_PERMISSION)
+class PortalContextHeaderPresentationEditForm(PortalContextPresentationEditForm):
+    """Portal context header presentation edit form"""
+
+    title = _("Page header template configuration")
+
+    page_name = 'header'
+
+
+#
+# Footer presentation
+#
+
+@viewletmanager_config(name='footer-presentation.menu',
+                       context=IPortalContext, layer=IAdminLayer,
+                       manager=IPortalContextPresentationMenu, weight=20,
+                       provides=IPortalContextFooterPresentationMenu,
+                       permission=MANAGE_TEMPLATE_PERMISSION)
+class PortalContextFooterPresentationMenu(NavigationMenuItem):
+    """Portal context footer presentation menu"""
+
+    label = _("Footer presentation")
+    icon_class = 'fas fa-arrows-down-to-line'
+    href = '#footer-presentation.html'
+
+
+@ajax_form_config(name='footer-presentation.html',
+                  context=IPortalContext, layer=IPyAMSLayer,
+                  permission=MANAGE_TEMPLATE_PERMISSION)
+class PortalContextFooterPresentationEditForm(PortalContextPresentationEditForm):
+    """Portal context footer presentation edit form"""
+
+    title = _("Page footer template configuration")
+
+    page_name = 'footer'
+
+
+#
+# Presentation management form
+#
+
 @subscriber(IDataExtractedEvent, form_selector=PortalContextPresentationEditForm)
 def extract_portal_context_presentation_edit_form_data(event):
     """Handle data extraction from presentation edit form"""
     form = event.form
     request = form.request
     params = request.params
-    page = IPortalPage(request.context)
     override = True
+    page = form.get_content()
     if page.can_inherit:
         override = params.get('{}{}override_parent'.format(form.prefix, form.widgets.prefix))
     if override:
@@ -139,13 +206,19 @@ class PortalContextPresentationInheritGroup(FormGroupChecker):
     """Portal context presentation inherit group"""
 
     def __new__(cls, context, request, parent_form):  # pylint: disable=unused-argument
-        if not IPortalPage(context).can_inherit:
+        page = parent_form.get_content()
+        if not page.can_inherit:
             return None
         return FormGroupChecker.__new__(cls)
 
     fields = Fields(IPortalPage).select('override_parent')
     checker_fieldname = 'override_parent'
     checker_mode = 'disable'
+
+    @property
+    def page_name(self):
+        """Portal page name getter"""
+        return self.parent_form.page_name
 
 
 @adapter_config(name='presentation-template',
@@ -158,13 +231,13 @@ class PortalContextPresentationTemplateEditForm(InnerEditForm):
     fields = Fields(IPortalPage).select('shared_template')
 
     def get_content(self):
-        return IPortalPage(self.context)
+        return self.parent_form.get_content()
 
     @property
     def template_css_class(self):
         """Template CSS class getter"""
         result = None
-        page = IPortalPage(self.context)
+        page = self.get_content()
         template = page.local_template
         if template is not None:
             return template.css_class
@@ -211,6 +284,14 @@ class PortalContextTemplateLayoutMenu(NavigationMenuItem):
     label = _("Page layout")
     href = '#template-layout.html'
 
+    page_name = ''
+
+    def __new__(cls, context, request, view, manager):
+        page = get_portal_page(context, page_name=cls.page_name)
+        if page.template is None:
+            return None
+        return NavigationMenuItem.__new__(cls)
+
 
 @pagelet_config(name='template-layout.html',
                 context=IPortalContext, layer=IPyAMSLayer,
@@ -219,8 +300,54 @@ class PortalContextTemplateLayoutView(PortalTemplateLayoutView):
     """Portal context template layout view"""
 
     def get_template(self):
-        return IPortalPage(self.context).template
+        page = self.get_portal_page()
+        return page.template
 
     @property
     def can_change(self):
-        return IPortalPage(self.context).use_local_template
+        page = self.get_portal_page()
+        return page.use_local_template
+
+
+@viewlet_config(name='header-template-layout.menu',
+                context=IPortalContext, layer=IAdminLayer,
+                manager=IPortalContextHeaderPresentationMenu, weight=10,
+                permission=MANAGE_TEMPLATE_PERMISSION)
+class PortalContextHeaderTemplateLayoutMenu(PortalContextTemplateLayoutMenu):
+    """Portal context header template layout menu"""
+
+    label = _("Header layout")
+    href = '#header-template-layout.html'
+
+    page_name = 'header'
+
+
+@pagelet_config(name='header-template-layout.html',
+                context=IPortalContext, layer=IPyAMSLayer,
+                permission=MANAGE_TEMPLATE_PERMISSION)
+class PortalContextHeaderTemplateLayoutView(PortalContextTemplateLayoutView):
+    """Portal context header template layout view"""
+
+    page_name = 'header'
+
+
+@viewlet_config(name='footer-template-layout.menu',
+                context=IPortalContext, layer=IAdminLayer,
+                manager=IPortalContextFooterPresentationMenu, weight=10,
+                permission=MANAGE_TEMPLATE_PERMISSION)
+class PortalContextFooterTemplateLayoutMenu(PortalContextTemplateLayoutMenu):
+    """Portal context footer template layout menu"""
+
+    label = _("Footer layout")
+    href = '#footer-template-layout.html'
+
+    page_name = 'footer'
+
+
+@pagelet_config(name='footer-template-layout.html',
+                context=IPortalContext, layer=IPyAMSLayer,
+                permission=MANAGE_TEMPLATE_PERMISSION)
+class PortalContextFooterTemplateLayoutView(PortalContextTemplateLayoutView):
+    """Portal context footer template layout view"""
+
+    page_name = 'footer'

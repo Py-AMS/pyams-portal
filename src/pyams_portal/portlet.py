@@ -15,8 +15,6 @@
 This module defines all portlet-related components.
 """
 
-__docformat__ = 'restructuredtext'
-
 import logging
 
 import venusian
@@ -35,12 +33,15 @@ from zope.traversing.interfaces import ITraversable
 from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortletsConfiguration, \
     IPortalTemplate, IPortlet, IPortletConfiguration, IPortletRenderer, \
     IPortletSettings, MANAGE_TEMPLATE_PERMISSION, PORTLETS_VOCABULARY_NAME
+from pyams_portal.utils import get_portal_page
 from pyams_security.interfaces import IViewContextPermissionChecker
 from pyams_utils.adapter import ContextAdapter, adapter_config
 from pyams_utils.factory import factory_config, get_object_factory, is_interface
 from pyams_utils.registry import get_pyramid_registry
 from pyams_utils.request import check_request
 from pyams_utils.vocabulary import vocabulary_config
+
+__docformat__ = 'restructuredtext'
 
 
 LOGGER = logging.getLogger('PyAMS (portal)')
@@ -191,7 +192,8 @@ class PortletSettings(Persistent, Contained):
             self.__parent__ = value
 
 
-@adapter_config(required=IPortletSettings, provides=IViewContextPermissionChecker)
+@adapter_config(required=IPortletSettings,
+                provides=IViewContextPermissionChecker)
 class PortletSettingsPermissionChecker(ContextAdapter):
     """Portlet settings permission checker"""
 
@@ -261,19 +263,23 @@ class PortletConfiguration(Persistent, Contained):
         parent = self.__parent__
         if IPortalTemplate.providedBy(parent):
             return parent
+        page_name = None
         while True:
+            if (page_name is None) and IPortalPage.providedBy(parent):
+                page_name = parent.name
             if IPortalContext.providedBy(parent):
-                configuration = IPortalPortletsConfiguration(parent).get_portlet_configuration(
-                    self.portlet_id)
+                registry = get_pyramid_registry()
+                configuration = registry.getAdapter(parent, IPortalPortletsConfiguration, name=page_name) \
+                    .get_portlet_configuration(self.portlet_id)
+                page = get_portal_page(parent, page_name=page_name)
                 if not configuration.inherit_parent:
-                    return parent
-                page = IPortalPage(parent)
+                    return page
                 if not page.inherit_parent:
                     break
             parent = parent.__parent__
             if parent is None:
                 break
-        page = IPortalPage(parent, None)
+        page = get_portal_page(parent, page_name=page_name or '')
         if page is not None:
             return page.template
         return None
@@ -298,26 +304,30 @@ class PortletConfiguration(Persistent, Contained):
         return self._settings
 
 
-@adapter_config(required=IPortlet, provides=IPortletConfiguration)
-def portlet_configuration_adapter(portlet):
+@adapter_config(required=IPortlet,
+                provides=IPortletConfiguration)
+def portlet_configuration(portlet):
     """Portlet configuration factory"""
     return PortletConfiguration(portlet)
 
 
-@adapter_config(required=IPortletConfiguration, provides=IPortletSettings)
-def portlet_configuration_settings_adapter(configuration):
+@adapter_config(required=IPortletConfiguration,
+                provides=IPortletSettings)
+def portlet_configuration_settings(configuration):
     """Portlet configuration settings adapter"""
     return configuration.settings
 
 
-@adapter_config(required=IPortletSettings, provides=IPortletConfiguration)
-def portlet_settings_configuration_adapter(settings):
+@adapter_config(required=IPortletSettings,
+                provides=IPortletConfiguration)
+def portlet_settings_configuration(settings):
     """Portlet settings configuration adapter"""
     return settings.configuration
 
 
 @adapter_config(name='settings',
-                required=IPortletConfiguration, provides=ITraversable)
+                required=IPortletConfiguration,
+                provides=ITraversable)
 class PortletConfigurationSettingsTraverser(ContextAdapter):
     """++settings++ portlet configuration traverser"""
 
@@ -326,7 +336,8 @@ class PortletConfigurationSettingsTraverser(ContextAdapter):
         return self.context.settings
 
 
-@adapter_config(required=IPortletConfiguration, provides=IViewContextPermissionChecker)
+@adapter_config(required=IPortletConfiguration,
+                provides=IViewContextPermissionChecker)
 class PortletConfigurationPermissionChecker(ContextAdapter):
     """Portlet configuration permission checker"""
 

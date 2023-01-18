@@ -151,7 +151,10 @@ class CardsTableIllustrationColumn(IconColumn):
     icon_class = 'far fa-image text-muted'
     hint = _("Illustration")
 
-    checker = lambda self, x: bool(x.illustration and x.illustration.data)
+    @staticmethod
+    def checker(image):
+        """Column image checker"""
+        return bool(image.illustration and image.illustration.data)
 
 
 @adapter_config(name='trash',

@@ -16,6 +16,9 @@ This module provides site generation utility to automatically create
 a shared templates container.
 """
 
+import sys
+from importlib import import_module
+
 from pyams_portal.interfaces import IPortalTemplateContainer
 from pyams_site.generations import check_required_utilities
 from pyams_site.interfaces import ISiteGenerations
@@ -32,8 +35,16 @@ class PortalGenerationsChecker:
     """Portal package generations checker"""
 
     order = 100
-    generation = 1
+    generation = 5
 
     def evolve(self, site, current=None):  # pylint: disable=no-self-use,unused-argument
         """Check for required utilities"""
         check_required_utilities(site, REQUIRED_UTILITIES)
+        if not current:
+            current = 1
+        for generation in range(current, self.generation):
+            module_name = f'pyams_portal.generations.evolve{generation}'
+            module = sys.modules.get(module_name)
+            if module is None:
+                module = import_module(module_name)
+            module.evolve(site)

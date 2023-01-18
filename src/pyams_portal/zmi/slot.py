@@ -30,6 +30,7 @@ from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalTemplate
     IPortalTemplateConfiguration, IPortalTemplateContainer, ISlot, ISlotConfiguration, \
     MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.page import check_local_template
+from pyams_portal.utils import get_portal_page
 from pyams_portal.zmi.layout import PortalTemplateLayoutView
 from pyams_skin.viewlet.menu import MenuItem
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
@@ -60,7 +61,7 @@ class PortalTemplateSlotMixinForm:  # pylint: disable=no-member
                 get_object_label(container, self.request, self),
                 translate(_("« {} »  portal template")).format(self.context.name))
         return '<small>{}</small><br />{}'.format(
-            get_object_label(self.context, self.request, self),
+            get_object_label(self.context.__parent__, self.request, self),
             translate(_("Local template")))
 
 
@@ -74,8 +75,7 @@ class PortalTemplateSlotAddMenu(MenuItem):
     label = _("Add slot...")
     icon_class = 'fas fa-columns'
 
-    href = 'add-template-slot.html'
-    modal_target = True
+    href = 'MyAMS.portal.template.addSlot'
 
 
 @viewlet_config(name='add-template-slot.menu',
@@ -85,8 +85,10 @@ class PortalTemplateSlotAddMenu(MenuItem):
 class PortalContextTemplateSlotAddMenu(PortalTemplateSlotAddMenu):
     """Portal context template slot add menu"""
 
+    page_name = ''
+
     def __new__(cls, context, request, view, manager):  # pylint: disable=unused-argument
-        page = IPortalPage(context)
+        page = get_portal_page(context, page_name=cls.page_name)
         if not page.use_local_template:
             return None
         return PortalTemplateSlotAddMenu.__new__(cls)
@@ -96,7 +98,7 @@ class PortalContextTemplateSlotAddMenu(PortalTemplateSlotAddMenu):
                   context=IPortalTemplate, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
 @ajax_form_config(name='add-template-slot.html',
-                  context=IPortalContext, layer=IPyAMSLayer,
+                  context=IPortalPage, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
 class PortalTemplateSlotAddForm(PortalTemplateSlotMixinForm, AdminModalAddForm):  # pylint: disable=abstract-method
     """Portal template slot add form"""
@@ -155,7 +157,7 @@ def handle_new_slot_data_extraction(event):
 
 @adapter_config(required=(IPortalTemplate, IAdminLayer, PortalTemplateSlotAddForm),
                 provides=IAJAXFormRenderer)
-@adapter_config(required=(IPortalContext, IAdminLayer, PortalTemplateSlotAddForm),
+@adapter_config(required=(IPortalPage, IAdminLayer, PortalTemplateSlotAddForm),
                 provides=IAJAXFormRenderer)
 class PortalTemplateSlotAddFormAJAXRenderer(ContextRequestViewAdapter):
     """Portal template slot add form AJAX renderer"""
@@ -178,7 +180,7 @@ class PortalTemplateSlotAddFormAJAXRenderer(ContextRequestViewAdapter):
                   context=IPortalTemplate, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
 @ajax_form_config(name='slot-properties.html',
-                  context=IPortalContext, layer=IPyAMSLayer,
+                  context=IPortalPage, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
 class PortalTemplateSlotPropertiesEditForm(PortalTemplateSlotMixinForm, AdminModalEditForm):
     """Portal template slot properties edit form"""
@@ -242,7 +244,7 @@ class PortalTemplateSlotPropertiesHTMLCodes(FormGroupSwitcher):
 
 @adapter_config(required=(IPortalTemplate, IAdminLayer, PortalTemplateSlotPropertiesEditForm),
                 provides=IAJAXFormRenderer)
-@adapter_config(required=(IPortalContext, IAdminLayer, PortalTemplateSlotPropertiesEditForm),
+@adapter_config(required=(IPortalPage, IAdminLayer, PortalTemplateSlotPropertiesEditForm),
                 provides=IAJAXFormRenderer)
 class PortalTemplatePropertiesEditFormAJAXRenderer(ContextRequestViewAdapter):
     """Portal template slot properties edit form JSON renderer"""
@@ -269,7 +271,7 @@ class PortalTemplatePropertiesEditFormAJAXRenderer(ContextRequestViewAdapter):
              context=IPortalTemplate, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 @view_config(name='set-template-slot-order.json',
-             context=IPortalContext, request_type=IPyAMSLayer,
+             context=IPortalPage, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 def set_template_slot_order(request):
     """Set template slots order"""
@@ -280,14 +282,16 @@ def set_template_slot_order(request):
     for key in order.copy().keys():
         order[int(key)] = order.pop(key)
     config.set_slot_order(order)
-    return {'status': 'success'}
+    return {
+        'status': 'success'
+    }
 
 
 @view_config(name='switch-slot-visibility.json',
              context=IPortalTemplate, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 @view_config(name='switch-slot-visibility.json',
-             context=IPortalContext, request_type=IPyAMSLayer,
+             context=IPortalPage, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 def switch_slot_visibility(request):
     """Switch slot visibility"""
@@ -297,14 +301,16 @@ def switch_slot_visibility(request):
     config = IPortalTemplateConfiguration(context)
     slot_config = config.get_slot_configuration(params.get('slot_name'))
     slot_config.visible = not slot_config.visible
-    return {'status': slot_config.visible}
+    return {
+        'status': slot_config.visible
+    }
 
 
 @view_config(name='get-slots-width.json',
              context=IPortalTemplate, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 @view_config(name='get-slots-width.json',
-             context=IPortalContext, request_type=IPyAMSLayer,
+             context=IPortalPage, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 def get_template_slots_width(request):
     """Get template slots width"""
@@ -317,7 +323,7 @@ def get_template_slots_width(request):
              context=IPortalTemplate, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 @view_config(name='set-slot-width.json',
-             context=IPortalContext, request_type=IPyAMSLayer,
+             context=IPortalPage, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 def set_template_slot_width(request):
     """Set template slot width"""
@@ -335,7 +341,7 @@ def set_template_slot_width(request):
              context=IPortalTemplate, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 @view_config(name='delete-template-slot.json',
-             context=IPortalContext, request_type=IPyAMSLayer,
+             context=IPortalPage, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 def delete_template_slot(request):
     """Delete template slot"""
@@ -343,4 +349,6 @@ def delete_template_slot(request):
     check_local_template(context)
     config = IPortalTemplateConfiguration(context)
     config.delete_slot(request.params.get('slot_name'))
-    return {'status': 'success'}
+    return {
+        'status': 'success'
+    }

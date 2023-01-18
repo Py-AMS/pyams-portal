@@ -34,6 +34,7 @@ from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortlets
 from pyams_portal.page import check_local_template
 from pyams_portal.portlet import LOGGER
 from pyams_portal.skin import PORTLETS_CACHE_NAME, PORTLETS_CACHE_NAMESPACE, PORTLETS_CACHE_REGION
+from pyams_portal.utils import get_portal_page
 from pyams_portal.zmi.interfaces import IPortletConfigurationEditor
 from pyams_portal.zmi.layout import PortalTemplateLayoutView
 from pyams_portal.zmi.widget import RendererSelectFieldWidget
@@ -73,8 +74,10 @@ class PortalTemplatePortletAddMenuDivider(MenuDivider):
 class PortalContextPortletAddMenuDivider(MenuDivider):
     """Portal context portlet add menu divider"""
 
+    page_name = ''
+
     def __new__(cls, context, request, view, manager):  # pylint: disable=unused-argument
-        page = IPortalPage(context)
+        page = get_portal_page(context, page_name=cls.page_name)
         if not page.use_local_template:
             return None
         return MenuDivider.__new__(cls)
@@ -90,8 +93,7 @@ class PortalTemplatePortletAddMenu(MenuItem):
     label = _("Add portlet...")
     icon_class = 'far fa-window-restore'
 
-    href = 'add-template-portlet.html'
-    modal_target = True
+    href = 'MyAMS.portal.template.addPortlet'
 
 
 @viewlet_config(name='add-template-portlet.menu',
@@ -101,8 +103,10 @@ class PortalTemplatePortletAddMenu(MenuItem):
 class PortalContextTemplatePortletAddMenu(PortalTemplatePortletAddMenu):
     """Portal context template portlet add menu"""
 
+    page_name = ''
+
     def __new__(cls, context, request, view, manager):  # pylint: disable=unused-argument
-        page = IPortalPage(context)
+        page = get_portal_page(context, page_name=cls.page_name)
         if not page.use_local_template:
             return None
         return PortalTemplatePortletAddMenu.__new__(cls)
@@ -112,7 +116,7 @@ class PortalContextTemplatePortletAddMenu(PortalTemplatePortletAddMenu):
                   context=IPortalTemplate, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
 @ajax_form_config(name='add-template-portlet.html',
-                  context=IPortalContext, layer=IPyAMSLayer,
+                  context=IPortalPage, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
 class PortalTemplatePortletAddForm(AdminModalAddForm):  # pylint: disable=abstract-method
     """Portal template portlet add form"""
@@ -146,7 +150,7 @@ class PortalTemplatePortletAddForm(AdminModalAddForm):  # pylint: disable=abstra
 
 @adapter_config(required=(IPortalTemplate, IAdminLayer, PortalTemplatePortletAddForm),
                 provides=IAJAXFormRenderer)
-@adapter_config(required=(IPortalContext, IAdminLayer, PortalTemplatePortletAddForm),
+@adapter_config(required=(IPortalPage, IAdminLayer, PortalTemplatePortletAddForm),
                 provides=IAJAXFormRenderer)
 class PortalTemplatePortletAddFormRenderer(ContextRequestViewAdapter):
     """Portal template portlet add form JSON renderer"""
@@ -181,7 +185,7 @@ class PortalTemplatePortletAddFormRenderer(ContextRequestViewAdapter):
              context=IPortalTemplate, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 @view_config(name='drop-template-portlet.json',
-             context=IPortalContext, request_type=IPyAMSLayer,
+             context=IPortalPage, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 def drop_template_portlet(request):
     """Drop portlet icon to slot"""
@@ -217,7 +221,7 @@ def drop_template_portlet(request):
                   context=IPortalTemplate, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
 @ajax_form_config(name='portlet-properties.html',
-                  context=IPortalContext, layer=IPyAMSLayer,
+                  context=IPortalPage, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
 class PortalTemplatePortletEditForm(AdminModalEditForm):
     """Portal template portlet properties edit form"""
@@ -243,11 +247,10 @@ class PortalTemplatePortletEditForm(AdminModalEditForm):
     def title(self):
         """Title getter"""
         translate = self.request.localizer.translate
-        if IPortalTemplate.providedBy(self.context):
-            title = translate(_("« {} »  portal template")).format(self.context.name)
+        if IPortalTemplate.providedBy(self.initial_context):
+            title = translate(_("« {} »  portal template")).format(self.initial_context.name)
         else:
-            context = get_parent(self.context, IPortalContext)
-            page = IPortalPage(context)
+            page = get_parent(self.context, IPortalPage)
             if page.use_shared_template:
                 title = translate(_("« {} » shared template")).format(page.template.name)
             else:
@@ -424,7 +427,7 @@ class PortletConfigurationEditFormRenderer(AJAXFormRenderer):
              context=IPortalTemplate, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 @view_config(name='set-template-portlet-order.json',
-             context=IPortalContext, request_type=IPyAMSLayer,
+             context=IPortalPage, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 def set_template_portlet_order(request):
     """Set template portlet order"""
@@ -434,14 +437,16 @@ def set_template_portlet_order(request):
     order['from'] = int(order['from'])
     order['to']['portlet_ids'] = list(map(int, order['to']['portlet_ids']))
     IPortalTemplateConfiguration(context).set_portlet_order(order)
-    return {'status': 'success'}
+    return {
+        'status': 'success'
+    }
 
 
 @view_config(name='delete-template-portlet.json',
              context=IPortalTemplate, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 @view_config(name='delete-template-portlet.json',
-             context=IPortalContext, request_type=IPyAMSLayer,
+             context=IPortalPage, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 def delete_template_portlet(request):
     """Delete template portlet"""
@@ -449,7 +454,9 @@ def delete_template_portlet(request):
     check_local_template(context)
     config = IPortalTemplateConfiguration(context)
     config.delete_portlet(int(request.params.get('portlet_id')))
-    return {'status': 'success'}
+    return {
+        'status': 'success'
+    }
 
 
 #

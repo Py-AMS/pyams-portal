@@ -47,7 +47,6 @@ from pyams_utils.request import check_request
 from pyams_utils.traversing import get_parent
 from pyams_utils.vocabulary import LocalUtilitiesVocabulary, vocabulary_config
 
-
 __docformat__ = 'restructuredtext'
 
 
@@ -71,15 +70,15 @@ class PortalTemplateContainer(ProtectedObjectMixin, Folder):
 
 @implementer(IPortalTemplateContainerRoles)
 class PortalTemplateContainerRoles(ProtectedObjectRoles):
-    """Portal template container roles"""
+    """Portal templates container roles"""
 
     designers = RolePrincipalsFieldProperty(IPortalTemplateContainerRoles['designers'])
 
 
 @adapter_config(required=IPortalTemplateContainer,
                 provides=IPortalTemplateContainerRoles)
-def portal_template_container_roles_adapter(context):
-    """Portal template container roles adapter"""
+def portal_template_container_roles(context):
+    """Portal templates container roles adapter"""
     return PortalTemplateContainerRoles(context)
 
 
@@ -87,7 +86,7 @@ def portal_template_container_roles_adapter(context):
                 required=IPortalTemplateContainer,
                 provides=IRolesPolicy)
 class PortalTemplateContainerRolesPolicy(ContextAdapter):
-    """Portal template container roles policy"""
+    """Portal templates container roles policy"""
 
     roles_interface = IPortalTemplateContainerRoles
     weight = 20
@@ -95,15 +94,15 @@ class PortalTemplateContainerRolesPolicy(ContextAdapter):
 
 @factory_config(IPortalTemplateContainerConfiguration)
 class PortalTemplateContainerConfiguration(Persistent, Contained):
-    """Portal template container configuration"""
+    """Portal templates container configuration"""
 
     toolbar_portlets = FieldProperty(IPortalTemplateContainerConfiguration['toolbar_portlets'])
 
 
 @adapter_config(required=IPortalTemplateContainer,
                 provides=IPortalTemplateContainerConfiguration)
-def portal_template_container_configuration_adapter(context):
-    """Portal template container configuration factory"""
+def portal_template_container_configuration(context):
+    """Portal templates container configuration factory"""
     return get_annotation_adapter(context, TEMPLATE_CONTAINER_CONFIGURATION_KEY,
                                   IPortalTemplateContainerConfiguration)
 
@@ -140,7 +139,8 @@ def handle_removed_template(event):
                                               name=IUniqueID(template).oid)
 
 
-@adapter_config(required=IPortalTemplate, provides=IViewContextPermissionChecker)
+@adapter_config(required=IPortalTemplate,
+                provides=IViewContextPermissionChecker)
 class PortalTemplatePermissionChecker(ContextAdapter):
     """Portal template permission checker"""
 
@@ -403,7 +403,7 @@ class PortalTemplatePortletTraverser(ContextAdapter):
 
 @adapter_config(required=IPortalTemplate,
                 provides=IPortalPortletsConfiguration)
-def portal_template_portlets_configuration_adapter(template):
+def portal_template_portlets_configuration(template):
     """Portal template portlets configuration adapter"""
     return get_annotation_adapter(template, PORTLETS_CONFIGURATION_KEY,
                                   IPortalPortletsConfiguration)

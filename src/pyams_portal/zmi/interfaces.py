@@ -33,5 +33,15 @@ class IPortalContextPresentationMenu(Interface):
     """Portal context presentation menu marker interface"""
 
 
+class IPortalContextHeaderPresentationMenu(Interface):
+    """Portal context header presentation menu marker interface"""
+
+
+class IPortalContextFooterPresentationMenu(Interface):
+    """Portal context footer presentation menu marker interface"""
+
+
 class IPortalContextPresentationForm(IForm):
     """Portal context presentation form marker interface"""
+
+    page_name = Attribute("Portal page name getter")

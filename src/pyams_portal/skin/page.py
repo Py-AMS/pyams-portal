@@ -19,24 +19,29 @@ __docformat__ = 'restructuredtext'
 
 from pyramid.decorator import reify
 from pyramid.exceptions import NotFound
-from zope.interface import Interface
+from zope.interface import Interface, implementer
 
-from pyams_layer.interfaces import IPyAMSLayer
+from pyams_layer.interfaces import IPyAMSLayer, IPyAMSUserLayer
 from pyams_pagelet.pagelet import pagelet_config
-from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortletsConfiguration, \
-    IPortalTemplateConfiguration, IPortlet, IPortletCSSClass, IPortletRenderer, PREVIEW_MODE
+from pyams_portal.interfaces import IPortalContext, IPortalContextIndexPage, IPortalPage, \
+    IPortalPortletsConfiguration, IPortalTemplateConfiguration, IPortlet, IPortletCSSClass, \
+    IPortletRenderer, PREVIEW_MODE
+from pyams_portal.utils import get_portal_page
 from pyams_security.interfaces.base import VIEW_SYSTEM_PERMISSION
 from pyams_template.template import layout_config, template_config
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
 from pyams_utils.interfaces.tales import ITALESExtension
 from pyams_utils.request import get_annotations
 from pyams_utils.traversing import get_parent
+from pyams_viewlet.viewlet import contentprovider_config
 from pyams_workflow.interfaces import IWorkflowPublicationInfo
 
 
-class BasePortalContextIndexPage:
+@implementer(IPortalContextIndexPage)
+class BasePortalContextPage:
     """Base portal context index page"""
 
+    page_name = ''
     portlets = None
 
     def update(self):
@@ -63,7 +68,7 @@ class BasePortalContextIndexPage:
     @reify
     def page(self):
         """Portal page getter"""
-        return IPortalPage(self.context)  # pylint: disable=no-member
+        return get_portal_page(self.context, page_name=self.page_name)  # pylint: disable=no-member
 
     @reify
     def template_configuration(self):
@@ -73,7 +78,7 @@ class BasePortalContextIndexPage:
     @reify
     def portlet_configuration(self):
         """Portlet configuration getter"""
-        return IPortalPortletsConfiguration(self.context)  # pylint: disable=no-member
+        return IPortalPortletsConfiguration(self.page)  # pylint: disable=no-member
 
     def get_portlet(self, name):
         """Portlet getter"""
@@ -101,7 +106,7 @@ class BasePortalContextIndexPage:
                 context=IPortalContext, layer=IPyAMSLayer)
 @layout_config(template='templates/layout.pt', layer=IPyAMSLayer)
 @template_config(template='templates/pagelet.pt', layer=IPyAMSLayer)
-class PortalContextIndexPage(BasePortalContextIndexPage):
+class PortalContextIndexPage(BasePortalContextPage):
     """Portal context index page"""
 
     def update(self):
@@ -123,11 +128,14 @@ class PortalContextPreviewPage(PortalContextIndexPage):
         super(PortalContextIndexPage, self).update()  # pylint: disable=bad-super-call
 
 
-@adapter_config(name='template_container_class',
-                required=(Interface, IPyAMSLayer, Interface),
-                provides=ITALESExtension)
-class TemplateContainerClassTALESExtension(ContextRequestViewAdapter):
-    """Template class TALES extension"""
+#
+# Templates classes
+#
+
+class BaseTemplateClassTALESExtension(ContextRequestViewAdapter):
+    """Base template class TALES extension"""
+
+    page_name = ''
 
     def render(self, context=None, default=''):
         """Extension renderer"""
@@ -135,9 +143,61 @@ class TemplateContainerClassTALESExtension(ContextRequestViewAdapter):
             context = self.context
         result = default
         parent = get_parent(context, IPortalContext)
-        page = IPortalPage(parent, None)
-        if page is not None:
-            template = page.template
-            if template is not None:
-                result = template.css_class or result
+        if parent is not None:
+            page = get_portal_page(parent, page_name=self.page_name, default=None)
+            if page is not None:
+                template = page.template
+                if template is not None:
+                    result = template.css_class or result
         return result
+
+
+@adapter_config(name='template_container_class',
+                required=(Interface, IPyAMSLayer, Interface),
+                provides=ITALESExtension)
+class TemplateContainerClassTALESExtension(BaseTemplateClassTALESExtension):
+    """Template container class TALES extension"""
+
+
+@adapter_config(name='template_header_class',
+                required=(Interface, IPyAMSLayer, Interface),
+                provides=ITALESExtension)
+class TemplateHeaderClassTALESExtension(BaseTemplateClassTALESExtension):
+    """Template header class TALES extension"""
+
+    page_name = 'header'
+
+
+@adapter_config(name='template_footer_class',
+                required=(Interface, IPyAMSLayer, Interface),
+                provides=ITALESExtension)
+class TemplateFooterClassTALESExtension(BaseTemplateClassTALESExtension):
+    """Template footer class TALES extension"""
+
+    page_name = 'footer'
+
+
+#
+# Header and footer content providers
+#
+
+class InnerPortalContentProvider(BasePortalContextPage):
+    """Inner portal content provider, used for headers and footers"""
+
+
+@contentprovider_config(name='pyams_portal.header',
+                        context=IPortalContext, layer=IPyAMSLayer, view=Interface)
+@template_config(template='templates/pagelet.pt', layer=IPyAMSLayer)
+class PortalHeaderContentProvider(InnerPortalContentProvider):
+    """Portal header content provider"""
+
+    page_name = 'header'
+
+
+@contentprovider_config(name='pyams_portal.footer',
+                        context=IPortalContext, layer=IPyAMSLayer, view=Interface)
+@template_config(template='templates/pagelet.pt', layer=IPyAMSLayer)
+class PortalFooterContentProvider(InnerPortalContentProvider):
+    """Portal footer content provider"""
+
+    page_name = 'footer'

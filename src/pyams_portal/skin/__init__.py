@@ -20,10 +20,12 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.traversing.interfaces import ITraversable
 
 from pyams_layer.interfaces import IPyAMSLayer
-from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalTemplateConfiguration, \
+from pyams_portal.interfaces import IPortalContext, IPortalContextIndexPage, IPortalPage, \
+    IPortalTemplateConfiguration, \
     IPortlet, IPortletRenderer, IPortletRendererSettings, IPortletSettings, \
     PORTLET_RENDERERS_VOCABULARY, PORTLET_RENDERER_SETTINGS_KEY, PREVIEW_MODE
 from pyams_portal.portlet import LOGGER
+from pyams_portal.utils import get_portal_page
 from pyams_utils.adapter import ContextAdapter, adapter_config, get_adapter_weight, \
     get_annotation_adapter
 from pyams_utils.cache import get_cache
@@ -89,7 +91,11 @@ class PortletRenderer(PortletContentProvider):
     @property
     def slot_configuration(self):
         """Slot configuration getter"""
-        template = IPortalPage(self.context).template
+        index_page = IPortalContextIndexPage(self.view, None)
+        if index_page is not None:
+            template = self.view.page.template
+        else:
+            template = get_portal_page(self.context).template
         config = IPortalTemplateConfiguration(template)
         _slot_id, slot_name = config.get_portlet_slot(self.settings.configuration.portlet_id)
         return config.get_slot_configuration(slot_name)

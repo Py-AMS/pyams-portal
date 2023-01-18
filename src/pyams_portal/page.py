@@ -30,6 +30,7 @@ from pyams_portal.interfaces import ILocalTemplateHandler, IPortalContext, IPort
     IPortalPortletsConfiguration, IPortalTemplate, IPortalTemplateConfiguration, \
     LOCAL_TEMPLATE_NAME, PORTAL_PAGE_KEY, PORTLETS_CONFIGURATION_KEY
 from pyams_portal.portlet import PortalPortletsConfiguration
+from pyams_portal.utils import get_portal_page
 from pyams_utils.adapter import ContextAdapter, adapter_config, get_annotation_adapter
 from pyams_utils.factory import factory_config, get_object_factory
 from pyams_utils.interfaces.intids import IUniqueID
@@ -40,10 +41,10 @@ from pyams_utils.zodb import volatile_property
 __docformat__ = 'restructuredtext'
 
 
-def check_local_template(context):
+def check_local_template(context, page_name=''):
     """Check for local template in portal context"""
-    if IPortalContext.providedBy(context):
-        page = IPortalPage(context)
+    if IPortalContext.providedBy(context):  # pylint: disable=no-value-for-parameter
+        page = get_portal_page(context, page_name=page_name)
         if not page.use_local_template:
             raise HTTPBadRequest("Action can be done only on local templates!")
 
@@ -56,6 +57,8 @@ class PortalPage(Persistent, Contained):
     It defines which template is used (a shared or local one), which gives
     the rows, slots and portlets lists.
     """
+
+    name = ''
 
     _inherit_parent = FieldProperty(IPortalPage['inherit_parent'])
     _use_local_template = FieldProperty(IPortalPage['use_local_template'])
@@ -70,12 +73,12 @@ class PortalPage(Persistent, Contained):
     @property
     def inherit_parent(self):
         """Inheritance getter"""
-        return self._inherit_parent if self.can_inherit else False
+        return self._inherit_parent if self.can_inherit else False  # pylint: disable=using-constant-test
 
     @inherit_parent.setter
     def inherit_parent(self, value):
         """Inheritance setter"""
-        self._inherit_parent = value if self.can_inherit else False
+        self._inherit_parent = value if self.can_inherit else False  # pylint: disable=using-constant-test
 
     @property
     def override_parent(self):
@@ -89,12 +92,12 @@ class PortalPage(Persistent, Contained):
 
     @property
     def parent(self):
-        """Parent getter"""
+        """Parent page getter"""
         parent = self.__parent__
-        page = IPortalPage(parent)
+        page = get_portal_page(parent, page_name=self.name)
         while page.inherit_parent:
             parent = parent.__parent__
-            page = IPortalPage(parent)
+            page = get_portal_page(parent, page_name=self.name)
         return parent
 
     @property
@@ -126,8 +129,8 @@ class PortalPage(Persistent, Contained):
     @property
     def use_shared_template(self):
         """Shared template usage getter"""
-        return IPortalPage(self.parent).use_shared_template \
-            if self.inherit_parent else not self._use_local_template
+        page = get_portal_page(self.parent, page_name=self.name)
+        return page.use_shared_template if self.inherit_parent else not self._use_local_template
 
     @use_shared_template.setter
     def use_shared_template(self, value):
@@ -137,14 +140,14 @@ class PortalPage(Persistent, Contained):
     @property
     def shared_template(self):
         """Shared template getter"""
-        return IPortalPage(self.parent).shared_template \
+        return self.parent.shared_template \
             if self.inherit_parent else self._shared_template
 
     @shared_template.setter
     def shared_template(self, value):
         """Shared template setter"""
         if not self.inherit_parent:
-            if IPortalTemplate.providedBy(value):
+            if IPortalTemplate.providedBy(value):  # pylint: disable=no-value-for-parameter
                 value = IUniqueID(value).oid
             self._shared_template = value
 
@@ -152,7 +155,7 @@ class PortalPage(Persistent, Contained):
     def template(self):
         """Template getter"""
         if self.inherit_parent:
-            template = IPortalPage(self.parent).template
+            template = get_portal_page(self.parent, page_name=self.name).template
         else:
             if self.use_local_template:
                 template = self.local_template
@@ -163,48 +166,83 @@ class PortalPage(Persistent, Contained):
         return template
 
 
-@adapter_config(required=IPortalContext, provides=IPortalPage)
-def portal_context_page_adapter(context):
+@adapter_config(required=IPortalContext,
+                provides=IPortalPage)
+def portal_context_page(context, page_name=''):
     """Portal context page factory"""
-    return get_annotation_adapter(context, PORTAL_PAGE_KEY, IPortalPage)
+
+    def set_page_name(page):
+        """Set page name after creation"""
+        page.name = page_name
+
+    key = f'{PORTAL_PAGE_KEY}::{page_name}' if page_name else PORTAL_PAGE_KEY
+    return get_annotation_adapter(context, key, IPortalPage,
+                                  name=f'++page++{page_name}',
+                                  callback=set_page_name)
+
+
+@adapter_config(name='header',
+                required=IPortalContext,
+                provides=IPortalPage)
+def portal_context_header_page(context):
+    """Portal context page header factory"""
+    return portal_context_page(context, page_name='header')
+
+
+@adapter_config(name='footer',
+                required=IPortalContext,
+                provides=IPortalPage)
+def portal_context_footer_page(context):
+    """Portal context page footer factory"""
+    return portal_context_page(context, page_name='footer')
+
+
+@adapter_config(name='page',
+                required=IPortalContext,
+                provides=ITraversable)
+class PortalContextPageTraverser(ContextAdapter):
+    """Portal context page traverser"""
+
+    def traverse(self, name, furtherpath=None):  # pylint: disable=unused-argument
+        """Portal context page traverser"""
+        return get_portal_page(self.context, page_name=name or '')
 
 
 @adapter_config(name='template',
-                required=IPortalContext, provides=ITraversable)
-class PortalContextTemplateTraverser(ContextAdapter):
-    """++template++ portal context traverser"""
+                required=IPortalPage,
+                provides=ITraversable)
+class PortalPageTemplateTraverser(ContextAdapter):
+    """++template++ portal page traverser"""
 
     def traverse(self, name, furtherpath=None):  # pylint: disable=unused-argument
         """Portal page traverser to local template"""
-        return IPortalPage(self.context).local_template
+        return self.context.local_template
 
 
-@adapter_config(required=IPortalContext,
+@adapter_config(required=IPortalPage,
                 provides=IPortalTemplateConfiguration)
-def portal_context_template_configuration_adapter(context):
+def portal_page_template_configuration(context):
     """Portal context template configuration adapter"""
-    template = IPortalPage(context).template
-    return IPortalTemplateConfiguration(template)
+    return IPortalTemplateConfiguration(context.template)
 
 
-@adapter_config(required=IPortalContext,
+@adapter_config(required=IPortalPage,
                 provides=IPortalPortletsConfiguration)
-def portal_context_portlets_configuration_adapter(context):
-    """Portal context portlets configuration adapter"""
+def portal_page_portlets_configuration(context):
+    """Portal page portlets configuration adapter"""
 
     def portlet_configuration_factory():
         return PortalPortletsConfiguration.clone(portlets_config, context)
 
     # get page and template
-    page = IPortalPage(context)
-    if page.use_local_template:
-        template = page.local_template
+    if context.use_local_template:
+        template = context.local_template
     else:
-        template = page.template
+        template = context.template
     if template is None:
         return None
     portlets_config = IPortalPortletsConfiguration(template)
-    if page.use_local_template:
+    if context.use_local_template:
         context = template
     # get current configuration
     config = get_annotation_adapter(context, PORTLETS_CONFIGURATION_KEY,
@@ -217,14 +255,39 @@ def portal_context_portlets_configuration_adapter(context):
     return config
 
 
+@adapter_config(required=IPortalContext,
+                provides=IPortalPortletsConfiguration)
+def portal_context_portlets_configuration(context, page_name=''):
+    """Portal context portlets configuration adapter"""
+    page = get_portal_page(context, page_name=page_name)
+    return IPortalPortletsConfiguration(page)
+
+
+@adapter_config(name='header',
+                required=IPortalContext,
+                provides=IPortalPortletsConfiguration)
+def portal_context_header_portlets_configuration(context):
+    """Portal context header portlets configuration adapter"""
+    return portal_context_portlets_configuration(context, 'header')
+
+
+@adapter_config(name='footer',
+                required=IPortalContext,
+                provides=IPortalPortletsConfiguration)
+def portal_context_footer_portlets_configuration(context):
+    """Portal context footer portlets configuration adapter"""
+    return portal_context_portlets_configuration(context, 'footer')
+
+
 @adapter_config(name='portlet',
-                required=IPortalContext, provides=ITraversable)
-class PortalContextPortletTraverser(ContextAdapter):
-    """++portlet++ portal context traverser"""
+                required=IPortalPage,
+                provides=ITraversable)
+class PortalPagePortletTraverser(ContextAdapter):
+    """++portlet++ portal page traverser"""
 
     def traverse(self, name, thurtherpath=None):  # pylint: disable=unused-argument
         """Portal context traverser to portlet configuration"""
-        config = IPortalPortletsConfiguration(self.context)
+        config = portal_context_portlets_configuration(self.context, page_name=self.context.name)
         if name:
             return config.get_portlet_configuration(int(name))
         return config

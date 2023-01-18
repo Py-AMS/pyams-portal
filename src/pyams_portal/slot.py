@@ -24,8 +24,9 @@ from pyams_portal.interfaces import IPortalPage, IPortalTemplate, IPortalTemplat
     ISlotConfiguration
 from pyams_utils.factory import factory_config
 
-
 __docformat__ = 'restructuredtext'
+
+from pyams_utils.traversing import get_parent
 
 
 DEVICES = ('xs', 'sm', 'md', 'lg', 'xl')
@@ -64,7 +65,7 @@ class SlotConfiguration(Persistent, Contained):
         """Template getter"""
         if IPortalTemplate.providedBy(self.__parent__):
             return self.__parent__
-        return IPortalPage(self.__parent__).template
+        return get_parent(self.__parent__, IPortalPage).template
 
     @property
     def portlet_ids(self):

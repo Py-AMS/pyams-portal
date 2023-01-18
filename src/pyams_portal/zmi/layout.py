@@ -34,6 +34,7 @@ from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortlets
     IPortalTemplateContainerConfiguration, IPortlet, IPortletPreviewer, LOCAL_TEMPLATE_NAME, \
     MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.page import check_local_template
+from pyams_portal.utils import get_portal_page
 from pyams_security.interfaces import IViewContextPermissionChecker
 from pyams_security.interfaces.base import FORBIDDEN_PERMISSION
 from pyams_security.permission import get_edit_permission
@@ -55,7 +56,6 @@ from pyams_zmi.interfaces.viewlet import IActionsViewletManager, IContentManagem
 from pyams_zmi.utils import get_object_label
 from pyams_zmi.zmi.viewlet.breadcrumb import AdminLayerBreadcrumbItem
 from pyams_zmi.zmi.viewlet.menu import NavigationMenuItem
-
 
 __docformat__ = 'restructuredtext'
 
@@ -101,6 +101,8 @@ class PortalTemplateBreadcrumbItem(AdminLayerBreadcrumbItem):
 class PortalTemplateLayoutView:  # pylint: disable=no-member
     """Portal template layout view"""
 
+    page_name = ''
+
     @property
     def title(self):
         """View title getter"""
@@ -108,13 +110,19 @@ class PortalTemplateLayoutView:  # pylint: disable=no-member
         container = get_parent(self.context, IPortalTemplateContainer)
         if container is None:
             context = get_parent(self.context, IPortalContext)
-            page = IPortalPage(context)
+            page = self.get_portal_page(context)
             if page.use_local_template:
                 return _("Local template configuration")
             if page.template.name == LOCAL_TEMPLATE_NAME:
                 return _("Inherited local template configuration")
             return translate(_("« {} » shared template configuration")).format(page.template.name)
         return translate(_("« {} » template configuration")).format(self.context.name)
+
+    def get_portal_page(self, context=None):
+        """Portal page getter"""
+        if context is None:
+            context = self.context
+        return get_portal_page(context, page_name=self.page_name)
 
     def get_template(self):
         """Template getter"""
@@ -132,12 +140,13 @@ class PortalTemplateLayoutView:  # pylint: disable=no-member
     @reify
     def template_configuration(self):
         """Template configuration getter"""
-        return IPortalTemplateConfiguration(self.get_template())
+        template = self.get_template()
+        return IPortalTemplateConfiguration(template)
 
     @reify
     def portlets_configuration(self):
         """Portlets configuration getter"""
-        return IPortalPortletsConfiguration(self.get_context())
+        return IPortalPortletsConfiguration(self.get_portal_page())
 
     @property
     def selected_portlets(self):
@@ -181,8 +190,9 @@ class PortalTemplateLayoutView:  # pylint: disable=no-member
             return render('templates/portlet-preview.pt', {
                 'config': portlet_config,
                 'can_change': self.can_change,
-                'can_delete': IPortalTemplate.providedBy(self.context) or
-                              IPortalPage(self.context).use_local_template,
+                'can_delete':
+                    IPortalTemplate.providedBy(self.context) or
+                    self.get_portal_page(self.context).use_local_template,
                 'label': self.get_portlet_label(portlet_config.portlet_name),
                 'portlet': previewer.render()
             }, request=self.request)
@@ -213,7 +223,7 @@ class PortalContextTemplateRowAddMenu(PortalTemplateRowAddMenu):
     """Portal context template row add menu"""
 
     def __new__(cls, context, request, view, manager):  # pylint: disable=unused-argument
-        page = IPortalPage(context)
+        page = get_portal_page(context, page_name=view.page_name)
         if not page.use_local_template:
             return None
         return PortalTemplateRowAddMenu.__new__(cls)
@@ -223,21 +233,23 @@ class PortalContextTemplateRowAddMenu(PortalTemplateRowAddMenu):
              context=IPortalTemplate, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 @view_config(name='add-template-row.json',
-             context=IPortalContext, request_type=IPyAMSLayer,
+             context=IPortalPage, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 def add_template_row(request):
     """Add template raw"""
     context = request.context
     check_local_template(context)
     config = IPortalTemplateConfiguration(context)
-    return {'row_id': config.add_row()}
+    return {
+        'row_id': config.add_row()
+    }
 
 
 @view_config(name='set-template-row-order.json',
              context=IPortalTemplate, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 @view_config(name='set-template-row-order.json',
-             context=IPortalContext, request_type=IPyAMSLayer,
+             context=IPortalPage, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 def set_template_row_order(request):
     """Set template rows order"""
@@ -246,14 +258,16 @@ def set_template_row_order(request):
     config = IPortalTemplateConfiguration(context)
     row_ids = map(int, json.loads(request.params.get('rows')))
     config.set_row_order(row_ids)
-    return {'status': 'success'}
+    return {
+        'status': 'success'
+    }
 
 
 @view_config(name='delete-template-row.json',
              context=IPortalTemplate, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 @view_config(name='delete-template-row.json',
-             context=IPortalContext, request_type=IPyAMSLayer,
+             context=IPortalPage, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
 def delete_template_row(request):
     """Delete template row"""
@@ -261,7 +275,9 @@ def delete_template_row(request):
     check_local_template(context)
     config = IPortalTemplateConfiguration(context)
     config.delete_row(int(request.params.get('row_id')))
-    return {'status': 'success'}
+    return {
+        'status': 'success'
+    }
 
 
 #
@@ -276,7 +292,7 @@ class LocalTemplateShareMenu(MenuItem):
     """Local template share menu"""
 
     def __new__(cls, context, request, view, manager):  # pylint: disable=unused-argument
-        page = IPortalPage(context, None)
+        page = get_portal_page(context, page_name=view.page_name)
         if (page is None) or not page.use_local_template:
             return None
         templates = query_utility(IPortalTemplateContainer)
@@ -289,8 +305,12 @@ class LocalTemplateShareMenu(MenuItem):
     label = _("Share template")
     icon_class = 'fas fa-share'
 
-    href = 'share-template.html'
     modal_target = True
+
+    @property
+    def href(self):
+        page_name = self.view.page_name
+        return f'share-{page_name}{"-" if page_name else ""}template.html'
 
 
 class ILocalTemplateShareFormButtons(Interface):
@@ -316,6 +336,7 @@ class PortalContextTemplateShareForm(AdminModalAddForm):
 
     legend = _("Share local template")
 
+    page_name = ''
     fields = Fields(IPortalTemplate).select('name')
     buttons = Buttons(ILocalTemplateShareFormButtons)
 
@@ -329,16 +350,38 @@ class PortalContextTemplateShareForm(AdminModalAddForm):
         super().handle_add(self, action)
 
     def create(self, data):
-        page = IPortalPage(self.context)
+        page = get_portal_page(self.context, page_name=self.page_name)
         return copy(page.local_template)
 
     def add(self, obj):
         templates = query_utility(IPortalTemplateContainer)
         oid = IUniqueID(obj).oid
         templates[oid] = obj
-        page = IPortalPage(self.context)
+        page = get_portal_page(self.context, page_name=self.page_name)
         page.use_local_template = False
         page.shared_template = oid
+
+
+@ajax_form_config(name='share-header-template.html',
+                  context=IPortalContext, layer=IPyAMSLayer,
+                  permission=MANAGE_TEMPLATE_PERMISSION)
+class PortalContextHeaderTemplateShareForm(PortalContextTemplateShareForm):
+    """Portal context header template share form"""
+
+    legend = _("Share local header template")
+
+    page_name = 'header'
+
+
+@ajax_form_config(name='share-footer-template.html',
+                  context=IPortalContext, layer=IPyAMSLayer,
+                  permission=MANAGE_TEMPLATE_PERMISSION)
+class PortalContextFooterTemplateShareForm(PortalContextTemplateShareForm):
+    """Portal context footer template share form"""
+
+    legend = _("Share local footer template")
+
+    page_name = 'footer'
 
 
 @adapter_config(name='share',
@@ -350,7 +393,7 @@ class PortalContextTemplateSharePermissionChecker(ContextRequestViewAdapter):
     @property
     def edit_permission(self):
         """Edit permission getter"""
-        page = IPortalPage(self.context, None)
+        page = get_portal_page(self.context, page_name=self.view.page_name)
         if (page is None) or not page.use_local_template:
             return FORBIDDEN_PERMISSION
         templates = query_utility(IPortalTemplateContainer)

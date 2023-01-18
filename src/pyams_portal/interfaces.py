@@ -128,7 +128,9 @@ class IPortletConfiguration(ILocation):
 
     can_inherit = Attribute("Can inherit parent configuration?")
 
-    parent = Attribute("Portlet configuration parent")
+    parent = Attribute("Portlet configuration parent.\n"
+                       "This parent can be a template itself, or the portal page object when "
+                       "adapted to a portal context.")
 
     inherit_parent = Bool(title=_("Inherit parent configuration?"),
                           description=_("This option is only available if context's parent is "
@@ -480,7 +482,7 @@ class IPortalTemplateRenderer(IContentProvider):
 PREVIEW_MODE = 'PREVIEW_MODE'
 
 
-class IPortalPage(Interface):
+class IPortalPage(IAttributeAnnotatable):
     """Portal page interface
 
     The page is the highest configuration level.
@@ -490,7 +492,12 @@ class IPortalPage(Interface):
 
     can_inherit = Attribute("Can inherit parent template?")
 
-    parent = Attribute("Parent from which to inherit, the real parent or the source template")
+    name = Attribute("Portal page name. This attribute is used to make a distinction between "
+                     "main portal page, header and footer")
+
+    parent = Attribute("Parent context from which to inherit\n"
+                       "This parent can be the context of the portal page from which we inherit, "
+                       "or the source template itself")
 
     inherit_parent = Bool(title=_("Inherit parent template?"),
                           description=_("Should we reuse parent template?"),
@@ -528,3 +535,9 @@ class IPortalPage(Interface):
 
 class IPortalContext(IAttributeAnnotatable):
     """Portal context marker interface"""
+
+
+class IPortalContextIndexPage(Interface):
+    """Portal context index page interface"""
+
+    page = Attribute("Portal page getter")

@@ -8,6 +8,16 @@ if (window.$ === undefined) {
 }
 
 
+/**
+ * Current page location getter
+ * @returns: current template page location
+ */
+const getLocation = () => {
+    const config = $('#portal_config');
+    return config.data('ams-location');
+};
+
+
 const portal = {
 
     i18n: {
@@ -75,7 +85,7 @@ const portal = {
          */
         selectDisplay: (evt) => {
             const device = $(evt.target).val();
-            MyAMS.ajax.post('get-slots-width.json', {
+            MyAMS.ajax.post(`${getLocation()}/get-slots-width.json`, {
                 device: device
             }).then((result) => {
                 const config = $('#portal_config');
@@ -111,7 +121,7 @@ const portal = {
         addRow: () => {
             return function(src) {
                 $(src).parents('.dropdown').dropdown('hide');
-                MyAMS.ajax.post('add-template-row.json', {}).then((result) => {
+                MyAMS.ajax.post(`${getLocation()}/add-template-row.json`, {}).then((result) => {
                     const rowId = result.row_id;
                     const rows = $('.rows', '#portal_config');
                     $('<div></div>')
@@ -155,7 +165,7 @@ const portal = {
             console.debug(ui.draggable);
             ui.draggable.tooltip('hide');
             ui.draggable.addClass('already-dropped');
-            MyAMS.ajax.post('add-template-row.json', {}).then((result) => {
+            MyAMS.ajax.post(`${getLocation()}/add-template-row.json`, {}).then((result) => {
                 const rowId = result.row_id;
                 const rows = $('.rows', '#portal_config');
                 ui.draggable
@@ -218,7 +228,7 @@ const portal = {
             }
             const config = $('#portal_config');
             const ids = $('.row', config).listattr('data-ams-row-id');
-            MyAMS.ajax.post('set-template-row-order.json', {
+            MyAMS.ajax.post(`${getLocation()}/set-template-row-order.json`, {
                 rows: JSON.stringify(ids)
             }).then((result) => {
                 if (result.status === 'success') {
@@ -254,7 +264,7 @@ const portal = {
                         }).then((result) => {
                             if (result === 'success') {
                                 MyAMS.require('ajax').then(() => {
-                                    MyAMS.ajax.post('delete-template-row.json', {
+                                    MyAMS.ajax.post(`${getLocation()}/delete-template-row.json`, {
                                         row_id: row.data('ams-row-id')
                                     }).then((result) => {
                                         if (result.status === 'success') {
@@ -281,6 +291,18 @@ const portal = {
 
         /**
          * Add new slot
+         */
+        addSlot: () => {
+            return function(src) {
+                $(src).parents('.dropdown').dropdown('hide');
+                MyAMS.require('modal').then(() => {
+                    MyAMS.modal.open(`${getLocation()}/add-template-slot.html`);
+                });
+            }
+        },
+
+        /**
+         * Slot add callback
          */
         addSlotCallback: (form, result) => {
             const
@@ -347,7 +369,7 @@ const portal = {
             ui.draggable.addClass('already-dropped');
             MyAMS.require('modal').then(() => {
                 const rowId = ui.helper.parents('.row:first').data('ams-row-id');
-                MyAMS.modal.open(`add-template-slot.html?form.widgets.row_id=${rowId}`).then((modal) => {
+                MyAMS.modal.open(`${getLocation()}/add-template-slot.html?form.widgets.row_id=${rowId}`).then((modal) => {
                     $('.hint').tooltip('hide');
                     modal.on('hide.bs.modal', (evt) => {
                         const form = $('form', modal);
@@ -401,7 +423,7 @@ const portal = {
                 slotCols = Math.round($(slot).width() / colWidth),
                 device = $('#device_selector').val();
             MyAMS.require('ajax').then(() => {
-                MyAMS.ajax.post('set-slot-width.json', {
+                MyAMS.ajax.post(`${getLocation()}/set-slot-width.json`, {
                     slot_name: slot.data('ams-slot-name'),
                     device: device,
                     width: slotCols
@@ -425,7 +447,7 @@ const portal = {
                 slot = slot.parents('.slot');
             }
             MyAMS.require('modal').then(() => {
-                MyAMS.modal.open(`slot-properties.html?form.widgets.slot_name=${slot.data('ams-slot-name')}`);
+                MyAMS.modal.open(`${getLocation()}/slot-properties.html?form.widgets.slot_name=${slot.data('ams-slot-name')}`);
             });
         },
 
@@ -478,7 +500,7 @@ const portal = {
                 order[parseInt(row.attr('data-ams-row-id'))] = rowConfig;
             });
             MyAMS.require('ajax').then(() => {
-                MyAMS.ajax.post('set-template-slot-order.json',
+                MyAMS.ajax.post(`${getLocation()}/set-template-slot-order.json`,
                     {order: JSON.stringify(order)});
             });
         },
@@ -509,7 +531,7 @@ const portal = {
             icon.tooltip('hide');
             icon.replaceWith('<i class="action ml-2 fas fa-fw fa-spinner fa-spin"></i>');
             MyAMS.require('ajax').then(() => {
-                MyAMS.ajax.post('switch-slot-visibility.json', {
+                MyAMS.ajax.post(`${getLocation()}/switch-slot-visibility.json`, {
                     slot_name: slot.data('ams-slot-name')
                 }).then((result) => {
                     icon = $('.fa-spin', slot).objectOrParentWithClass('action');
@@ -551,7 +573,7 @@ const portal = {
                     }).then((result) => {
                         if (result === 'success') {
                             MyAMS.require('ajax').then(() => {
-                                MyAMS.ajax.post('delete-template-slot.json', {
+                                MyAMS.ajax.post(`${getLocation()}/delete-template-slot.json`, {
                                     slot_name: slot.data('ams-slot-name')
                                 }).then((result) => {
                                     if (result.status === 'success') {
@@ -572,6 +594,15 @@ const portal = {
         /**
          * Portlets management
          */
+
+        addPortlet: () => {
+            return function(src) {
+                $(src).parents('.dropdown').dropdown('hide');
+                MyAMS.require('modal').then(() => {
+                    MyAMS.modal.open(`${getLocation()}/add-template-portlet.html`);
+                });
+            }
+        },
 
         /**
          * Portlet add callback
@@ -596,7 +627,7 @@ const portal = {
                 }
                 portlets.sortable('refresh');
                 MyAMS.require('modal').then(() => {
-                    MyAMS.modal.open(`portlet-properties.html?form.widgets.portlet_id=${result.portlet_id}`).then((modal) => {
+                    MyAMS.modal.open(`${getLocation()}/portlet-properties.html?form.widgets.portlet_id=${result.portlet_id}`).then((modal) => {
                         modal.on('hide.bs.modal', (evt) => {
                             const form = $('form', modal);
                             if (!form.data('submitted')) {
@@ -618,7 +649,7 @@ const portal = {
             source.addClass('already-dropped');
             MyAMS.require('ajax').then(() => {
                 source.tooltip('hide');
-                MyAMS.ajax.post('drop-template-portlet.json', {
+                MyAMS.ajax.post(`${getLocation()}/drop-template-portlet.json`, {
                     portlet_name: source.data('ams-portlet-name'),
                     slot_name: slot.data('ams-slot-name')
                 }).then((result) => {
@@ -645,7 +676,7 @@ const portal = {
         editPortlet: (evt) => {
             MyAMS.require('modal').then(() => {
                 const portlet = $(evt.currentTarget).objectOrParentWithClass('portlet');
-                MyAMS.modal.open(`portlet-properties.html?form.widgets.portlet_id=${portlet.data('ams-portlet-id')}`);
+                MyAMS.modal.open(`${getLocation()}/portlet-properties.html?form.widgets.portlet_id=${portlet.data('ams-portlet-id')}`);
             });
         },
 
@@ -681,7 +712,7 @@ const portal = {
                         portlet_ids: toPortlets.listattr('data-ams-portlet-id')
                     }
                 };
-            MyAMS.ajax.post('set-template-portlet-order.json', {
+            MyAMS.ajax.post(`${getLocation()}/set-template-portlet-order.json`, {
                 order: JSON.stringify(order)
             });
         },
@@ -720,7 +751,7 @@ const portal = {
 
         doDeletePortlet: (portletId) => {
             MyAMS.require('ajax').then(() => {
-                MyAMS.ajax.post('delete-template-portlet.json', {
+                MyAMS.ajax.post(`${getLocation()}/delete-template-portlet.json`, {
                     portlet_id: portletId
                 }).then((result) => {
                     if (result.status === 'success') {

@@ -5,7 +5,19 @@ PyAMS portal package
 Introduction
 ------------
 
-This package is composed of a set of utility functions, usable into any Pyramid application.
+This package is composed of a set of components, usable into any PyAMS application, which can be used to provide
+presentation templates.
+
+A template is using a Bootstrap based structure, made of rows and "slots" which are containers which can be sized
+and placed according to device size. A slot can then contain "portlets", which are small components which can contain
+text, images or whatever required content.
+
+Templates can be local to a given context, or stored in a central repository and shared between several contents.
+Moreover, any content which is placed inside a hierarchy can choose to inherit template from it's parent, or define
+it's own configuration; but even if you inherit from parent of use a shared template, each portlet settings can be
+reused as is, or redefined, individually.
+
+To improve rendering performances, each portlet render result can be cached.
 
     >>> import pprint
     >>> from pyramid.testing import setUp, tearDown, DummyRequest
@@ -47,7 +59,7 @@ This package is composed of a set of utility functions, usable into any Pyramid 
     Upgrading PyAMS I18n to generation 1...
     Upgrading PyAMS catalog to generation 1...
     Upgrading PyAMS security to generation 2...
-    Upgrading PyAMS portal to generation 1...
+    Upgrading PyAMS portal to generation 5...
 
     >>> from pyramid_chameleon.zpt import renderer_factory
     >>> config.add_renderer('.pt', renderer_factory)
@@ -97,80 +109,80 @@ Let's create a first template:
     True
 
     >>> from pyams_portal.interfaces import IPortalTemplateConfiguration
-    >>> config = IPortalTemplateConfiguration(template)
-    >>> config
+    >>> template_config = IPortalTemplateConfiguration(template)
+    >>> template_config
     <pyams_portal.template.PortalTemplateConfiguration object at 0x...>
-    >>> config.rows
+    >>> template_config.rows
     1
-    >>> config.slot_order[0]
+    >>> template_config.slot_order[0]
     []
 
-    >>> row_index = config.add_row()
+    >>> row_index = template_config.add_row()
     >>> row_index
     1
-    >>> config.rows
+    >>> template_config.rows
     2
 
 Let's create a new slot:
 
-    >>> row_id, name = config.add_slot('Slot 1')
+    >>> row_id, name = template_config.add_slot('Slot 1')
     >>> row_id, name
     (0, 'Slot 1')
-    >>> config.get_slots(0)
+    >>> template_config.get_slots(0)
     ['Slot 1']
 
-    >>> config.slot_names
+    >>> template_config.slot_names
     ['Slot 1']
-    >>> config.slot_order
+    >>> template_config.slot_order
     {0: ['Slot 1'], 1: []}
-    >>> config.get_slot_row('Slot 1')
+    >>> template_config.get_slot_row('Slot 1')
     0
-    >>> config.get_slots(0)
+    >>> template_config.get_slots(0)
     ['Slot 1']
 
-    >>> config.slot_config
+    >>> template_config.slot_config
     {'Slot 1': <pyams_portal.slot.SlotConfiguration object at 0x...>}
-    >>> config.get_slot_configuration('Slot 1')
+    >>> template_config.get_slot_configuration('Slot 1')
     <pyams_portal.slot.SlotConfiguration object at 0x...>
-    >>> config.get_slot_configuration('missing') is None
+    >>> template_config.get_slot_configuration('missing') is None
     True
 
-    >>> config.get_slots_width()
+    >>> template_config.get_slots_width()
     {'Slot 1': {'xs': 12, 'sm': 12, 'md': 12, 'lg': 12, 'xl': 12, 'css': 'col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12', 'visible': True}}
-    >>> config.set_slot_width('Slot 1', 'md', 6)
-    >>> config.get_slots_width('md')
+    >>> template_config.set_slot_width('Slot 1', 'md', 6)
+    >>> template_config.get_slots_width('md')
     {'Slot 1': {'md': 6, 'css': 'col  col-md-6', 'visible': True}}
 
 We can than add a new slot:
 
-    >>> config.add_slot('Slot 2', row_id=1)
+    >>> template_config.add_slot('Slot 2', row_id=1)
     (1, 'Slot 2')
-    >>> config.add_slot('Slot 3', row_id=1)
+    >>> template_config.add_slot('Slot 3', row_id=1)
     (1, 'Slot 3')
 
-    >>> config.slot_order
+    >>> template_config.slot_order
     {0: ['Slot 1'], 1: ['Slot 2', 'Slot 3']}
 
 A slot can be moved from one row to another:
 
-    >>> config.set_slot_order({0: ['Slot 1', 'Slot 3'], 1: ['Slot 2']})
-    >>> config.slot_order
+    >>> template_config.set_slot_order({0: ['Slot 1', 'Slot 3'], 1: ['Slot 2']})
+    >>> template_config.slot_order
     {0: ['Slot 1', 'Slot 3'], 1: ['Slot 2']}
 
 We can also delete a slot:
 
-    >>> config.delete_slot('Slot 3')
-    >>> config.slot_order
+    >>> template_config.delete_slot('Slot 3')
+    >>> template_config.slot_order
     {0: ['Slot 1'], 1: ['Slot 2']}
 
 We can also change rows order, or delete a row:
 
-    >>> config.set_row_order([1, 0])
-    >>> config.slot_order
+    >>> template_config.set_row_order([1, 0])
+    >>> template_config.slot_order
     {0: ['Slot 2'], 1: ['Slot 1']}
 
-    >>> config.delete_row(0)
-    >>> config.slot_order
+    >>> template_config.delete_row(0)
+    >>> template_config.slot_order
     {0: ['Slot 1']}
 
 
@@ -179,9 +191,9 @@ Configuring slots
 
 Each slot can configured using a number of properties:
 
-    >>> config.get_slot_configuration('Slot 2') is None
+    >>> template_config.get_slot_configuration('Slot 2') is None
     True
-    >>> slot_configuration = config.get_slot_configuration('Slot 1')
+    >>> slot_configuration = template_config.get_slot_configuration('Slot 1')
     >>> slot_configuration
     <pyams_portal.slot.SlotConfiguration object at 0x...>
 
@@ -216,7 +228,7 @@ A portlets vocabulary is available:
 
     >>> from pyams_portal.portlets.html import HTML_PORTLET_NAME
 
-    >>> portlet = config.add_portlet(HTML_PORTLET_NAME, 'Slot 1')
+    >>> portlet = template_config.add_portlet(HTML_PORTLET_NAME, 'Slot 1')
     >>> pprint.pprint(portlet)
     {'label': 'Rich text',
      'portlet_id': 2,
@@ -224,12 +236,12 @@ A portlets vocabulary is available:
      'position': 0,
      'slot_name': 'Slot 1'}
 
-    >>> config.get_portlet_slot(2)
+    >>> template_config.get_portlet_slot(2)
     (0, 'Slot 1')
 
 The same portlet can be added several times in a same slot:
 
-    >>> portlet2 = config.add_portlet(HTML_PORTLET_NAME, 'Slot 1')
+    >>> portlet2 = template_config.add_portlet(HTML_PORTLET_NAME, 'Slot 1')
     >>> pprint.pprint(portlet2)
     {'label': 'Rich text',
      'portlet_id': 3,
@@ -239,14 +251,14 @@ The same portlet can be added several times in a same slot:
 
 We can then change portlets order:
 
-    >>> config.set_portlet_order({'from': 3, 'to': {'slot': 'Slot 1', 'portlet_ids': [3, 2]}})
-    >>> config.get_slot_configuration('Slot 1').portlet_ids
+    >>> template_config.set_portlet_order({'from': 3, 'to': {'slot': 'Slot 1', 'portlet_ids': [3, 2]}})
+    >>> template_config.get_slot_configuration('Slot 1').portlet_ids
     [3, 2]
 
 Providing bad IDs doesn't change anything:
 
-    >>> config.set_portlet_order({'from': 4, 'to': {'slot': 'Slot 1', 'portlet_ids': [4, 1]}})
-    >>> config.get_slot_configuration('Slot 1').portlet_ids
+    >>> template_config.set_portlet_order({'from': 4, 'to': {'slot': 'Slot 1', 'portlet_ids': [4, 1]}})
+    >>> template_config.get_slot_configuration('Slot 1').portlet_ids
     [3, 2]
 
 
@@ -315,7 +327,7 @@ only for a specific renderer; the settings factory is defined by the renderer's
 Let's try to add another portlet:
 
     >>> from pyams_portal.portlets.html import RAW_PORTLET_NAME
-    >>> portlet3 = config.add_portlet(RAW_PORTLET_NAME, 'Slot 1')
+    >>> portlet3 = template_config.add_portlet(RAW_PORTLET_NAME, 'Slot 1')
     >>> portlet3['portlet_id']
     4
     >>> portlet_config = portlets_config[4]
@@ -346,8 +358,8 @@ Portlets adapters
 Deleting portlet
 ----------------
 
-    >>> config.delete_portlet(3)
-    >>> config.get_slot_configuration('Slot 1').portlet_ids
+    >>> template_config.delete_portlet(3)
+    >>> template_config.get_slot_configuration('Slot 1').portlet_ids
     [2, 4]
 
 
@@ -404,11 +416,11 @@ A portal page is then getting it's slots configuration from it's selected templa
 portlet can override it's configuration:
 
     >>> from pyams_portal.interfaces import IPortalTemplateConfiguration
-    >>> IPortalTemplateConfiguration(app) is config
+    >>> IPortalTemplateConfiguration(page) is template_config
     True
 
     >>> from pyams_portal.interfaces import IPortalPortletsConfiguration
-    >>> IPortalPortletsConfiguration(app) is portlets_config
+    >>> IPortalPortletsConfiguration(page) is portlets_config
     False
     >>> page_portlets_config = IPortalPortletsConfiguration(app)
     >>> pprint.pprint(page_portlets_config)
@@ -464,7 +476,7 @@ Instead of using a shared template, we can always choose to use a local template
 
     >>> check_local_template(app)
 
-    >>> app_template = IPortalTemplateConfiguration(app)
+    >>> app_template = IPortalTemplateConfiguration(page)
     >>> app_template
     <pyams_portal.template.PortalTemplateConfiguration object at 0x...>
     >>> app_template.rows
@@ -509,7 +521,7 @@ but you can also choose to inherit from parent level:
     >>> folder_page.inherit_parent
     True
 
-    >>> IPortalTemplateConfiguration(folder) is app_template
+    >>> IPortalTemplateConfiguration(folder_page) is app_template
     True
 
     >>> folder_portlets = IPortalPortletsConfiguration(folder)
@@ -518,8 +530,8 @@ but you can also choose to inherit from parent level:
     >>> folder_portlets.get_portlet_configuration(5)
     <pyams_portal.portlet.PortletConfiguration object at 0x...>
 
-    >>> folder_portlets[5].parent
-    <pyams_site.site.BaseSiteRoot object at 0x... oid 0x1 in <Connection at ...>>
+    >>> folder_portlets[5].parent is page
+    True
 
 If we create a new portlet in parent template after initialization, we always get a clone of it's
 configuration in the inherited template:
@@ -580,7 +592,7 @@ Rendering portlets
 ------------------
 
 Portlets are rendered using renderers. A renderer is a registered adapter which is usually
-relies on a template to do it's rendering.
+relying on a template to do it's rendering.
 
     >>> renderer = folder_portlets[6].settings.get_renderer()
     >>> renderer
@@ -672,11 +684,26 @@ Two rendering modes are available for portal pages: a *preview* mode where cachi
 and workflow status is ignored to always get a "fresh" preview, and a *normal* mode where
 workflow status is checked and where cache can be used.
 
+We have to register two content providers used for header and footer before rendering:
+
+    >>> from pyams_portal.skin.page import PortalHeaderContentProvider, PortalFooterContentProvider
+    >>> empty_template = os.path.join(temp_dir, 'empty-template.pt')
+    >>> with open(empty_template, 'w') as file:
+    ...     _ = file.write('')
+
+    >>> override_template(PortalHeaderContentProvider, template=empty_template, layer=IPyAMSLayer)
+    >>> PortalHeaderContentProvider.update = lambda x: None
+
+    >>> override_template(PortalFooterContentProvider, template=empty_template, layer=IPyAMSLayer)
+    >>> PortalFooterContentProvider.update = lambda x: None
+
     >>> from pyams_pagelet.interfaces import IPagelet
     >>> from pyams_portal.skin.page import PortalContextIndexPage, PortalContextPreviewPage
 
     >>> preview = request.registry.queryMultiAdapter((folder, request), IPagelet, name='preview.html')
     >>> preview.update()
+    >>> response = preview()
+
     >>> response = preview()
     >>> response.status_code
     200
@@ -844,6 +871,23 @@ Let's try to use several renderers on another portlet:
         </div>
       </body>
     </html>
+
+Header and footer templates
+---------------------------
+
+Starting with PyAMS_portal 1.6, page header and footer can also be managed using templates in
+the same way. Then, each page is using three distinct templates: header, body (which is the
+default and is using unnamed adapters)and footer; each of them can be defined, shared and
+configured individually:
+
+    >>> from pyams_portal.utils import get_portal_page
+    >>> page = get_portal_page(folder, page_name='header')
+    >>> page
+    <pyams_portal.page.PortalPage object at 0x...>
+    >>> page.__parent__ is folder
+    True
+    >>> page.can_inherit
+    True
 
 
 Tests cleanup:
