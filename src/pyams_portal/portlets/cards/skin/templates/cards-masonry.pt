@@ -25,14 +25,15 @@
 										  xl_width=slot_config.xl_width,
 										  css_class='card-img-top w-100')}
 			</tal:if>
-			<div class="card-body">
+			<div class="card-body"
+				 tal:define="title i18n:card.title;
+							 body i18n:card.body;"
+				 tal:condition="title or body">
 				<h3 class="card-title"
-					tal:define="title i18n:card.title"
 					tal:condition="title">
 					${title}
 				</h3>
 				<p class="card-text"
-				   tal:define="body i18n:card.body"
 				   tal:condition="body">
 					${structure:tales:html(body)}
 				</p>
