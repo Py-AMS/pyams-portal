@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.6.1
+-----
+ - updated doctests
+
 1.6.0
 -----
  - added support for distinct header, body and footer templates in a portlet context
