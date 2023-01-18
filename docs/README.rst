@@ -26,7 +26,10 @@ What is PyAMS portal?
 PyAMS_portal is a PyAMS extension package which can be used to handle presentation templates.
 
 A template is made of rows, slots and portlets, following Bootstrap's grid logic, and
-can be shared between several contexts to handle data or content presentation.
+can be shared between several contexts to handle content presentation. A context can then be
+configured to use distinct templates for page header, body and footer; when reusing a shared
+template, the template configuration of rows and slots is frozen, but each portlet can use a
+different configuration from those of the template from which we inherit.
 
 PyAMS_portal package only provides a very small set of portlets. More portlets are provided by
 content management packages like PyAMS_content, while other extension packages can be used to

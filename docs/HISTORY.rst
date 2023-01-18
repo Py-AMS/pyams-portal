@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.6.0
+-----
+ - added support for distinct header, body and footer templates in a portlet context
+ - added support for Python 3.11
+ - added renderer to spacer portlet
+
 1.5.2
 -----
  - updated doctests
