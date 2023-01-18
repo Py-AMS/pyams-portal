@@ -4,24 +4,24 @@
         <i tal:omit-tag="">${structure:tales:metas}</i>
         <i tal:omit-tag="">${tales:resources}</i>
     </head>
-    <body>
+    <body class="m-0 p-0">
         <div tal:define="skin_class tales:skin_container_class"
              tal:omit-tag="not:skin_class"
-            class="${skin_class}">
+            class="page ${skin_class}">
             <div tal:define="portal_header provider:pyams_portal.header;
                              header_class tales:template_header_class"
                  tal:condition="portal_header"
-                 class="${header_class or 'container'}">
+                 class="header ${header_class or 'container'}">
                ${structure:portal_header}
             </div>
             <div tal:define="template_class tales:template_container_class"
-                class="${template_class or 'container'}">
+                class="main ${template_class or 'container'}">
                 ${structure:provider:pagelet}
             </div>
             <div tal:define="portal_footer provider:pyams_portal.footer;
                              footer_class tales:template_footer_class"
                  tal:condition="portal_footer"
-                 class="${footer_class or 'container'}">
+                 class="footer ${footer_class or 'container'}">
                 ${structure:portal_footer}
             </div>
         </div>
