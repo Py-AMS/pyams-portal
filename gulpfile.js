@@ -1,11 +1,9 @@
 
 const { src, dest, task, watch, parallel } = require('gulp');
 
-const sass = require('gulp-sass');
 const clean = require('gulp-clean-css');
 const rename = require('gulp-rename');
-
-sass.compiler = require('node-sass');
+const sass = require('gulp-sass')(require('node-sass'));
 
 
 task('sass_dev', function() {
@@ -14,10 +12,20 @@ task('sass_dev', function() {
         .pipe(dest('src/pyams_portal/zmi/resources/css/'));
 });
 
-task('sass_prod', function() {
+task('sass', function() {
     return src('src/pyams_portal/zmi/resources/sass/layout.scss')
         .pipe(sass().on('error', sass.logError))
         .pipe(clean())
         .pipe(rename('layout.min.css'))
         .pipe(dest('src/pyams_portal/zmi/resources/css/'));
 });
+
+
+exports.sass_dev = task('sass_dev');
+exports.sass_prod = task('sass');
+
+
+exports.default = function() {
+	watch('src/pyams_portal/zmi/resources/sass/*.scss',
+		parallel('sass_dev', 'sass'));
+};
