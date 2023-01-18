@@ -712,8 +712,8 @@ We have to register two content providers used for header and footer before rend
     <html>
       <head>
       </head>
-      <body>
-        <div class="container">
+      <body class="m-0 p-0">
+        <div class="main container">
           <div>
             <div class="rows">
               <div class="row m-0">
@@ -743,8 +743,8 @@ We have to register two content providers used for header and footer before rend
     <html>
       <head>
       </head>
-      <body>
-        <div class="container">
+      <body class="m-0 p-0">
+        <div class="main container">
           <div>
             <div class="rows">
               <div class="row m-0">
@@ -781,8 +781,8 @@ Let's try to use several renderers on another portlet:
     <html>
       <head>
       </head>
-      <body>
-        <div class="container">
+      <body class="m-0 p-0">
+        <div class="main container">
           <div>
             <div class="rows">
               <div class="row m-0">
@@ -815,8 +815,8 @@ Let's try to use several renderers on another portlet:
     <html>
       <head>
       </head>
-      <body>
-        <div class="container">
+      <body class="m-0 p-0">
+        <div class="main container">
           <div>
             <div class="rows">
               <div class="row m-0">
@@ -848,8 +848,8 @@ Let's try to use several renderers on another portlet:
     <html>
       <head>
       </head>
-      <body>
-        <div class="container">
+      <body class="m-0 p-0">
+        <div class="main container">
           <div>
             <div class="rows">
               <div class="row m-0">
