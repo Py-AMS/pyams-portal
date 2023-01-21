@@ -17,7 +17,7 @@ This module defines base ZMI components.
 
 from fanstatic import Library, Resource
 from pyramid.renderers import render
-from zope.interface import Interface, implementer
+from zope.interface import Interface
 from zope.schema import getFields
 from zope.schema.interfaces import IBool
 
@@ -29,7 +29,6 @@ from pyams_portal.skin import PortletContentProvider
 from pyams_template.template import template_config
 from pyams_utils.adapter import adapter_config
 from pyams_utils.text import text_to_html
-
 
 __docformat__ = 'restructuredtext'
 
@@ -99,7 +98,9 @@ class PortletPreviewer(PortletContentProvider):
             value = value.get(localizer.locale_name)
         if value is None:
             return render('templates/setting-none-preview.pt', {
-                'label': label
+                'label': label,
+                'visible': visible,
+                'icon': icon
             })
         if IBool.providedBy(field):
             return render('templates/setting-bool-preview.pt', {

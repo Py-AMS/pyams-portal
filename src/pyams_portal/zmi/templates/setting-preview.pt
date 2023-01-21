@@ -1,4 +1,4 @@
-<div class="text-truncate">
+<div class="text-truncate" i18n:domain="pyams_portal">
 	<i tal:condition="not:visible"
 	   class="far fa-eye-slash text-danger hint"
 	   title="Hidden element" i18n:attributes="title"></i>
