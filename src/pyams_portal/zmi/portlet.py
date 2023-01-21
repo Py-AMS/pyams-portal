@@ -49,10 +49,9 @@ from pyams_utils.url import absolute_url
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm, FormGroupChecker
 from pyams_zmi.helper.event import get_json_widget_refresh_callback
-from pyams_zmi.interfaces import IAdminLayer
+from pyams_zmi.interfaces import IAdminLayer, IObjectLabel
 from pyams_zmi.interfaces.viewlet import IContextAddingsViewletManager
 from pyams_zmi.utils import get_object_label
-
 
 __docformat__ = 'restructuredtext'
 
@@ -280,7 +279,7 @@ class PortalTemplatePortletEditForm(AdminModalEditForm):
 
     def update_widgets(self, prefix=None):
         super().update_widgets(prefix)
-        portlet_id = self.widgets['portlet_id']
+        portlet_id = self.widgets.get('portlet_id')
         if portlet_id is not None:
             portlet_id.mode = HIDDEN_MODE
 
@@ -516,3 +515,12 @@ class PortletRendererSettingsEditFormRenderer(ContextRequestViewAdapter):
             'status': 'success',
             'message': self.request.localizer.translate(self.view.success_message)
         }
+
+
+@adapter_config(required=(IPortletSettings, IAdminLayer, Interface),
+                provides=IObjectLabel)
+def portlet_settings_label(context, request, view):
+    """Portlet settings label adapter"""
+    portlet = context.configuration.get_portlet()
+    translate = request.localizer.translate
+    return translate(_("Portlet: {portlet}")).format(portlet=translate(portlet.label))
