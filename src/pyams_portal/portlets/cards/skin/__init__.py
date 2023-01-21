@@ -27,9 +27,8 @@ from pyams_portal.portlets.cards.skin.interfaces import CARDS_RENDERER_SETTINGS_
     ICardsPortletMasonryRendererSettings, ICardsPortletRendererSettings
 from pyams_portal.skin import PortletRenderer
 from pyams_template.template import template_config
-from pyams_utils.adapter import adapter_config, get_annotation_adapter
+from pyams_utils.adapter import adapter_config
 from pyams_utils.factory import factory_config
-
 
 __docformat__ = 'restructuredtext'
 
@@ -46,14 +45,6 @@ class CardsPortletRendererSettings(Persistent, Contained):
 
     css_class = FieldProperty(ICardsPortletRendererSettings['css_class'])
     thumb_selection = FieldProperty(ICardsPortletRendererSettings['thumb_selection'])
-
-
-@adapter_config(required=ICardsPortletSettings,
-                provides=ICardsPortletRendererSettings)
-def cards_portlet_renderer_settings(context):
-    """Cards portlet renderer settings"""
-    return get_annotation_adapter(context, CARDS_RENDERER_SETTINGS_KEY,
-                                  ICardsPortletRendererSettings)
 
 
 @adapter_config(required=(IPortalContext, IPyAMSLayer, Interface, ICardsPortletSettings),
@@ -78,14 +69,6 @@ class CardsPortletMasonryRendererSettings(Persistent, Contained):
 
     css_class = FieldProperty(ICardsPortletMasonryRendererSettings['css_class'])
     thumb_selection = FieldProperty(ICardsPortletMasonryRendererSettings['thumb_selection'])
-
-
-@adapter_config(required=ICardsPortletSettings,
-                provides=ICardsPortletMasonryRendererSettings)
-def cards_portlet_masonry_renderer_settings(context):
-    """Cards portlet Masonry renderer settings"""
-    return get_annotation_adapter(context, CARDS_RENDERER_SETTINGS_KEY,
-                                  ICardsPortletMasonryRendererSettings)
 
 
 @adapter_config(name='cards::masonry',

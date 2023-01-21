@@ -27,9 +27,8 @@ from pyams_portal.portlets.carousel.skin.interfaces import CAROUSEL_RENDERER_SET
     ICarouselPortletRendererSettings
 from pyams_portal.skin import PortletRenderer
 from pyams_template.template import template_config
-from pyams_utils.adapter import adapter_config, get_annotation_adapter
+from pyams_utils.adapter import adapter_config
 from pyams_utils.factory import factory_config
-
 
 __docformat__ = 'restructuredtext'
 
@@ -48,14 +47,6 @@ class CarouselPortletRendererSettings(Persistent, Contained):
     display_indicators = FieldProperty(ICarouselPortletRendererSettings['display_indicators'])
     display_captions = FieldProperty(ICarouselPortletRendererSettings['display_captions'])
     enable_touch = FieldProperty(ICarouselPortletRendererSettings['enable_touch'])
-
-
-@adapter_config(required=ICarouselPortletSettings,
-                provides=ICarouselPortletRendererSettings)
-def carousel_portlet_renderer_settings(context):
-    """Carousel portlet renderer settings"""
-    return get_annotation_adapter(context, CAROUSEL_RENDERER_SETTINGS_KEY,
-                                  ICarouselPortletRendererSettings)
 
 
 @adapter_config(required=(IPortalContext, IPyAMSLayer, Interface, ICarouselPortletSettings),
