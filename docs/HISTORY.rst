@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.6.2
+-----
+ - added default portlet settings label adapter
+ - removed useless portlets renderers settings adapters
+ - updated portlet settings preview templates
+
 1.6.1
 -----
  - updated doctests
