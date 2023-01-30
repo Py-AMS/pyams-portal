@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.7.0
+-----
+ - added attribute to portlet settings to define Bootstrap devices on which portlet
+  is visible
+
 1.6.2
 -----
  - added default portlet settings label adapter
