@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2023-01-21 13:04+0100\n"
+"POT-Creation-Date: 2023-01-30 08:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,115 +24,123 @@ msgstr ""
 msgid "Designer (role)"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:82
+#: ./src/pyams_portal/interfaces.py:83
 msgid "Portlet"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:85 ./src/pyams_portal/interfaces.py:233
+#: ./src/pyams_portal/interfaces.py:86 ./src/pyams_portal/interfaces.py:243
 msgid "Slot name"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:86
+#: ./src/pyams_portal/interfaces.py:87
 msgid "Slot name to which this configuration applies"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:99
+#: ./src/pyams_portal/interfaces.py:100
 msgid "Portlet renderer"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:100
+#: ./src/pyams_portal/interfaces.py:101
 msgid "Name of renderer used to render this portlet"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:135
+#: ./src/pyams_portal/interfaces.py:109
+msgid "Devices visibility"
+msgstr ""
+
+#: ./src/pyams_portal/interfaces.py:110
+msgid "You can specify devices on which this portlet will be displayed or not"
+msgstr ""
+
+#: ./src/pyams_portal/interfaces.py:145
 msgid "Inherit parent configuration?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:136 ./src/pyams_portal/interfaces.py:142
+#: ./src/pyams_portal/interfaces.py:146 ./src/pyams_portal/interfaces.py:152
 msgid ""
 "This option is only available if context's parent is using the same "
 "template..."
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:141
+#: ./src/pyams_portal/interfaces.py:151
 msgid "Override parent configuration?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:234
+#: ./src/pyams_portal/interfaces.py:244
 msgid "This name must be unique in a given template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:237
+#: ./src/pyams_portal/interfaces.py:247
 msgid "Row ID"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:251
+#: ./src/pyams_portal/interfaces.py:261
 msgid "Visible slot?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:252
+#: ./src/pyams_portal/interfaces.py:262
 msgid "Select 'no' to hide this slot..."
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:256
+#: ./src/pyams_portal/interfaces.py:266
 msgid "Container CSS class"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:257
+#: ./src/pyams_portal/interfaces.py:267
 msgid "CSS class applied to this slot container"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:260
+#: ./src/pyams_portal/interfaces.py:270
 msgid "Extra small device width"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:261
+#: ./src/pyams_portal/interfaces.py:271
 msgid ""
 "Slot width, in columns count, on extra small devices (&lt; 576 pixels); set "
 "to 0 to hide the slot"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:267
+#: ./src/pyams_portal/interfaces.py:277
 msgid "Small device width"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:268
+#: ./src/pyams_portal/interfaces.py:278
 msgid ""
 "Slot width, in columns count, on small devices (&gt;= 576 pixels); set to 0 "
 "to hide the slot"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:274
+#: ./src/pyams_portal/interfaces.py:284
 msgid "Medium devices width"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:275
+#: ./src/pyams_portal/interfaces.py:285
 msgid ""
 "Slot width, in columns count, on medium desktop devices (&gt;= 768 pixels); "
 "set to 0 to hide the slot"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:281
+#: ./src/pyams_portal/interfaces.py:291
 msgid "Large devices width"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:282
+#: ./src/pyams_portal/interfaces.py:292
 msgid ""
 "Slot width, in columns count, on large desktop devices (&gt;= 992 pixels); "
 "set to 0 to hide the slot"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:288
+#: ./src/pyams_portal/interfaces.py:298
 msgid "Extra-large devices width"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:289
+#: ./src/pyams_portal/interfaces.py:299
 msgid ""
 "Slot width, in columns count, on extra large desktop devices (&gt;= 1200 "
 "pixels); set to 0 to hide the slot"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:295 ./src/pyams_portal/interfaces.py:428
+#: ./src/pyams_portal/interfaces.py:305 ./src/pyams_portal/interfaces.py:438
 #: ./src/pyams_portal/zmi/templates/presentation-template.pt:46
 #: ./src/pyams_portal/portlets/cards/interfaces.py:76
 #: ./src/pyams_portal/portlets/cards/skin/interfaces.py:34
@@ -141,110 +149,110 @@ msgstr ""
 msgid "CSS class"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:296
+#: ./src/pyams_portal/interfaces.py:306
 msgid "CSS class applied to this slot"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:299
+#: ./src/pyams_portal/interfaces.py:309
 msgid "HTML prefix"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:300
+#: ./src/pyams_portal/interfaces.py:310
 msgid "This HTML code with be included, as is, before the first portlet"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:304
+#: ./src/pyams_portal/interfaces.py:314
 msgid "HTML suffix"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:305
+#: ./src/pyams_portal/interfaces.py:315
 msgid "This HTML code will be included, as is, after the last portlet"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:424
+#: ./src/pyams_portal/interfaces.py:434
 msgid "Template name"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:425
+#: ./src/pyams_portal/interfaces.py:435
 msgid "Explicit name given to portal template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:429
+#: ./src/pyams_portal/interfaces.py:439
 #: ./src/pyams_portal/zmi/templates/presentation-template.pt:48
 msgid "This CSS class will be used as main template container CSS class"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:439
+#: ./src/pyams_portal/interfaces.py:449
 msgid "Access menu from home"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:440
+#: ./src/pyams_portal/interfaces.py:450
 msgid ""
 "If 'yes', a menu will be displayed to get access to portal templates "
 "container from site admin home page"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:457
+#: ./src/pyams_portal/interfaces.py:467
 msgid "Designers"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:458
+#: ./src/pyams_portal/interfaces.py:468
 msgid "List of designers allowed to manage presentation templates"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:467
+#: ./src/pyams_portal/interfaces.py:477
 msgid "Toolbar portlets"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:468
+#: ./src/pyams_portal/interfaces.py:478
 msgid ""
 "These portlets will be directly available in templates configuration page "
 "toolbar"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:502
+#: ./src/pyams_portal/interfaces.py:512
 msgid "Inherit parent template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:503
+#: ./src/pyams_portal/interfaces.py:513
 msgid "Should we reuse parent template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:507
+#: ./src/pyams_portal/interfaces.py:517
 msgid "Override parent template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:508
+#: ./src/pyams_portal/interfaces.py:518
 msgid "Should we override parent template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:512
+#: ./src/pyams_portal/interfaces.py:522
 msgid "Use local template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:513
+#: ./src/pyams_portal/interfaces.py:523
 msgid ""
 "If 'yes', you can define a custom local template instead of a shared template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:518 ./src/pyams_portal/zmi/portlet.py:132
+#: ./src/pyams_portal/interfaces.py:528 ./src/pyams_portal/zmi/portlet.py:132
 #: ./src/pyams_portal/zmi/portlet.py:257 ./src/pyams_portal/zmi/slot.py:65
 msgid "Local template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:523
+#: ./src/pyams_portal/interfaces.py:533
 msgid "Use shared template?"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:524
+#: ./src/pyams_portal/interfaces.py:534
 msgid "If 'yes', you can select a shared template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:528
+#: ./src/pyams_portal/interfaces.py:538
 msgid "Page template"
 msgstr ""
 
-#: ./src/pyams_portal/interfaces.py:529
+#: ./src/pyams_portal/interfaces.py:539
 msgid "Template used for this page"
 msgstr ""
 
@@ -416,22 +424,22 @@ msgstr ""
 msgid "Portlet settings"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/portlet.py:415
+#: ./src/pyams_portal/zmi/portlet.py:416
 msgid ""
 "You changed selected portlet renderer. Don't omit to check new renderer "
 "settings..."
 msgstr ""
 
-#: ./src/pyams_portal/zmi/portlet.py:480
+#: ./src/pyams_portal/zmi/portlet.py:481
 #, python-format
 msgid "<small>Portlet: {portlet}</small><br />« {renderer} » renderer"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/portlet.py:484
+#: ./src/pyams_portal/zmi/portlet.py:485
 msgid "Edit renderer settings"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/portlet.py:527
+#: ./src/pyams_portal/zmi/portlet.py:528
 #, python-format
 msgid "Portlet: {portlet}"
 msgstr ""
@@ -535,11 +543,11 @@ msgstr ""
 msgid "Template properties"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/__init__.py:84
+#: ./src/pyams_portal/zmi/__init__.py:100
 msgid "Renderer:"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/__init__.py:86
+#: ./src/pyams_portal/zmi/__init__.py:102
 msgid "!! MISSING RENDERER !!"
 msgstr ""
 

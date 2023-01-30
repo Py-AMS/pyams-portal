@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2023-01-21 13:04+0100\n"
+"POT-Creation-Date: 2023-01-30 08:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,31 +23,41 @@ msgstr "Gérer les modèles de présentation"
 msgid "Designer (role)"
 msgstr "Designer (rôle)"
 
-#: src/pyams_portal/interfaces.py:82
+#: src/pyams_portal/interfaces.py:83
 msgid "Portlet"
 msgstr "Composant"
 
-#: src/pyams_portal/interfaces.py:85 src/pyams_portal/interfaces.py:233
+#: src/pyams_portal/interfaces.py:86 src/pyams_portal/interfaces.py:243
 msgid "Slot name"
 msgstr "Nom du bloc"
 
-#: src/pyams_portal/interfaces.py:86
+#: src/pyams_portal/interfaces.py:87
 msgid "Slot name to which this configuration applies"
 msgstr "Nom du bloc à l'intérieur duquel le composant sera ajouté"
 
-#: src/pyams_portal/interfaces.py:99
+#: src/pyams_portal/interfaces.py:100
 msgid "Portlet renderer"
 msgstr "Mode de rendu"
 
-#: src/pyams_portal/interfaces.py:100
+#: src/pyams_portal/interfaces.py:101
 msgid "Name of renderer used to render this portlet"
 msgstr "Nom du mode de rendu utilisé pour restituer le contenu de ce composant"
 
-#: src/pyams_portal/interfaces.py:135
+#: src/pyams_portal/interfaces.py:109
+msgid "Devices visibility"
+msgstr "Périphériques d'affichage"
+
+#: src/pyams_portal/interfaces.py:110
+msgid "You can specify devices on which this portlet will be displayed or not"
+msgstr ""
+"Utilisez cette option pour limiter l'affichage du composant à certains types "
+"de périphériques"
+
+#: src/pyams_portal/interfaces.py:145
 msgid "Inherit parent configuration?"
 msgstr "Hériter de la configuration du parent"
 
-#: src/pyams_portal/interfaces.py:136 src/pyams_portal/interfaces.py:142
+#: src/pyams_portal/interfaces.py:146 src/pyams_portal/interfaces.py:152
 msgid ""
 "This option is only available if context's parent is using the same "
 "template..."
@@ -55,39 +65,39 @@ msgstr ""
 "Cette option n'est applicable que si le niveau parent utilise le même modèle "
 "de présentation..."
 
-#: src/pyams_portal/interfaces.py:141
+#: src/pyams_portal/interfaces.py:151
 msgid "Override parent configuration?"
 msgstr "Redéfinir les propriétés du composant"
 
-#: src/pyams_portal/interfaces.py:234
+#: src/pyams_portal/interfaces.py:244
 msgid "This name must be unique in a given template"
 msgstr "Ce nom doit un être unique au sein d'un modèle de présentation"
 
-#: src/pyams_portal/interfaces.py:237
+#: src/pyams_portal/interfaces.py:247
 msgid "Row ID"
 msgstr "ID de la ligne"
 
-#: src/pyams_portal/interfaces.py:251
+#: src/pyams_portal/interfaces.py:261
 msgid "Visible slot?"
 msgstr "Bloc visible ?"
 
-#: src/pyams_portal/interfaces.py:252
+#: src/pyams_portal/interfaces.py:262
 msgid "Select 'no' to hide this slot..."
 msgstr "Sélectionner 'non' pour cacher ce bloc..."
 
-#: src/pyams_portal/interfaces.py:256
+#: src/pyams_portal/interfaces.py:266
 msgid "Container CSS class"
 msgstr "Classe CSS du conteneur"
 
-#: src/pyams_portal/interfaces.py:257
+#: src/pyams_portal/interfaces.py:267
 msgid "CSS class applied to this slot container"
 msgstr "Classe CSS spécifique appliquée au conteneur de ce bloc"
 
-#: src/pyams_portal/interfaces.py:260
+#: src/pyams_portal/interfaces.py:270
 msgid "Extra small device width"
 msgstr "Largeur sur très petits périphériques"
 
-#: src/pyams_portal/interfaces.py:261
+#: src/pyams_portal/interfaces.py:271
 msgid ""
 "Slot width, in columns count, on extra small devices (&lt; 576 pixels); set "
 "to 0 to hide the slot"
@@ -96,11 +106,11 @@ msgstr ""
 "(&lt; 576 pixels) ; indiquez une valeur de 0 pour ne pas afficher ce bloc "
 "sur ce type de périphérique..."
 
-#: src/pyams_portal/interfaces.py:267
+#: src/pyams_portal/interfaces.py:277
 msgid "Small device width"
 msgstr "Largeur sur petits périphériques"
 
-#: src/pyams_portal/interfaces.py:268
+#: src/pyams_portal/interfaces.py:278
 msgid ""
 "Slot width, in columns count, on small devices (&gt;= 576 pixels); set to 0 "
 "to hide the slot"
@@ -109,11 +119,11 @@ msgstr ""
 "576 pixels) ; indiquez une valeur de 0 pour ne pas afficher ce bloc sur ce "
 "type de périphérique..."
 
-#: src/pyams_portal/interfaces.py:274
+#: src/pyams_portal/interfaces.py:284
 msgid "Medium devices width"
 msgstr "Largeur sur périphériques moyens"
 
-#: src/pyams_portal/interfaces.py:275
+#: src/pyams_portal/interfaces.py:285
 msgid ""
 "Slot width, in columns count, on medium desktop devices (&gt;= 768 pixels); "
 "set to 0 to hide the slot"
@@ -122,11 +132,11 @@ msgstr ""
 "768 pixels) ; indiquez une valeur de 0 pour ne pas afficher ce bloc sur ce "
 "type de périphérique..."
 
-#: src/pyams_portal/interfaces.py:281
+#: src/pyams_portal/interfaces.py:291
 msgid "Large devices width"
 msgstr "Largeur sur grands périphériques"
 
-#: src/pyams_portal/interfaces.py:282
+#: src/pyams_portal/interfaces.py:292
 msgid ""
 "Slot width, in columns count, on large desktop devices (&gt;= 992 pixels); "
 "set to 0 to hide the slot"
@@ -135,11 +145,11 @@ msgstr ""
 "992 pixels) ; indiquez une valeur de 0 pour ne pas afficher ce bloc sur ce "
 "type de périphérique..."
 
-#: src/pyams_portal/interfaces.py:288
+#: src/pyams_portal/interfaces.py:298
 msgid "Extra-large devices width"
 msgstr "Largeur sur très grands périphériques"
 
-#: src/pyams_portal/interfaces.py:289
+#: src/pyams_portal/interfaces.py:299
 msgid ""
 "Slot width, in columns count, on extra large desktop devices (&gt;= 1200 "
 "pixels); set to 0 to hide the slot"
@@ -148,7 +158,7 @@ msgstr ""
 "(&gt;= 1200 pixels) ; indiquez une valeur de 0 pour ne pas afficher ce bloc "
 "sur ce type de périphérique..."
 
-#: src/pyams_portal/interfaces.py:295 src/pyams_portal/interfaces.py:428
+#: src/pyams_portal/interfaces.py:305 src/pyams_portal/interfaces.py:438
 #: src/pyams_portal/zmi/templates/presentation-template.pt:46
 #: src/pyams_portal/portlets/cards/interfaces.py:76
 #: src/pyams_portal/portlets/cards/skin/interfaces.py:34
@@ -157,50 +167,50 @@ msgstr ""
 msgid "CSS class"
 msgstr "Classe CSS"
 
-#: src/pyams_portal/interfaces.py:296
+#: src/pyams_portal/interfaces.py:306
 msgid "CSS class applied to this slot"
 msgstr "Classe CSS spécifique appliquée à ce bloc"
 
-#: src/pyams_portal/interfaces.py:299
+#: src/pyams_portal/interfaces.py:309
 msgid "HTML prefix"
 msgstr "Préfixe HTML"
 
-#: src/pyams_portal/interfaces.py:300
+#: src/pyams_portal/interfaces.py:310
 msgid "This HTML code with be included, as is, before the first portlet"
 msgstr ""
 "Ce code HTML sera intégré dans la page, en l'état, juste avant le premier "
 "composant"
 
-#: src/pyams_portal/interfaces.py:304
+#: src/pyams_portal/interfaces.py:314
 msgid "HTML suffix"
 msgstr "Suffixe HTML"
 
-#: src/pyams_portal/interfaces.py:305
+#: src/pyams_portal/interfaces.py:315
 msgid "This HTML code will be included, as is, after the last portlet"
 msgstr ""
 "Ce code HTML sera intégré dans la page, en l'état, juste après le dernier "
 "composant"
 
-#: src/pyams_portal/interfaces.py:424
+#: src/pyams_portal/interfaces.py:434
 msgid "Template name"
 msgstr "Nom du modèle"
 
-#: src/pyams_portal/interfaces.py:425
+#: src/pyams_portal/interfaces.py:435
 msgid "Explicit name given to portal template"
 msgstr "Nom explicite du modèle de présentation"
 
-#: src/pyams_portal/interfaces.py:429
+#: src/pyams_portal/interfaces.py:439
 #: src/pyams_portal/zmi/templates/presentation-template.pt:48
 msgid "This CSS class will be used as main template container CSS class"
 msgstr ""
 "Cette classe CSS sera appliquée comme classe principale du conteneur du "
 "modèle de présentation, lors du rendu en front-office"
 
-#: src/pyams_portal/interfaces.py:439
+#: src/pyams_portal/interfaces.py:449
 msgid "Access menu from home"
 msgstr "Ajouter un accès depuis l'accueil"
 
-#: src/pyams_portal/interfaces.py:440
+#: src/pyams_portal/interfaces.py:450
 msgid ""
 "If 'yes', a menu will be displayed to get access to portal templates "
 "container from site admin home page"
@@ -208,19 +218,19 @@ msgstr ""
 "Si 'oui', un menu d'accès au gestionnaire de modèles de présentation sera "
 "ajouté depuis la page d'accueil de l'interface d'administration du site"
 
-#: src/pyams_portal/interfaces.py:457
+#: src/pyams_portal/interfaces.py:467
 msgid "Designers"
 msgstr "Designers"
 
-#: src/pyams_portal/interfaces.py:458
+#: src/pyams_portal/interfaces.py:468
 msgid "List of designers allowed to manage presentation templates"
 msgstr "Liste des mandataires hbailités à gérer les modèles de présentation"
 
-#: src/pyams_portal/interfaces.py:467
+#: src/pyams_portal/interfaces.py:477
 msgid "Toolbar portlets"
 msgstr "Composants de la barre d'outils"
 
-#: src/pyams_portal/interfaces.py:468
+#: src/pyams_portal/interfaces.py:478
 msgid ""
 "These portlets will be directly available in templates configuration page "
 "toolbar"
@@ -228,53 +238,53 @@ msgstr ""
 "Les composants sélectionnés seront accessibles directement dans la barre "
 "d'outils de configuration des modèles de présentation"
 
-#: src/pyams_portal/interfaces.py:502
+#: src/pyams_portal/interfaces.py:512
 msgid "Inherit parent template?"
 msgstr "Hériter du modèle du parent ?"
 
-#: src/pyams_portal/interfaces.py:503
+#: src/pyams_portal/interfaces.py:513
 msgid "Should we reuse parent template?"
 msgstr "Si 'oui', le même modèle que le niveau parent sera utilisé"
 
-#: src/pyams_portal/interfaces.py:507
+#: src/pyams_portal/interfaces.py:517
 msgid "Override parent template?"
 msgstr "Redéfinir le modèle de présentation"
 
-#: src/pyams_portal/interfaces.py:508
+#: src/pyams_portal/interfaces.py:518
 msgid "Should we override parent template?"
 msgstr "Si 'oui', le modèle du niveau parent ne sera pas utilisé"
 
-#: src/pyams_portal/interfaces.py:512
+#: src/pyams_portal/interfaces.py:522
 msgid "Use local template?"
 msgstr "Utiliser un modèle spécifique"
 
-#: src/pyams_portal/interfaces.py:513
+#: src/pyams_portal/interfaces.py:523
 msgid ""
 "If 'yes', you can define a custom local template instead of a shared template"
 msgstr ""
 "Si 'oui', vous pouvez choisir d'utiliser un modèle de présentation propre à "
 "ce contexte plutôt qu'un modèle de présentation partagé"
 
-#: src/pyams_portal/interfaces.py:518 src/pyams_portal/zmi/portlet.py:132
+#: src/pyams_portal/interfaces.py:528 src/pyams_portal/zmi/portlet.py:132
 #: src/pyams_portal/zmi/portlet.py:257 src/pyams_portal/zmi/slot.py:65
 msgid "Local template"
 msgstr "Modèle de présentation spécifique"
 
-#: src/pyams_portal/interfaces.py:523
+#: src/pyams_portal/interfaces.py:533
 msgid "Use shared template?"
 msgstr "Utiliser un modèle partagé"
 
-#: src/pyams_portal/interfaces.py:524
+#: src/pyams_portal/interfaces.py:534
 msgid "If 'yes', you can select a shared template"
 msgstr ""
 "Si 'oui', vous pouvez sélectionner un modèle de présentation partagé pour "
 "prendre en charge la présentation de ce contexte"
 
-#: src/pyams_portal/interfaces.py:528
+#: src/pyams_portal/interfaces.py:538
 msgid "Page template"
 msgstr "Modèle de présentation"
 
-#: src/pyams_portal/interfaces.py:529
+#: src/pyams_portal/interfaces.py:539
 msgid "Template used for this page"
 msgstr "Modèle de présentation utilisé pour ce contexte"
 
@@ -471,7 +481,7 @@ msgstr ""
 msgid "Portlet settings"
 msgstr "Propriétés du composant"
 
-#: src/pyams_portal/zmi/portlet.py:415
+#: src/pyams_portal/zmi/portlet.py:416
 msgid ""
 "You changed selected portlet renderer. Don't omit to check new renderer "
 "settings..."
@@ -479,17 +489,17 @@ msgstr ""
 "Vous avez changé le mode de rendu de ce composant ; n'oubliez pas de "
 "vérifier les paramètres du nouveau mode de rendu !"
 
-#: src/pyams_portal/zmi/portlet.py:480
+#: src/pyams_portal/zmi/portlet.py:481
 #, python-format
 msgid "<small>Portlet: {portlet}</small><br />« {renderer} » renderer"
 msgstr ""
 "<small>Composant « {portlet} »</small><br />Mode de rendu « {renderer} »"
 
-#: src/pyams_portal/zmi/portlet.py:484
+#: src/pyams_portal/zmi/portlet.py:485
 msgid "Edit renderer settings"
 msgstr "Propriétés du mode de rendu"
 
-#: src/pyams_portal/zmi/portlet.py:527
+#: src/pyams_portal/zmi/portlet.py:528
 #, python-format
 msgid "Portlet: {portlet}"
 msgstr "Composant « {portlet} »"
@@ -591,11 +601,11 @@ msgstr "Modèle de présentation « {} »"
 msgid "Template properties"
 msgstr "Propriétés du modèle"
 
-#: src/pyams_portal/zmi/__init__.py:84
+#: src/pyams_portal/zmi/__init__.py:100
 msgid "Renderer:"
 msgstr "Mode de rendu :"
 
-#: src/pyams_portal/zmi/__init__.py:86
+#: src/pyams_portal/zmi/__init__.py:102
 msgid "!! MISSING RENDERER !!"
 msgstr "!! INCONNU !!"
 

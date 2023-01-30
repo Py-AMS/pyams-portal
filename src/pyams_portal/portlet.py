@@ -133,12 +133,13 @@ class PortletSettings(Persistent, Contained):
     This class is supposed to be sub-classed by all custom portlet subclasses to
     store their configuration settings.
 
-    Each portlet sub-class must define it's settings factory in it's "settings_factory" attribute.
+    Each portlet subclass must define its settings factory in it's "settings_factory" attribute.
     Given factory can be a function, a class or an interface; in this last case, implementation
     is looking for default object factory registered for this interface.
     """
 
     _renderer = FieldProperty(IPortletSettings['renderer'])
+    devices_visibility = FieldProperty(IPortletSettings['devices_visibility'])
 
     __name__ = '++settings++'
 
@@ -180,6 +181,13 @@ class PortletSettings(Persistent, Contained):
         return request.registry.queryMultiAdapter((request.root, request, request, self),
                                                   IPortletRenderer, name=self._renderer)
 
+    def get_devices_visibility(self):
+        """Get CSS classes matching devices visibility"""
+        return ' '.join(
+            f"d{'-' if size != 'xs' else ''}{'' if size == 'xs' else size}-{'block' if value else 'none'}"
+            for size, value in self.devices_visibility.items()
+        )
+
     @property
     def configuration(self):
         """Configuration getter"""
@@ -219,9 +227,7 @@ class PortletConfiguration(Persistent, Contained):
 
     def __init__(self, portlet):
         self.portlet_name = portlet.name
-        factory = portlet.settings_factory
-        if is_interface(factory):
-            factory = get_object_factory(factory)
+        factory = get_object_factory(portlet.settings_factory)
         assert factory is not None, "Missing portlet settings factory"
         settings = factory()
         settings.configuration = self

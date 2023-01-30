@@ -90,8 +90,9 @@ class BasePortalContextPage:
         portlet = self.get_portlet(configuration.portlet_name)
         if portlet is not None:
             request = self.request  # pylint: disable=no-member
-            return request.registry.queryMultiAdapter((portlet, request),
-                                                      IPortletCSSClass, default='')
+            css_class = request.registry.queryMultiAdapter((portlet, request),
+                                                           IPortletCSSClass, default='')
+            return f"{configuration.settings.get_devices_visibility()} {css_class}"
         return None
 
     def render_portlet(self, portlet_id, template_name=''):

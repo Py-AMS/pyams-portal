@@ -573,7 +573,10 @@ graphical theme which will be applied.
     </div>
 
     >>> print(previewer())
-    <div class="text-info text-truncate border-bottom mb-1">    <small>Renderer:</small>    Rich text (default)</div>--
+    <div class="text-info text-truncate border-bottom mb-1">
+        <small>Renderer:</small>    Rich text (default)
+        <span class="float-right"><i class="fa fa-fw fas fa-mobile-alt hint" title="Smartphones"></i> <i class="fa fa-fw fas fa-tablet-alt hint" title="Tablets"></i> <i class="fa fa-fw fas fa-desktop hint" title="Medium screens"></i> <i class="fa fa-fw fas fa-tv hint" title="Large screens"></i> <i class="fa fa-fw fas fa-solar-panel hint" title="Extra large screens"></i></span>
+    </div>--
 
     >>> settings = folder_portlets[6].settings
     >>> previewer = request.registry.queryMultiAdapter((folder, request, None, settings), IPortletPreviewer)
@@ -585,7 +588,10 @@ graphical theme which will be applied.
     </div>
 
     >>> print(previewer())
-    <div class="text-info text-truncate border-bottom mb-1">    <small>Renderer:</small>    Rich text (default)</div><p>This is a test!</p>
+    <div class="text-info text-truncate border-bottom mb-1">
+        <small>Renderer:</small>    Rich text (default)
+        <span class="float-right"><i class="fa fa-fw fas fa-mobile-alt hint" title="Smartphones"></i> <i class="fa fa-fw fas fa-tablet-alt hint" title="Tablets"></i> <i class="fa fa-fw fas fa-desktop hint" title="Medium screens"></i> <i class="fa fa-fw fas fa-tv hint" title="Large screens"></i> <i class="fa fa-fw fas fa-solar-panel hint" title="Extra large screens"></i></span>
+    </div><p>This is a test!</p>
 
 
 Rendering portlets
@@ -593,6 +599,9 @@ Rendering portlets
 
 Portlets are rendered using renderers. A renderer is a registered adapter which is usually
 relying on a template to do it's rendering.
+
+    >>> folder_portlets[6].settings.get_devices_visibility()
+    'd-block d-sm-block d-md-block d-lg-block d-xl-block'
 
     >>> renderer = folder_portlets[6].settings.get_renderer()
     >>> renderer
@@ -720,7 +729,7 @@ We have to register two content providers used for header and footer before rend
                 <div class="slots w-100">
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                     <div class="portlets">
-                      <div class="portlet ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
                         <p>This is a test!</p>
                       </div>
                     </div>
@@ -751,7 +760,7 @@ We have to register two content providers used for header and footer before rend
                 <div class="slots w-100">
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                     <div class="portlets">
-                      <div class="portlet ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
                         <p>This is a test!</p>
                       </div>
                     </div>
@@ -789,10 +798,10 @@ Let's try to use several renderers on another portlet:
                 <div class="slots w-100">
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                     <div class="portlets">
-                      <div class="portlet ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
                         <p>This is a test!</p>
                       </div>
-                      <div class="portlet ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
                         <div class="source"><pre><span></span><span class="linenos">1</span>*This* is my code
                           </pre></div>
                       </div>
@@ -823,10 +832,10 @@ Let's try to use several renderers on another portlet:
                 <div class="slots w-100">
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                     <div class="portlets">
-                      <div class="portlet ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
                         <p>This is a test!</p>
                       </div>
-                      <div class="portlet ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
                         <p><em>This</em> is my code</p>
                       </div>
                     </div>
@@ -856,10 +865,10 @@ Let's try to use several renderers on another portlet:
                 <div class="slots w-100">
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                     <div class="portlets">
-                      <div class="portlet ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
                         <p>This is a test!</p>
                       </div>
-                      <div class="portlet ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
                         <p><em>This</em> is my code</p>
                       </div>
                     </div>

@@ -23,6 +23,7 @@ from pyramid.view import view_config
 from zope.interface import Interface, alsoProvides, implementer
 
 from pyams_form.ajax import AJAXFormRenderer, ajax_form_config
+from pyams_form.browser.checkbox import SingleCheckBoxFieldWidget, CheckBoxFieldWidget
 from pyams_form.field import Fields
 from pyams_form.interfaces import HIDDEN_MODE
 from pyams_form.interfaces.form import IAJAXFormRenderer, IFormContent, IGroup, IInnerSubForm
@@ -378,7 +379,8 @@ class PortletConfigurationEditForm(InnerEditForm):
     def fields(self):
         """Form fields getter"""
         factory = self.parent_form.settings_factory
-        fields = Fields(factory).omit('__name__', 'renderer') + Fields(factory).select('renderer')
+        fields = Fields(factory).omit('__name__', 'renderer', 'devices_visibility') + \
+            Fields(factory).select('renderer', 'devices_visibility')
         fields['renderer'].widget_factory = RendererSelectFieldWidget
         return fields
 

@@ -26,6 +26,7 @@ from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortalTemplate, IPortalTemplateConfiguration, \
     IPortletPreviewer, IPortletSettings
 from pyams_portal.skin import PortletContentProvider
+from pyams_skin.interfaces import BOOTSTRAP_DEVICES_ICONS, BOOTSTRAP_SIZES
 from pyams_template.template import template_config
 from pyams_utils.adapter import adapter_config
 from pyams_utils.text import text_to_html
@@ -50,10 +51,26 @@ layout_js = Resource(library, 'js/layout.js',
 # Portlet preview
 #
 
-PREVIEW_PREFIX = '<div class="text-info text-truncate border-bottom mb-1">' \
-                 '    <small>{label}</small>' \
-                 '    {renderer}' \
-                 '</div>'
+PREVIEW_PREFIX = '''<div class="text-info text-truncate border-bottom mb-1">
+    <small>{label}</small>
+    {renderer}
+    <span class="float-right">{visibility}</span>
+</div>'''
+
+VISIBLE_ICON = '<i class="fa fa-fw {icon} hint" title="{title}"></i>'
+
+HIDDEN_ICON = '<i class="fa fa-fw {icon} text-warning hint" title="{title}"></i>'
+
+
+def get_visibility_icons(settings, translate):
+    """Visibility icons getter"""
+    for size, value in settings.devices_visibility.items():
+        if value:
+            yield VISIBLE_ICON.format(icon=BOOTSTRAP_DEVICES_ICONS.get(size),
+                                      title=translate(BOOTSTRAP_SIZES.get(size)))
+        else:
+            yield HIDDEN_ICON.format(icon=BOOTSTRAP_DEVICES_ICONS.get(size),
+                                     title=translate(BOOTSTRAP_SIZES.get(size)))
 
 
 @adapter_config(required=(Interface, IPyAMSLayer, Interface, IPortletSettings),
@@ -82,7 +99,8 @@ class PortletPreviewer(PortletContentProvider):
         result = PREVIEW_PREFIX.format(
             label=translate(_("Renderer:")),
             renderer=translate(renderer.label if renderer is not None
-                               else _("!! MISSING RENDERER !!")))
+                               else _("!! MISSING RENDERER !!")),
+            visibility=' '.join(get_visibility_icons(self.settings, translate)))
         result += super().render(template_name)
         return result
 

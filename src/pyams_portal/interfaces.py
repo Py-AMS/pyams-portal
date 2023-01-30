@@ -25,6 +25,7 @@ from zope.location.interfaces import IContained
 from zope.schema import Bool, Choice, Int, List, Object, Text, TextLine
 
 from pyams_security.schema import PermissionField, PrincipalsSetField
+from pyams_skin.schema import BootstrapDevicesBooleanField
 from pyams_utils.schema import PersistentListField, PersistentMappingField
 
 from pyams_portal import _  # pylint: disable=ungrouped-imports
@@ -104,6 +105,15 @@ class IPortletSettings(ILocation, IAttributeAnnotatable):
 
     def get_renderer(self, request=None):
         """Get renderer utility"""
+
+    devices_visibility = BootstrapDevicesBooleanField(title=_("Devices visibility"),
+                                                      description=_("You can specify devices on which this "
+                                                                    "portlet will be displayed or not"),
+                                                      required=False,
+                                                      default=True)
+
+    def get_devices_visibility(self):
+        """Get CSS classes list matching devices display"""
 
 
 PORTLETS_CONFIGURATION_KEY = 'pyams_portal.portlets'
