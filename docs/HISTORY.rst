@@ -1,10 +1,14 @@
 Changelog
 =========
 
+1.7.1
+-----
+ - corrected history syntax error
+
 1.7.0
 -----
  - added attribute to portlet settings to define Bootstrap devices on which portlet
-  is visible
+   is visible
 
 1.6.2
 -----
