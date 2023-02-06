@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.8.0
+-----
+ - added marker interfaces to handle header and footer templates
+
 1.7.1
 -----
  - corrected history syntax error
