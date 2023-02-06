@@ -18,7 +18,8 @@ This module is used for Pyramid integration.
 import re
 from zope.interface import classImplements
 
-from pyams_portal.interfaces import DESIGNER_ROLE, IPortalContext, MANAGE_TEMPLATE_PERMISSION
+from pyams_portal.interfaces import DESIGNER_ROLE, IPortalContext, IPortalFooterContext, \
+    IPortalHeaderContext, MANAGE_TEMPLATE_PERMISSION
 from pyams_security.interfaces.base import PUBLIC_PERMISSION, ROLE_ID, VIEW_PERMISSION, \
     VIEW_SYSTEM_PERMISSION
 from pyams_security.interfaces.names import ADMIN_USER_ID, SYSTEM_ADMIN_ROLE
@@ -57,7 +58,7 @@ def include_package(config):
     })
 
     # add portal support to site root
-    classImplements(BaseSiteRoot, IPortalContext)
+    classImplements(BaseSiteRoot, IPortalContext, IPortalHeaderContext, IPortalFooterContext)
 
     try:
         import pyams_zmi  # pylint: disable=import-outside-toplevel,unused-import

@@ -547,6 +547,14 @@ class IPortalContext(IAttributeAnnotatable):
     """Portal context marker interface"""
 
 
+class IPortalHeaderContext(IPortalContext):
+    """Portal header context marker interface"""
+
+
+class IPortalFooterContext(IPortalContext):
+    """Portal footer context marker interface"""
+
+
 class IPortalContextIndexPage(Interface):
     """Portal context index page interface"""
 

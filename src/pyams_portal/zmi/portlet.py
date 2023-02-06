@@ -23,7 +23,6 @@ from pyramid.view import view_config
 from zope.interface import Interface, alsoProvides, implementer
 
 from pyams_form.ajax import AJAXFormRenderer, ajax_form_config
-from pyams_form.browser.checkbox import SingleCheckBoxFieldWidget, CheckBoxFieldWidget
 from pyams_form.field import Fields
 from pyams_form.interfaces import HIDDEN_MODE
 from pyams_form.interfaces.form import IAJAXFormRenderer, IFormContent, IGroup, IInnerSubForm
@@ -53,6 +52,7 @@ from pyams_zmi.helper.event import get_json_widget_refresh_callback
 from pyams_zmi.interfaces import IAdminLayer, IObjectLabel
 from pyams_zmi.interfaces.viewlet import IContextAddingsViewletManager
 from pyams_zmi.utils import get_object_label
+
 
 __docformat__ = 'restructuredtext'
 

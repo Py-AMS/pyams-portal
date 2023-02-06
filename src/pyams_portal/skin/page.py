@@ -21,15 +21,16 @@ from pyramid.decorator import reify
 from pyramid.exceptions import NotFound
 from zope.interface import Interface, implementer
 
-from pyams_layer.interfaces import IPyAMSLayer, IPyAMSUserLayer
+from pyams_layer.interfaces import IPyAMSLayer
 from pyams_pagelet.pagelet import pagelet_config
-from pyams_portal.interfaces import IPortalContext, IPortalContextIndexPage, IPortalPage, \
+from pyams_portal.interfaces import IPortalContext, IPortalContextIndexPage, \
     IPortalPortletsConfiguration, IPortalTemplateConfiguration, IPortlet, IPortletCSSClass, \
     IPortletRenderer, PREVIEW_MODE
 from pyams_portal.utils import get_portal_page
 from pyams_security.interfaces.base import VIEW_SYSTEM_PERMISSION
 from pyams_template.template import layout_config, template_config
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
+from pyams_utils.interfaces import DISPLAY_CONTEXT_KEY_NAME
 from pyams_utils.interfaces.tales import ITALESExtension
 from pyams_utils.request import get_annotations
 from pyams_utils.traversing import get_parent
@@ -44,11 +45,15 @@ class BasePortalContextPage:
     page_name = ''
     portlets = None
 
+    def get_context(self):
+        """Context getter"""
+        return self.context  # pylint: disable=no-member
+
     def update(self):
         """Page update"""
         super().update()  # pylint: disable=no-member
         # extract all renderers list
-        context = self.context  # pylint: disable=no-member
+        self.context = context = self.get_context()
         request = self.request  # pylint: disable=no-member
         self.portlets = {}
         template_configuration = self.template_configuration
@@ -90,10 +95,15 @@ class BasePortalContextPage:
         portlet = self.get_portlet(configuration.portlet_name)
         if portlet is not None:
             request = self.request  # pylint: disable=no-member
-            css_class = request.registry.queryMultiAdapter((portlet, request),
-                                                           IPortletCSSClass, default='')
-            return f"{configuration.settings.get_devices_visibility()} {css_class}"
-        return None
+            settings = configuration.settings
+            renderer_settings = self.portlets[portlet_id].renderer_settings
+            css_class = request.registry.queryMultiAdapter((self.context, request, self,
+                                                            renderer_settings),
+                                                           IPortletCSSClass,
+                                                           name=settings.renderer,
+                                                           default='')
+            return f"{settings.get_devices_visibility()} {css_class}"
+        return ''
 
     def render_portlet(self, portlet_id, template_name=''):
         """Render given portlet"""
@@ -184,6 +194,19 @@ class TemplateFooterClassTALESExtension(BaseTemplateClassTALESExtension):
 
 class InnerPortalContentProvider(BasePortalContextPage):
     """Inner portal content provider, used for headers and footers"""
+
+    def get_context(self):
+        """Context getter"""
+        context = self.request.annotations.get(DISPLAY_CONTEXT_KEY_NAME)
+        if context is None:
+            context = self.context
+        return context
+
+    @reify
+    def page(self):
+        """Portal page getter"""
+        context = self.get_context()
+        return get_portal_page(context, page_name=self.page_name)  # pylint: disable=no-member
 
 
 @contentprovider_config(name='pyams_portal.header',

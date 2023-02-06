@@ -886,16 +886,48 @@ Header and footer templates
 
 Starting with PyAMS_portal 1.6, page header and footer can also be managed using templates in
 the same way. Then, each page is using three distinct templates: header, body (which is the
-default and is using unnamed adapters)and footer; each of them can be defined, shared and
-configured individually:
+default and is using unnamed adapters) and footer; each of them can be defined, shared and
+configured individually.
+
+Header and footer templates relies on specific IPortalHeaderContext and IPortalFooterContext marker interfaces.
+In a classic website handled by PyAMS, only site root, inner sites and sites folders implement these interfaces;
+shared contents like topics or news use header and footer templates provided by their display context.
+
+    >>> from zope.annotation.interfaces import IAttributeAnnotatable, IAnnotations
+    >>> from zope.annotation.attribute import AttributeAnnotations
+    >>> config.registry.registerAdapter(AttributeAnnotations, (IAttributeAnnotatable, ), IAnnotations)
+    >>> alsoProvides(request, IAttributeAnnotatable)
+
+    >>> from pyams_utils.request import get_annotations
+    >>> config.add_request_method(get_annotations, 'annotations', reify=True)
 
     >>> from pyams_portal.utils import get_portal_page
     >>> page = get_portal_page(folder, page_name='header')
     >>> page
     <pyams_portal.page.PortalPage object at 0x...>
     >>> page.__parent__ is folder
+    False
+    >>> page.can_inherit
+    False
+
+    >>> from zope.interface import alsoProvides
+    >>> from pyams_portal.interfaces import IPortalHeaderContext
+    >>> alsoProvides(folder, IPortalHeaderContext)
+
+    >>> page = get_portal_page(folder, page_name='header')
+    >>> page
+    <pyams_portal.page.PortalPage object at 0x...>
+    >>> page.__parent__ is folder
     True
     >>> page.can_inherit
+    True
+
+    >>> request.annotations = {}
+
+    >>> provider = PortalHeaderContentProvider()
+    >>> provider.context = folder
+    >>> provider.request = request
+    >>> provider.page is page
     True
 
 

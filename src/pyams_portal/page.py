@@ -26,9 +26,9 @@ from zope.location import locate
 from zope.schema.fieldproperty import FieldProperty
 from zope.traversing.interfaces import ITraversable
 
-from pyams_portal.interfaces import ILocalTemplateHandler, IPortalContext, IPortalPage, \
-    IPortalPortletsConfiguration, IPortalTemplate, IPortalTemplateConfiguration, \
-    LOCAL_TEMPLATE_NAME, PORTAL_PAGE_KEY, PORTLETS_CONFIGURATION_KEY
+from pyams_portal.interfaces import ILocalTemplateHandler, IPortalContext, IPortalFooterContext, \
+    IPortalHeaderContext, IPortalPage, IPortalPortletsConfiguration, IPortalTemplate, \
+    IPortalTemplateConfiguration, LOCAL_TEMPLATE_NAME, PORTAL_PAGE_KEY, PORTLETS_CONFIGURATION_KEY
 from pyams_portal.portlet import PortalPortletsConfiguration
 from pyams_portal.utils import get_portal_page
 from pyams_utils.adapter import ContextAdapter, adapter_config, get_annotation_adapter
@@ -182,7 +182,7 @@ def portal_context_page(context, page_name=''):
 
 
 @adapter_config(name='header',
-                required=IPortalContext,
+                required=IPortalHeaderContext,
                 provides=IPortalPage)
 def portal_context_header_page(context):
     """Portal context page header factory"""
@@ -190,7 +190,7 @@ def portal_context_header_page(context):
 
 
 @adapter_config(name='footer',
-                required=IPortalContext,
+                required=IPortalFooterContext,
                 provides=IPortalPage)
 def portal_context_footer_page(context):
     """Portal context page footer factory"""

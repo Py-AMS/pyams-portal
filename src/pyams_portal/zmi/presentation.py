@@ -24,7 +24,9 @@ from pyams_form.interfaces.form import IDataExtractedEvent, IGroup, IInnerSubFor
 from pyams_form.subform import InnerEditForm
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_pagelet.pagelet import pagelet_config
-from pyams_portal.interfaces import IPortalContext, IPortalPage, MANAGE_TEMPLATE_PERMISSION
+from pyams_portal.interfaces import IPortalContext, IPortalFooterContext, IPortalHeaderContext, \
+    IPortalPage, \
+    MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.utils import get_portal_page
 from pyams_portal.zmi.interfaces import IPortalContextPresentationForm, \
     IPortalContextPresentationMenu, IPortalContextHeaderPresentationMenu, IPortalContextFooterPresentationMenu
@@ -120,7 +122,7 @@ class PortalContextPresentationEditForm(AdminEditForm):
 #
 
 @viewletmanager_config(name='header-presentation.menu',
-                       context=IPortalContext, layer=IAdminLayer,
+                       context=IPortalHeaderContext, layer=IAdminLayer,
                        manager=IPortalContextPresentationMenu, weight=20,
                        provides=IPortalContextHeaderPresentationMenu,
                        permission=MANAGE_TEMPLATE_PERMISSION)
@@ -133,7 +135,7 @@ class PortalContextHeaderPresentationMenu(NavigationMenuItem):
 
 
 @ajax_form_config(name='header-presentation.html',
-                  context=IPortalContext, layer=IPyAMSLayer,
+                  context=IPortalHeaderContext, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
 class PortalContextHeaderPresentationEditForm(PortalContextPresentationEditForm):
     """Portal context header presentation edit form"""
@@ -148,7 +150,7 @@ class PortalContextHeaderPresentationEditForm(PortalContextPresentationEditForm)
 #
 
 @viewletmanager_config(name='footer-presentation.menu',
-                       context=IPortalContext, layer=IAdminLayer,
+                       context=IPortalFooterContext, layer=IAdminLayer,
                        manager=IPortalContextPresentationMenu, weight=20,
                        provides=IPortalContextFooterPresentationMenu,
                        permission=MANAGE_TEMPLATE_PERMISSION)
@@ -161,7 +163,7 @@ class PortalContextFooterPresentationMenu(NavigationMenuItem):
 
 
 @ajax_form_config(name='footer-presentation.html',
-                  context=IPortalContext, layer=IPyAMSLayer,
+                  context=IPortalFooterContext, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
 class PortalContextFooterPresentationEditForm(PortalContextPresentationEditForm):
     """Portal context footer presentation edit form"""

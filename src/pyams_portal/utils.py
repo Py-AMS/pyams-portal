@@ -15,6 +15,7 @@
 This module is used to provide custom utility functions.
 """
 
+from pyramid.traversal import lineage
 from zope.interface.interfaces import ComponentLookupError
 
 from pyams_portal.interfaces import IPortalPage, IPortalTemplate
@@ -32,9 +33,13 @@ def get_portal_page(context, page_name='', default=MARKER):
     if IPortalTemplate.providedBy(context) or IPortalPage.providedBy(context):  # pylint: disable=no-value-for-parameter
         return context
     registry = get_pyramid_registry()
-    adapter = registry.queryAdapter(context, IPortalPage, name=page_name)
-    if adapter is None:
-        if default is not MARKER:
-            return default
-        raise ComponentLookupError()
-    return adapter
+    adapter = None
+    for page in lineage(context):
+        adapter = registry.queryAdapter(page, IPortalPage, name=page_name)
+        if adapter is not None:
+            break
+    if adapter is not None:
+        return adapter
+    if default is not MARKER:
+        return default
+    raise ComponentLookupError()
