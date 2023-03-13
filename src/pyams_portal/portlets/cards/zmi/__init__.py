@@ -41,8 +41,7 @@ from pyams_zmi.interfaces import IAdminLayer
 from pyams_zmi.interfaces.table import ITableElementEditor
 from pyams_zmi.interfaces.viewlet import IToolbarViewletManager
 from pyams_zmi.table import I18nColumnMixin, IconColumn, InnerTableAdminView, NameColumn, \
-    ReorderColumn, Table, TableElementEditor, TrashColumn, VisibilityColumn, \
-    get_ordered_data_attributes
+    ReorderColumn, SortableTable, TableElementEditor, TrashColumn, VisibilityColumn
 from pyams_zmi.utils import get_object_label
 
 
@@ -51,15 +50,10 @@ __docformat__ = 'restructuredtext'
 from pyams_portal import _  # pylint: disable=ungrouped-imports
 
 
-class CardsTable(Table):
+class CardsTable(SortableTable):
     """Cards table"""
 
-    @property
-    def data_attributes(self):
-        attributes = super().data_attributes
-        container = ICardsPortletSettings(self.context)
-        get_ordered_data_attributes(attributes, container, self.request)
-        return attributes
+    container_class = ICardsPortletSettings
 
     display_if_empty = True
 

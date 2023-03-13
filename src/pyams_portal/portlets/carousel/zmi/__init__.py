@@ -40,8 +40,8 @@ from pyams_zmi.helper.event import get_json_table_row_add_callback, \
 from pyams_zmi.interfaces import IAdminLayer
 from pyams_zmi.interfaces.table import ITableElementEditor
 from pyams_zmi.interfaces.viewlet import IToolbarViewletManager
-from pyams_zmi.table import IconColumn, InnerTableAdminView, NameColumn, ReorderColumn, Table, \
-    TableElementEditor, TrashColumn, VisibilityColumn, get_ordered_data_attributes
+from pyams_zmi.table import IconColumn, InnerTableAdminView, NameColumn, ReorderColumn, SortableTable, \
+    TableElementEditor, TrashColumn, VisibilityColumn
 from pyams_zmi.utils import get_object_label
 
 
@@ -50,15 +50,10 @@ __docformat__ = 'restructuredtext'
 from pyams_portal import _  # pylint: disable=ungrouped-imports
 
 
-class CarouselItemsTable(Table):
+class CarouselItemsTable(SortableTable):
     """Carousel items table"""
 
-    @property
-    def data_attributes(self):
-        attributes = super().data_attributes
-        container = ICarouselPortletSettings(self.context)
-        get_ordered_data_attributes(attributes, container, self.request)
-        return attributes
+    container_class = ICarouselPortletSettings
 
     display_if_empty = True
 
