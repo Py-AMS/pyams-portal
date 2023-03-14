@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.8.1
+-----
+ - use new sortable table base class
+
 1.8.0
 -----
  - added marker interfaces to handle header and footer templates
