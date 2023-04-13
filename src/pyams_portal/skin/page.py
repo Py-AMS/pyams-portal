@@ -136,7 +136,7 @@ class PortalContextPreviewPage(PortalContextIndexPage):
     def update(self):
         # Bypass publication status in preview
         get_annotations(self.request)[PREVIEW_MODE] = True  # pylint: disable=no-member
-        super(PortalContextIndexPage, self).update()  # pylint: disable=bad-super-call
+        super().update()  # pylint: disable=bad-super-call
 
 
 #
