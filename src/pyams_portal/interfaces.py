@@ -306,6 +306,10 @@ class ISlotConfiguration(Interface):
                          description=_("CSS class applied to this slot"),
                          required=False)
 
+    portlets_css_class = TextLine(title=_("Portlets CSS class"),
+                                  description=_("CSS class applied to the inner portlets container"),
+                                  required=False)
+
     prefix = Text(title=_("HTML prefix"),
                   description=_("This HTML code with be included, as is, before the first "
                                 "portlet"),

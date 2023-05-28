@@ -211,12 +211,10 @@ class PortalTemplateSlotPropertiesEditForm(PortalTemplateSlotMixinForm, AdminMod
         slot_name = self.widgets.get('slot_name')
         if slot_name is not None:
             slot_name.mode = HIDDEN_MODE
-        css_class = self.widgets.get('container_css_class')
-        if css_class is not None:
-            css_class.input_css_class = 'col-sm-6'
-        css_class = self.widgets.get('css_class')
-        if css_class is not None:
-            css_class.input_css_class = 'col-sm-6'
+        for name in ('container_css_class', 'css_class', 'portlets_css_class'):
+            widget = self.widgets.get(name)
+            if widget is not None:
+                widget.input_css_class = 'col-sm-6'
 
 
 @adapter_config(name='html-codes',

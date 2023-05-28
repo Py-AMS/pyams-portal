@@ -9,7 +9,7 @@
 						 tal:omit-tag="not:slot_config.container_css_class"
 						 class="${slot_config.container_css_class}">
 						<div class="slot float-left ${slot_config.get_css_class()} px-0">
-							<div class="portlets">
+							<div class="portlets ${slot_config.portlets_css_class}">
 								${structure:slot_config.prefix or ''}
 								<tal:loop repeat="portlet_id template_config.slot_config[slot_name].portlet_ids">
 									<div tal:define="portlet view.render_portlet(portlet_id).strip()"
