@@ -297,7 +297,7 @@ class PortalTemplatePortletEditFormRenderer(AJAXFormRenderer):
         previewer = self.request.registry.queryMultiAdapter(
             (self.context, self.request, self.form, settings), IPortletPreviewer)
         result = {
-            'status': 'success',
+            'status': 'success' if changes else 'info',
             'callbacks': [{
                 'callback': 'MyAMS.portal.template.editPortletCallback',
                 'options': {
