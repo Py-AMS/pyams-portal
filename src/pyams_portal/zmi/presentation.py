@@ -25,8 +25,7 @@ from pyams_form.subform import InnerEditForm
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_pagelet.pagelet import pagelet_config
 from pyams_portal.interfaces import IPortalContext, IPortalFooterContext, IPortalHeaderContext, \
-    IPortalPage, \
-    MANAGE_TEMPLATE_PERMISSION
+    IPortalPage, MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.utils import get_portal_page
 from pyams_portal.zmi.interfaces import IPortalContextPresentationForm, \
     IPortalContextPresentationMenu, IPortalContextHeaderPresentationMenu, IPortalContextFooterPresentationMenu
@@ -36,6 +35,7 @@ from pyams_skin.viewlet.help import AlertMessage
 from pyams_template.template import template_config
 from pyams_utils.adapter import adapter_config
 from pyams_utils.interfaces.data import IObjectData
+from pyams_utils.interfaces.form import NO_VALUE_STRING
 from pyams_viewlet.manager import viewletmanager_config
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminEditForm, FormGroupChecker
@@ -195,7 +195,7 @@ def extract_portal_context_presentation_edit_form_data(event):
                                               "parent template!")),)
         elif template_mode == TEMPLATE_SHARED_MODE:
             template = params.get('{}{}shared_template'.format(form.prefix, form.widgets.prefix))
-            if (not template) or (template == '--NOVALUE--'):
+            if (not template) or (template == NO_VALUE_STRING):
                 form.widgets.errors += (Invalid(_("You must select a template when setting "
                                                   "shared template mode!")),)
 
