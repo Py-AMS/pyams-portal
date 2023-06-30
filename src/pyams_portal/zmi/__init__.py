@@ -14,21 +14,25 @@
 
 This module defines base ZMI components.
 """
+from _testbuffer import get_sizeof_void_p
 
 from fanstatic import Library, Resource
 from pyramid.renderers import render
 from zope.interface import Interface
 from zope.schema import getFields
-from zope.schema.interfaces import IBool
+from zope.schema.interfaces import IBool, IChoice
+from zope.schema.vocabulary import getVocabularyRegistry
 
 from pyams_i18n.schema import II18nField
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortalTemplate, IPortalTemplateConfiguration, \
-    IPortletPreviewer, IPortletSettings
+    IPortletPreviewer, IPortletSettings, PREVIEW_MODE
 from pyams_portal.skin import PortletContentProvider
 from pyams_skin.interfaces import BOOTSTRAP_DEVICES_ICONS, BOOTSTRAP_SIZES
 from pyams_template.template import template_config
 from pyams_utils.adapter import adapter_config
+from pyams_utils.interfaces.text import IHTMLRenderer
+from pyams_utils.request import get_annotations
 from pyams_utils.text import text_to_html
 
 __docformat__ = 'restructuredtext'
@@ -90,6 +94,11 @@ class PortletPreviewer(PortletContentProvider):
         _slot_id, slot_name = config.get_portlet_slot(self.settings.configuration.portlet_id)
         return config.get_slot_configuration(slot_name)
 
+    def update(self):
+        """Set preview mode on previewer update"""
+        get_annotations(self.request)[PREVIEW_MODE] = True
+        super().update()
+
     def render(self, template_name=''):
         """Preview portlet content"""
         if self.settings.renderer == 'hidden':
@@ -104,7 +113,7 @@ class PortletPreviewer(PortletContentProvider):
         result += super().render(template_name)
         return result
 
-    def get_setting(self, source, name, renderer=None, visible=True, icon=None):  # pylint: disable=too-many-arguments
+    def get_setting(self, source, name, renderer=None, visible=True, icon=None, converter=None):  # pylint: disable=too-many-arguments
         """Setting value renderer"""
         localizer = self.request.localizer
         translate = localizer.translate
@@ -125,6 +134,22 @@ class PortletPreviewer(PortletContentProvider):
                 'label': label,
                 'checked': bool(value)
             })
+        if IChoice.providedBy(field):
+            try:
+                source = field.source
+                if source is not None:
+                    value = translate(source.by_value.get(value).title)
+                elif field.vocabularyName is not None:
+                    source = getVocabularyRegistry().get(source, field.vocabularyName)
+                    value = translate(source.getTerm(value).token)
+            except AttributeError:
+                value = translate(_("(missing value: {})")).format(value)
+        if converter is not None:
+            converter = self.request.registry.queryMultiAdapter((source, value),
+                                                                IHTMLRenderer,
+                                                                name=converter)
+            if converter is not None:
+                value = converter.render()
         if renderer is not None:
             value = text_to_html(value, renderer, field=field, context=source)
         return render('templates/setting-preview.pt', {
