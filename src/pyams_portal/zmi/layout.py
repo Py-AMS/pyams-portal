@@ -51,7 +51,7 @@ from pyams_viewlet.manager import viewletmanager_config
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm
 from pyams_zmi.interfaces import IAdminLayer, IInnerAdminView
-from pyams_zmi.interfaces.viewlet import IActionsViewletManager, IContentManagementMenu, \
+from pyams_zmi.interfaces.viewlet import IContextActionsDropdownMenu, IContentManagementMenu, \
     IContextAddingsViewletManager, IMenuHeader, IPropertiesMenu, ISiteManagementMenu
 from pyams_zmi.utils import get_object_label
 from pyams_zmi.zmi.viewlet.breadcrumb import AdminLayerBreadcrumbItem
@@ -286,7 +286,7 @@ def delete_template_row(request):
 
 @viewlet_config(name='share-template.menu',
                 context=IPortalContext, layer=IAdminLayer, view=PortalTemplateLayoutView,
-                manager=IActionsViewletManager, weight=10,
+                manager=IContextActionsDropdownMenu, weight=10,
                 permission=MANAGE_TEMPLATE_PERMISSION)
 class LocalTemplateShareMenu(MenuItem):
     """Local template share menu"""
