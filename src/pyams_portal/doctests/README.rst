@@ -615,21 +615,16 @@ cache is never used in preview mode.
     >>> renderer.use_portlets_cache
     True
 
-The cache key is based on the current hostname, on the context and on the current locale:
-
-    >>> renderer.get_cache_key()
-    'portlet::http::example.com:80::...::1::en'
-    >>> renderer.render()
-    Traceback (most recent call last):
-    ...
-    KeyError: 'portlets'
-
 Rendering portlets requires a matching cache region:
 
     >>> from beaker.cache import CacheManager, cache_regions
     >>> cache = CacheManager(**{'cache.type': 'memory'})
     >>> cache_regions.update({'portlets': {'type': 'memory', 'expire': 60}})
 
+The cache key is based on the current hostname, on the context and on the current locale:
+
+    >>> renderer.get_cache_key()
+    'portlet::http::example.com:80::...::1::en'
     >>> renderer.render()
     '<p>This is a test!</p>'
 
@@ -674,10 +669,7 @@ Let's provide a custom template:
     ...                   template=custom_template, layer=IPyAMSLayer)
 
     >>> folder_portlets[6].settings.get_renderer().render(template_name='custom')
-    '<p>This is a test!</p>'
-
-Why don't we get custom template content? This is because our renderer is using the cache, which
-was set on first render, before the custom template was registered!
+    '<div>This is a custom template!</div>'
 
 We can disable the cache by defining a "preview mode" on the request:
 
@@ -728,8 +720,8 @@ We have to register two content providers used for header and footer before rend
               <div class="row m-0">
                 <div class="slots w-100">
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
-                    <div class="portlets">
-                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
+                    <div class="portlets ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block ">
                         <p>This is a test!</p>
                       </div>
                     </div>
@@ -759,8 +751,8 @@ We have to register two content providers used for header and footer before rend
               <div class="row m-0">
                 <div class="slots w-100">
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
-                    <div class="portlets">
-                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
+                    <div class="portlets ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block ">
                         <p>This is a test!</p>
                       </div>
                     </div>
@@ -797,11 +789,11 @@ Let's try to use several renderers on another portlet:
               <div class="row m-0">
                 <div class="slots w-100">
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
-                    <div class="portlets">
-                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
+                    <div class="portlets ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block ">
                         <p>This is a test!</p>
                       </div>
-                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block ">
                         <div class="source"><pre><span></span><span class="linenos">1</span>*This* is my code
                           </pre></div>
                       </div>
@@ -831,11 +823,11 @@ Let's try to use several renderers on another portlet:
               <div class="row m-0">
                 <div class="slots w-100">
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
-                    <div class="portlets">
-                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
+                    <div class="portlets ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block ">
                         <p>This is a test!</p>
                       </div>
-                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block ">
                         <p><em>This</em> is my code</p>
                       </div>
                     </div>
@@ -864,11 +856,11 @@ Let's try to use several renderers on another portlet:
               <div class="row m-0">
                 <div class="slots w-100">
                   <div class="slot float-left col  col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
-                    <div class="portlets">
-                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
+                    <div class="portlets ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block ">
                         <p>This is a test!</p>
                       </div>
-                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block  ">
+                      <div class="portlet d-block d-sm-block d-md-block d-lg-block d-xl-block ">
                         <p><em>This</em> is my code</p>
                       </div>
                     </div>
