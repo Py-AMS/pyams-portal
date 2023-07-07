@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.9.0
+-----
+ - added slot CSS class to portlets container
+ - updated portlet previewer
+ - updated portlet edit form status
+ - bypass workflow state check on page preview
+
 1.8.1
 -----
  - use new sortable table base class
