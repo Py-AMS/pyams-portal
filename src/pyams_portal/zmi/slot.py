@@ -88,7 +88,7 @@ class PortalContextTemplateSlotAddMenu(PortalTemplateSlotAddMenu):
     page_name = ''
 
     def __new__(cls, context, request, view, manager):  # pylint: disable=unused-argument
-        page = get_portal_page(context, page_name=cls.page_name)
+        page = get_portal_page(context, page_name=view.page_name)
         if not page.use_local_template:
             return None
         return PortalTemplateSlotAddMenu.__new__(cls)
