@@ -1,6 +1,15 @@
 Changelog
 =========
 
+2.0.0
+-----
+ - migrated to Pyramid 2.0
+
+1.9.2
+-----
+ - updated slots and portlets add menus factories to hide these menus on headers
+   and footers layouts when not using a custom template
+
 1.9.1
 -----
  - updated doctests

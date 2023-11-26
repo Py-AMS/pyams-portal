@@ -227,8 +227,8 @@ class PortalTemplateSlotPropertiesHTMLCodes(FormGroupSwitcher):
     fields = Fields(ISlotConfiguration).select('prefix', 'suffix')
     switcher_mode = 'always'
 
-    def update_widgets(self, prefix=None):
-        super().update_widgets(prefix)
+    def update_widgets(self, prefix=None, use_form_mode=True):
+        super().update_widgets(prefix, use_form_mode)
         for name in ('prefix', 'suffix'):
             widget = self.widgets.get(name)
             if widget is not None:
