@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.1.0
+-----
+ - updated modal forms title
+ - small updates in template layout row and slot management
+
 2.0.0
 -----
  - migrated to Pyramid 2.0
