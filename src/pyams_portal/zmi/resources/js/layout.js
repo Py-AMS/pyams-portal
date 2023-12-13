@@ -118,41 +118,40 @@ const portal = {
         /**
          * Add new row
          */
-        addRow: () => {
-            return function(src) {
-                $(src).parents('.dropdown').dropdown('hide');
-                MyAMS.ajax.post(`${getLocation()}/add-template-row.json`, {}).then((result) => {
-                    const rowId = result.row_id;
-                    const rows = $('.rows', '#portal_config');
-                    $('<div></div>')
-                        .addClass('row context-menu')
-                        .attr('data-ams-row-id', rowId)
-                        .append($('<strong></strong>')
-                            .addClass('row_id badge badge-danger pull-left')
-                            .text(rowId+1))
-                        .append($('<strong></strong>')
-                            .addClass('row_id badge badge-danger pull-right')
-                            .text(rowId+1))
-                        .append($('<div></div>')
-                            .addClass('slots')
-                            .sortable({
-                                placeholder: 'slot-highlight',
-                                connectWith: '.slots',
-                                over: MyAMS.portal.template.overSlots,
-                                stop: MyAMS.portal.template.sortSlots
-                            })
-                            .droppable({
-                                accept: '.btn-slot',
-                                drop: MyAMS.portal.template.dropSlotButton
-                            }))
-                        .contextMenu({
-                            menuSelector: '#rowMenu',
-                            menuSelected: MyAMS.helpers.contextMenuHandler
+        addRow: (evt) => {
+            const src = evt.currentTarget;
+            $(src).parents('.dropdown').dropdown('hide');
+            MyAMS.ajax.post(`${getLocation()}/add-template-row.json`, {}).then((result) => {
+                const rowId = result.row_id;
+                const rows = $('.rows', '#portal_config');
+                $('<div></div>')
+                    .addClass('row context-menu')
+                    .attr('data-ams-row-id', rowId)
+                    .append($('<strong></strong>')
+                        .addClass('row_id badge badge-danger pull-left')
+                        .text(rowId+1))
+                    .append($('<strong></strong>')
+                        .addClass('row_id badge badge-danger pull-right')
+                        .text(rowId+1))
+                    .append($('<div></div>')
+                        .addClass('slots')
+                        .sortable({
+                            placeholder: 'slot-highlight',
+                            connectWith: '.slots',
+                            over: MyAMS.portal.template.overSlots,
+                            stop: MyAMS.portal.template.sortSlots
                         })
-                        .appendTo(rows);
-                    rows.sortable('refresh');
-                });
-            };
+                        .droppable({
+                            accept: '.btn-slot',
+                            drop: MyAMS.portal.template.dropSlotButton
+                        }))
+                    .contextMenu({
+                        menuSelector: '#rowMenu',
+                        menuSelected: MyAMS.helpers.contextMenuHandler
+                    })
+                    .appendTo(rows);
+                rows.sortable('refresh');
+            });
         },
 
         /**
@@ -292,13 +291,12 @@ const portal = {
         /**
          * Add new slot
          */
-        addSlot: () => {
-            return function(src) {
-                $(src).parents('.dropdown').dropdown('hide');
-                MyAMS.require('modal').then(() => {
-                    MyAMS.modal.open(`${getLocation()}/add-template-slot.html`);
-                });
-            }
+        addSlot: (evt) => {
+            const src = evt.currentTarget;
+            $(src).parents('.dropdown').dropdown('hide');
+            MyAMS.require('modal').then(() => {
+                MyAMS.modal.open(`${getLocation()}/add-template-slot.html`);
+            });
         },
 
         /**

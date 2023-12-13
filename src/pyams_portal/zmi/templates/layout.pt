@@ -22,12 +22,16 @@
 				 tal:condition="can_change">
 				<div class="btn-group" role="group">
 					<div class="btn btn-secondary btn-row bg-color-silverLight hint"
-						 title="Add row<br />Drag and drop button to page template to position new row" i18n:attributes="title"
+						 title="Add row<br />Drag and drop button to page template to position new row, or just click to add new row at the end"
+						 i18n:attributes="title"
+						 data-ams-click-handler="MyAMS.portal.template.addRow"
 						 data-ams-hint-gravity="n" data-ams-hint-html="true">
 						<i class="fa fa-fw fa-2x fa-indent"></i>
 					</div>
 					<div class="btn btn-secondary btn-slot bg-color-silverLight hint"
-						 title="Add slot<br />Drag and drop button to page template to position new slot" i18n:attributes="title"
+						 title="Add slot<br />Drag and drop button to page template to position new slot, or just click to display add form"
+						 i18n:attributes="title"
+						 data-ams-click-handler="MyAMS.portal.template.addSlot"
 						 data-ams-hint-gravity="n" data-ams-hint-html="true">
 						<i class="fa fa-fw fa-2x fa-columns"></i>
 					</div>
