@@ -38,6 +38,7 @@ from pyams_portal.utils import get_portal_page
 from pyams_security.interfaces import IViewContextPermissionChecker
 from pyams_security.interfaces.base import FORBIDDEN_PERMISSION
 from pyams_security.permission import get_edit_permission
+from pyams_site.interfaces import ISiteRoot
 from pyams_skin.interfaces.viewlet import IBreadcrumbItem, IHelpViewletManager
 from pyams_skin.schema.button import CloseButton, SubmitButton
 from pyams_skin.viewlet.help import AlertMessage
@@ -50,9 +51,10 @@ from pyams_utils.traversing import get_parent
 from pyams_viewlet.manager import viewletmanager_config
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm
-from pyams_zmi.interfaces import IAdminLayer, IInnerAdminView
-from pyams_zmi.interfaces.viewlet import IContextActionsDropdownMenu, IContentManagementMenu, \
-    IContextAddingsViewletManager, IMenuHeader, IPropertiesMenu, ISiteManagementMenu
+from pyams_zmi.interfaces import IAdminLayer, IInnerAdminView, TITLE_SPAN_BREAK
+from pyams_zmi.interfaces.form import IFormTitle
+from pyams_zmi.interfaces.viewlet import IContentManagementMenu, IContextActionsDropdownMenu, IMenuHeader, \
+    IPropertiesMenu, ISiteManagementMenu
 from pyams_zmi.utils import get_object_label
 from pyams_zmi.zmi.viewlet.breadcrumb import AdminLayerBreadcrumbItem
 from pyams_zmi.zmi.viewlet.menu import NavigationMenuItem
@@ -203,32 +205,6 @@ class PortalTemplateLayoutView:  # pylint: disable=no-member
 # Rows views
 #
 
-@viewlet_config(name='add-template-row.menu',
-                context=IPortalTemplate, layer=IAdminLayer, view=PortalTemplateLayoutView,
-                manager=IContextAddingsViewletManager, weight=10,
-                permission=MANAGE_TEMPLATE_PERMISSION)
-class PortalTemplateRowAddMenu(MenuItem):
-    """Portal template row add menu"""
-
-    label = _("Add row...")
-    icon_class = 'fas fa-indent'
-    href = 'MyAMS.portal.template.addRow'
-
-
-@viewlet_config(name='add-template-row.menu',
-                context=IPortalContext, layer=IAdminLayer, view=PortalTemplateLayoutView,
-                manager=IContextAddingsViewletManager, weight=10,
-                permission=MANAGE_TEMPLATE_PERMISSION)
-class PortalContextTemplateRowAddMenu(PortalTemplateRowAddMenu):
-    """Portal context template row add menu"""
-
-    def __new__(cls, context, request, view, manager):  # pylint: disable=unused-argument
-        page = get_portal_page(context, page_name=view.page_name)
-        if not page.use_local_template:
-            return None
-        return PortalTemplateRowAddMenu.__new__(cls)
-
-
 @view_config(name='add-template-row.json',
              context=IPortalTemplate, request_type=IPyAMSLayer,
              permission=MANAGE_TEMPLATE_PERMISSION, renderer='json', xhr=True)
@@ -329,11 +305,7 @@ class ILocalTemplateShareFormButtons(Interface):
 class PortalContextTemplateShareForm(AdminModalAddForm):
     """Local template share form"""
 
-    @property
-    def title(self):
-        """Form title getter"""
-        return get_object_label(self.context, self.request, self)
-
+    subtitle = _("Local template")
     legend = _("Share local template")
 
     page_name = ''
@@ -360,6 +332,18 @@ class PortalContextTemplateShareForm(AdminModalAddForm):
         page = get_portal_page(self.context, page_name=self.page_name)
         page.use_local_template = False
         page.shared_template = oid
+
+
+@adapter_config(required=(IPortalContext, IAdminLayer, PortalContextTemplateShareForm),
+                provides=IFormTitle)
+def portal_template_share_form_title(context, request, form):
+    """Portal template share form title"""
+    if ISiteRoot.providedBy(context):
+        return get_object_label(context, request, form)
+    parent = get_parent(context, Interface, allow_context=False)
+    return TITLE_SPAN_BREAK.format(
+        get_object_label(parent, request, form),
+        get_object_label(context, request, form))
 
 
 @ajax_form_config(name='share-header-template.html',

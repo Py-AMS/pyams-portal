@@ -22,24 +22,26 @@ from pyams_form.ajax import ajax_form_config
 from pyams_form.field import Fields
 from pyams_form.interfaces.form import IAJAXFormRenderer, IAddForm
 from pyams_layer.interfaces import IPyAMSLayer
-from pyams_portal.interfaces import IPortalTemplate, IPortalTemplateContainer, \
-    MANAGE_TEMPLATE_PERMISSION
+from pyams_portal.interfaces import IPortalContext, IPortalTemplate, IPortalTemplateContainer, \
+    LOCAL_TEMPLATE_NAME, MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.zmi.container import PortalTemplatesContainerTable
+from pyams_skin.interfaces.view import IModalPage
 from pyams_skin.viewlet.actions import ContextAddAction
 from pyams_table.interfaces import IColumn
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
 from pyams_utils.interfaces.intids import IUniqueID
 from pyams_utils.registry import get_utility
+from pyams_utils.traversing import get_parent
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminEditForm, AdminModalAddForm
 from pyams_zmi.helper.event import get_json_table_row_add_callback
-from pyams_zmi.interfaces import IAdminLayer, IObjectLabel
+from pyams_zmi.interfaces import IAdminLayer, IObjectLabel, TITLE_SPAN, TITLE_SPAN_BREAK
+from pyams_zmi.interfaces.form import IFormTitle
 from pyams_zmi.interfaces.table import ITableElementEditor
 from pyams_zmi.interfaces.viewlet import IPropertiesMenu, IToolbarViewletManager
 from pyams_zmi.table import ActionColumn, TableElementEditor
 from pyams_zmi.utils import get_object_label
 from pyams_zmi.zmi.viewlet.menu import NavigationMenuItem
-
 
 __docformat__ = 'restructuredtext'
 
@@ -68,15 +70,7 @@ class PortalTemplateAddAction(ContextAddAction):
 class PortalTemplateAddForm(AdminModalAddForm):
     """Portal template add form"""
 
-    @property
-    def title(self):
-        """Form title getter"""
-        translate = self.request.localizer.translate
-        manager = get_utility(IPortalTemplateContainer)
-        return '<small>{}</small><br />{}'.format(
-            get_object_label(manager, self.request, self),
-            translate(_("Add new portal template")))
-
+    subtitle = _("New template")
     legend = _("New template properties")
 
     fields = Fields(IPortalTemplate)
@@ -87,11 +81,32 @@ class PortalTemplateAddForm(AdminModalAddForm):
         self.context[oid] = obj
 
 
+@adapter_config(required=(IPortalTemplateContainer, IAdminLayer, IPortalTemplateAddForm),
+                provides=IFormTitle)
+def portal_template_add_form_title(context, request, form):
+    """Portal template add form title"""
+    manager = get_utility(IPortalTemplateContainer)
+    return TITLE_SPAN.format(get_object_label(manager, request, form))
+
+
 @adapter_config(required=IPortalTemplate,
                 provides=IObjectLabel)
 def portal_template_label(context):
     """Portal templates container table element name factory"""
     return context.name
+
+
+@adapter_config(name='form-title',
+                required=(IPortalTemplate, IAdminLayer, IModalPage),
+                provides=IObjectLabel)
+def portal_template_form_label(context, request, view):
+    """Portal template form label"""
+    translate = request.localizer.translate
+    if context.name == LOCAL_TEMPLATE_NAME:
+        parent = get_parent(context, IPortalContext)
+        label = get_object_label(parent, request, view, name='form-title')
+        return translate(_("{} --- Local template")).format(label)
+    return translate(_("Template: {}")).format(context.name)
 
 
 @adapter_config(required=(IPortalTemplate, IAdminLayer, Interface),
@@ -125,12 +140,8 @@ class PortalTemplatesContainerCloneColumn(ActionColumn):
 class PortalTemplateCloneForm(AdminModalAddForm):
     """Portal template clone form"""
 
-    @property
-    def title(self):
-        """Title getter"""
-        return self.context.name
-
-    legend = _("Clone portal template")
+    subtitle = _("Template clone")
+    legend = _("New template clone properties")
 
     fields = Fields(IPortalTemplate).select('name')
 
@@ -140,6 +151,16 @@ class PortalTemplateCloneForm(AdminModalAddForm):
     def add(self, obj):
         oid = IUniqueID(obj).oid
         self.context.__parent__[oid] = obj
+
+
+@adapter_config(required=(IPortalTemplate, IAdminLayer, PortalTemplateCloneForm),
+                provides=IFormTitle)
+def portal_template_clone_form_title(context, request, form):
+    """Portal template add form title"""
+    manager = get_utility(IPortalTemplateContainer)
+    return TITLE_SPAN_BREAK.format(
+        get_object_label(manager, request, form),
+        get_object_label(context, request, form, name='form-title'))
 
 
 @adapter_config(required=(IPortalTemplateContainer, IAdminLayer, IPortalTemplateAddForm),
@@ -176,12 +197,7 @@ class PortalTemplatePropertiesMenuItem(NavigationMenuItem):
 class PortalTemplatePropertiesEditForm(AdminEditForm):
     """Portal template properties edit form"""
 
-    @property
-    def title(self):
-        """Title getter"""
-        translate = self.request.localizer.translate
-        return translate(_("Template « {} »")).format(self.context.name)
-
+    title = _("Template configuration")
     legend = _("Template properties")
 
     fields = Fields(IPortalTemplate)

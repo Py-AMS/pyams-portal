@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2023-05-28 12:14+0200\n"
+"POT-Creation-Date: 2023-12-10 02:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -92,8 +92,8 @@ msgstr "Classe CSS du conteneur"
 #: src/pyams_portal/interfaces.py:267
 msgid "CSS class applied to this slot container"
 msgstr ""
-"Classe CSS spécifique appliquée au conteneur de ce bloc ; dans le cas où aucune "
-"classe CSS n'est indiquée, ce conteneur n'est pas créé"
+"Classe CSS spécifique appliquée au conteneur de ce bloc ; dans le cas où "
+"aucune classe CSS n'est indiquée, ce conteneur n'est pas créé"
 
 #: src/pyams_portal/interfaces.py:270
 msgid "Extra small device width"
@@ -179,7 +179,8 @@ msgstr "Classe CSS du conteneur des composants"
 
 #: src/pyams_portal/interfaces.py:310
 msgid "CSS class applied to the inner portlets container"
-msgstr "Classe CSS spécifique appliquée au conteneur intermédiaire des composants"
+msgstr ""
+"Classe CSS spécifique appliquée au conteneur intermédiaire des composants"
 
 #: src/pyams_portal/interfaces.py:313
 msgid "HTML prefix"
@@ -246,7 +247,7 @@ msgid ""
 "toolbar"
 msgstr ""
 "Les composants sélectionnés seront accessibles directement dans la barre "
-"d'outils de configuration des modèles de présentation"
+"d'outils du module de mise en page des modèles de présentation"
 
 #: src/pyams_portal/interfaces.py:516
 msgid "Inherit parent template?"
@@ -275,8 +276,9 @@ msgstr ""
 "Si 'oui', vous pouvez choisir d'utiliser un modèle de présentation propre à "
 "ce contexte plutôt qu'un modèle de présentation partagé"
 
-#: src/pyams_portal/interfaces.py:532 src/pyams_portal/zmi/portlet.py:132
-#: src/pyams_portal/zmi/portlet.py:257 src/pyams_portal/zmi/slot.py:65
+#: src/pyams_portal/interfaces.py:532 src/pyams_portal/zmi/layout.py:308
+#: src/pyams_portal/zmi/portlet.py:88 src/pyams_portal/zmi/slot.py:64
+#: src/pyams_portal/zmi/slot.py:121
 msgid "Local template"
 msgstr "Modèle de présentation spécifique"
 
@@ -297,6 +299,12 @@ msgstr "Modèle de présentation"
 #: src/pyams_portal/interfaces.py:543
 msgid "Template used for this page"
 msgstr "Modèle de présentation utilisé pour ce contexte"
+
+#: src/pyams_portal/template.py:132 src/pyams_portal/zmi/portlet.py:82
+#: src/pyams_portal/zmi/slot.py:61 src/pyams_portal/zmi/slot.py:118
+#, python-format
+msgid "Portal template: {}"
+msgstr "Modèle de présentation : {}"
 
 #: src/pyams_portal/zmi/presentation.py:65
 msgid "Presentation"
@@ -361,7 +369,7 @@ msgstr ""
 "aurez toute liberté pour paramétrer ce modèle, mais il ne sera réutilisable "
 "que dans les sous-niveaux qui choisiront d'en hériter."
 
-#: src/pyams_portal/zmi/presentation.py:286 src/pyams_portal/zmi/layout.py:80
+#: src/pyams_portal/zmi/presentation.py:286 src/pyams_portal/zmi/layout.py:82
 msgid "Page layout"
 msgstr "Mise en page"
 
@@ -373,29 +381,29 @@ msgstr "Mise en page"
 msgid "Footer layout"
 msgstr "Mise en page"
 
-#: src/pyams_portal/zmi/layout.py:69
+#: src/pyams_portal/zmi/layout.py:71
 msgid "Portal template"
 msgstr "Modèle de présentation"
 
-#: src/pyams_portal/zmi/layout.py:115
+#: src/pyams_portal/zmi/layout.py:117
 msgid "Local template configuration"
 msgstr "Mise en page d'un modèle de présentation spécifique"
 
-#: src/pyams_portal/zmi/layout.py:117
+#: src/pyams_portal/zmi/layout.py:119
 msgid "Inherited local template configuration"
-msgstr "Configuration du modèle de présentation (hérité du parent)"
+msgstr "Mise en page du modèle de présentation (hérité du parent)"
 
-#: src/pyams_portal/zmi/layout.py:118
+#: src/pyams_portal/zmi/layout.py:120
 #, python-format
 msgid "« {} » shared template configuration"
 msgstr "Mise en page du modèle de présentation « {} »"
 
-#: src/pyams_portal/zmi/layout.py:119
+#: src/pyams_portal/zmi/layout.py:121
 #, python-format
 msgid "« {} » template configuration"
-msgstr "Mise en page du modèle de présentation « {} »"
+msgstr "Mise en page du modèle de présentation"
 
-#: src/pyams_portal/zmi/layout.py:169
+#: src/pyams_portal/zmi/layout.py:171
 #, python-format
 msgid ""
 "Add component: {0}<br />Drag and drop button to page template to position "
@@ -405,35 +413,31 @@ msgstr ""
 "bouton dans le modèle de présentation pour positionner ce nouveau composant "
 "au sein d'un bloc."
 
-#: src/pyams_portal/zmi/layout.py:178
+#: src/pyams_portal/zmi/layout.py:180
 msgid "{{ missing portlet }}"
 msgstr "{{ composant introuvable }}"
 
-#: src/pyams_portal/zmi/layout.py:213
-msgid "Add row..."
-msgstr "Ajouter une ligne"
-
-#: src/pyams_portal/zmi/layout.py:305 src/pyams_portal/zmi/layout.py:320
+#: src/pyams_portal/zmi/layout.py:281 src/pyams_portal/zmi/layout.py:296
 msgid "Share template"
 msgstr "Partager le modèle"
 
-#: src/pyams_portal/zmi/layout.py:323
+#: src/pyams_portal/zmi/layout.py:299
 msgid "Close"
 msgstr "Fermer"
 
-#: src/pyams_portal/zmi/layout.py:337
+#: src/pyams_portal/zmi/layout.py:309
 msgid "Share local template"
 msgstr "Partager le modèle de présentation"
 
-#: src/pyams_portal/zmi/layout.py:371
+#: src/pyams_portal/zmi/layout.py:355
 msgid "Share local header template"
 msgstr "Partager le modèle de présentation de l'en-tête de page"
 
-#: src/pyams_portal/zmi/layout.py:382
+#: src/pyams_portal/zmi/layout.py:366
 msgid "Share local footer template"
 msgstr "Partager le modèle de présentation du pied de page"
 
-#: src/pyams_portal/zmi/layout.py:414
+#: src/pyams_portal/zmi/layout.py:398
 msgid ""
 "Sharing a local template will make a copy of it in shared templates "
 "utility.\n"
@@ -446,40 +450,34 @@ msgstr ""
 "partagé, mais la configuration de votre modèle de présentation spécifique "
 "sera conservée et pourra être réutilisée si vous souhaitez y revenir..."
 
-#: src/pyams_portal/zmi/portlet.py:93
-msgid "Add portlet..."
-msgstr "Ajouter un composant"
-
-#: src/pyams_portal/zmi/portlet.py:129 src/pyams_portal/zmi/portlet.py:251
-#: src/pyams_portal/zmi/slot.py:62
+#: src/pyams_portal/zmi/portlet.py:66 src/pyams_portal/zmi/portlet.py:494
 #, python-format
-msgid "« {} »  portal template"
-msgstr "Modèle de présentation « {} »"
+msgid "Portlet: {}"
+msgstr "Composant : {}"
 
-#: src/pyams_portal/zmi/portlet.py:134
-msgid "Add template portlet"
-msgstr "Ajouter un composant"
-
-#: src/pyams_portal/zmi/portlet.py:255
+#: src/pyams_portal/zmi/portlet.py:86
 #, python-format
-msgid "« {} » shared template"
-msgstr "Modèle de présentation « {} »"
+msgid "Shared template: {}"
+msgstr "Modèle partagé : {}"
 
-#: src/pyams_portal/zmi/portlet.py:259
+#: src/pyams_portal/zmi/portlet.py:90
 #, python-format
 msgid "{} (inherited from parent)"
 msgstr "{} (hérité du parent)"
 
-#: src/pyams_portal/zmi/portlet.py:265
-#: src/pyams_portal/portlets/cards/zmi/__init__.py:220
-#: src/pyams_portal/portlets/cards/zmi/__init__.py:271
-#: src/pyams_portal/portlets/carousel/zmi/__init__.py:203
-#: src/pyams_portal/portlets/carousel/zmi/__init__.py:252
-#, python-format
-msgid "Portlet configuration: « {} »"
-msgstr "Configuration du composant « {} »"
+#: src/pyams_portal/zmi/portlet.py:105
+msgid "New portlet"
+msgstr "Nouveau composant"
 
-#: src/pyams_portal/zmi/portlet.py:359
+#: src/pyams_portal/zmi/portlet.py:106
+msgid "New portlet properties"
+msgstr "Propriétés du nouveau composant"
+
+#: src/pyams_portal/zmi/portlet.py:205
+msgid "Portlet properties"
+msgstr "Propriétés du composant"
+
+#: src/pyams_portal/zmi/portlet.py:312
 msgid ""
 "WARNING: portlet configuration is saved immediately when inherit mode is "
 "changed!!"
@@ -487,11 +485,11 @@ msgstr ""
 "ATTENTION : la configuration du composant est enregistrée immédiatement "
 "lorsque vous modifiez le mode d'héritage !"
 
-#: src/pyams_portal/zmi/portlet.py:374
+#: src/pyams_portal/zmi/portlet.py:327
 msgid "Portlet settings"
 msgstr "Propriétés du composant"
 
-#: src/pyams_portal/zmi/portlet.py:416
+#: src/pyams_portal/zmi/portlet.py:369
 msgid ""
 "You changed selected portlet renderer. Don't omit to check new renderer "
 "settings..."
@@ -499,20 +497,14 @@ msgstr ""
 "Vous avez changé le mode de rendu de ce composant ; n'oubliez pas de "
 "vérifier les paramètres du nouveau mode de rendu !"
 
-#: src/pyams_portal/zmi/portlet.py:481
+#: src/pyams_portal/zmi/portlet.py:434
 #, python-format
-msgid "<small>Portlet: {portlet}</small><br />« {renderer} » renderer"
-msgstr ""
-"<small>Composant « {portlet} »</small><br />Mode de rendu « {renderer} »"
+msgid "Renderer: {}"
+msgstr "Mode de rendu : {}"
 
-#: src/pyams_portal/zmi/portlet.py:485
-msgid "Edit renderer settings"
+#: src/pyams_portal/zmi/portlet.py:436
+msgid "Renderer settings"
 msgstr "Propriétés du mode de rendu"
-
-#: src/pyams_portal/zmi/portlet.py:528
-#, python-format
-msgid "Portlet: {portlet}"
-msgstr "Composant « {portlet} »"
 
 #: src/pyams_portal/zmi/container.py:61 src/pyams_portal/zmi/container.py:82
 #: src/pyams_portal/zmi/container.py:89 src/pyams_portal/zmi/container.py:97
@@ -533,8 +525,8 @@ msgid "Configuration"
 msgstr "Configuration"
 
 #: src/pyams_portal/zmi/container.py:208
-msgid "Templates container"
-msgstr "Modèles de présentation"
+msgid "Portlets configuration"
+msgstr "Configuration des composants"
 
 #: src/pyams_portal/zmi/container.py:209
 msgid "Template selected portlets"
@@ -548,76 +540,98 @@ msgstr "Interface d'administration"
 msgid "No selected renderer (use default)"
 msgstr "Pas de mode de rendu sélectionné (utiliser le mode par défaut)"
 
-#: src/pyams_portal/zmi/slot.py:75
-msgid "Add slot..."
-msgstr "Ajouter un bloc"
+#: src/pyams_portal/zmi/slot.py:80
+msgid "New slot"
+msgstr "Nouveau bloc"
 
-#: src/pyams_portal/zmi/slot.py:110
-msgid "Add slot"
-msgstr "Ajouter un bloc"
+#: src/pyams_portal/zmi/slot.py:81
+msgid "New slot properties"
+msgstr "Propriétés du nouveau bloc"
 
-#: src/pyams_portal/zmi/slot.py:143
+#: src/pyams_portal/zmi/slot.py:131
 msgid "Specified name is already used!"
 msgstr "Le nom indiqué est déjà utilisé !"
 
-#: src/pyams_portal/zmi/slot.py:149
+#: src/pyams_portal/zmi/slot.py:137
 msgid "Row ID must be an integer value!"
 msgstr "Le numéro de ligne doit être un nombre entier !"
 
-#: src/pyams_portal/zmi/slot.py:153
+#: src/pyams_portal/zmi/slot.py:141
 #, python-format
 msgid "Row ID must be between 1 and {0}!"
 msgstr "Le numéro de ligne doit être compris entre 1 et {} !"
 
-#: src/pyams_portal/zmi/slot.py:192
+#: src/pyams_portal/zmi/slot.py:180
 #, python-format
-msgid "« {} » slot properties"
-msgstr "Propriétés du bloc « {} »"
+msgid "Slot: {}"
+msgstr "Bloc : {}"
 
-#: src/pyams_portal/zmi/slot.py:226
+#: src/pyams_portal/zmi/slot.py:182
+msgid "Slot properties"
+msgstr "Propriétés du bloc"
+
+#: src/pyams_portal/zmi/slot.py:216
 msgid "HTML codes"
 msgstr "Codes HTML"
 
-#: src/pyams_portal/zmi/template.py:60
+#: src/pyams_portal/zmi/template.py:62
 msgid "Add template"
 msgstr "Ajouter un modèle de présentation"
 
-#: src/pyams_portal/zmi/template.py:78
-msgid "Add new portal template"
-msgstr "Ajouter un modèle de présentation"
+#: src/pyams_portal/zmi/template.py:73
+msgid "New template"
+msgstr "Nouveau modèle de présentation"
 
-#: src/pyams_portal/zmi/template.py:80
+#: src/pyams_portal/zmi/template.py:74
 msgid "New template properties"
 msgstr "Propriétés du nouveau modèle"
 
-#: src/pyams_portal/zmi/template.py:112
+#: src/pyams_portal/zmi/template.py:108
+#, python-format
+msgid "{} --- Local template"
+msgstr "{} --- Modèle de présentation spécifique"
+
+#: src/pyams_portal/zmi/template.py:109
+#, python-format
+msgid "Template: {}"
+msgstr "Modèle de présentation : {}"
+
+#: src/pyams_portal/zmi/template.py:127
 msgid "Clone template"
 msgstr "Dupliquer ce modèle"
 
-#: src/pyams_portal/zmi/template.py:133
-msgid "Clone portal template"
-msgstr "Dupliquer un modèle de présentation"
+#: src/pyams_portal/zmi/template.py:143
+msgid "Template clone"
+msgstr "Duplication du modèle"
 
-#: src/pyams_portal/zmi/template.py:169
+#: src/pyams_portal/zmi/template.py:144
+msgid "New template clone properties"
+msgstr "Propriétés du nouveau modèle"
+
+#: src/pyams_portal/zmi/template.py:190
 msgid "Properties"
 msgstr "Propriétés"
 
-#: src/pyams_portal/zmi/template.py:183
-#, python-format
-msgid "Template « {} »"
-msgstr "Modèle de présentation « {} »"
+#: src/pyams_portal/zmi/template.py:200
+msgid "Template configuration"
+msgstr "Propriétés du modèle de présentation"
 
-#: src/pyams_portal/zmi/template.py:185
+#: src/pyams_portal/zmi/template.py:201
 msgid "Template properties"
 msgstr "Propriétés du modèle"
 
-#: src/pyams_portal/zmi/__init__.py:100
+#: src/pyams_portal/zmi/__init__.py:111
 msgid "Renderer:"
 msgstr "Mode de rendu :"
 
-#: src/pyams_portal/zmi/__init__.py:102
+#: src/pyams_portal/zmi/__init__.py:113
 msgid "!! MISSING RENDERER !!"
 msgstr "!! INCONNU !!"
+
+#: src/pyams_portal/zmi/__init__.py:148
+#, python-format
+msgid "(missing value: {})"
+msgstr "{{ composant introuvable }}"
 
 #: src/pyams_portal/zmi/templates/renderer-input.pt:49
 msgid "Set renderer settings"
@@ -637,63 +651,68 @@ msgid "Use local template"
 msgstr "Utiliser un modèle de présentation spécifique"
 
 #: src/pyams_portal/zmi/templates/layout.pt:25
-msgid "Add row<br />Drag and drop button to page template to position new row"
+msgid ""
+"Add row<br />Drag and drop button to page template to position new row, or "
+"just click to add new row at the end"
 msgstr ""
 "Ajouter une ligne<br />Faire un glisser/déposer du bouton dans le modèle de "
-"présentation pour positionner cette ligne au sein du modèle."
+"présentation pour positionner cette ligne au sein du modèle, ou cliquer "
+"simplement sur le bouton pour ajouter une ligne en-dessous des autres"
 
-#: src/pyams_portal/zmi/templates/layout.pt:30
+#: src/pyams_portal/zmi/templates/layout.pt:32
 msgid ""
-"Add slot<br />Drag and drop button to page template to position new slot"
+"Add slot<br />Drag and drop button to page template to position new slot, or "
+"just click to display add form"
 msgstr ""
 "Ajouter un bloc<br />Faire un glisser/déposer du bouton dans le modèle de "
-"présentation pour positionner ce bloc au sein d'une ligne."
+"présentation pour positionner ce bloc au sein d'une ligne, ou cliquer "
+"simplement sur le bouton pour accéder au formulaire de création"
 
-#: src/pyams_portal/zmi/templates/layout.pt:51
+#: src/pyams_portal/zmi/templates/layout.pt:55
 msgid "Add another portlet..."
 msgstr "Ajouter un autre composant..."
 
-#: src/pyams_portal/zmi/templates/layout.pt:60
+#: src/pyams_portal/zmi/templates/layout.pt:64
 msgid "Selected display:"
 msgstr "Périphérique sélectionné :"
 
-#: src/pyams_portal/zmi/templates/layout.pt:67
+#: src/pyams_portal/zmi/templates/layout.pt:71
 msgid "Extra small device (phone, &lt; 576px)"
 msgstr "Très petit périphérique (téléphone, &lt; 576px)"
 
-#: src/pyams_portal/zmi/templates/layout.pt:68
+#: src/pyams_portal/zmi/templates/layout.pt:72
 msgid "Small device (tablet, &gt;= 576px)"
 msgstr "Petit périphérique (tablette, &gt;= 576px)"
 
-#: src/pyams_portal/zmi/templates/layout.pt:69
+#: src/pyams_portal/zmi/templates/layout.pt:73
 msgid "Medium desktop device (&gt;= 768px)"
 msgstr "Périphérique moyen (&gt;= 768px)"
 
-#: src/pyams_portal/zmi/templates/layout.pt:70
+#: src/pyams_portal/zmi/templates/layout.pt:74
 msgid "Large desktop device (&gt;= 992px)"
 msgstr "Grand périphérique (&gt;= 992px)"
 
-#: src/pyams_portal/zmi/templates/layout.pt:71
+#: src/pyams_portal/zmi/templates/layout.pt:75
 msgid "Extra-large device (&gt;= 1200px)"
 msgstr "Très grand périphérique (&gt;= 1200px)"
 
-#: src/pyams_portal/zmi/templates/layout.pt:87
+#: src/pyams_portal/zmi/templates/layout.pt:91
 msgid "Delete row..."
 msgstr "Supprimer la ligne..."
 
-#: src/pyams_portal/zmi/templates/layout.pt:123
+#: src/pyams_portal/zmi/templates/layout.pt:127
 msgid "Show/hide slot"
 msgstr "Afficher/masquer le bloc"
 
-#: src/pyams_portal/zmi/templates/layout.pt:127
+#: src/pyams_portal/zmi/templates/layout.pt:131
 msgid "This slot is not visible"
 msgstr "Ce bloc n'est pas affiché"
 
-#: src/pyams_portal/zmi/templates/layout.pt:131
+#: src/pyams_portal/zmi/templates/layout.pt:135
 msgid "Edit slot properties"
 msgstr "Propriétés du bloc"
 
-#: src/pyams_portal/zmi/templates/layout.pt:135
+#: src/pyams_portal/zmi/templates/layout.pt:139
 msgid "Delete slot"
 msgstr "Supprimer le bloc"
 
@@ -724,9 +743,9 @@ msgid "Card's title"
 msgstr "Titre de la carte"
 
 #: src/pyams_portal/portlets/cards/interfaces.py:45
-#: src/pyams_portal/portlets/cards/zmi/__init__.py:146
+#: src/pyams_portal/portlets/cards/zmi/__init__.py:148
 #: src/pyams_portal/portlets/carousel/interfaces.py:51
-#: src/pyams_portal/portlets/carousel/zmi/__init__.py:138
+#: src/pyams_portal/portlets/carousel/zmi/__init__.py:141
 msgid "Illustration"
 msgstr "Illustration"
 
@@ -797,10 +816,10 @@ msgid "Card's CSS class"
 msgstr "Classe CSS"
 
 #: src/pyams_portal/portlets/cards/interfaces.py:86
-#: src/pyams_portal/portlets/cards/zmi/__init__.py:116
+#: src/pyams_portal/portlets/cards/zmi/__init__.py:118
 #: src/pyams_portal/portlets/carousel/interfaces.py:43
 #: src/pyams_portal/portlets/carousel/interfaces.py:65
-#: src/pyams_portal/portlets/carousel/zmi/__init__.py:114
+#: src/pyams_portal/portlets/carousel/zmi/__init__.py:117
 #: src/pyams_portal/portlets/jumbotron/interfaces.py:35
 #: src/pyams_portal/portlets/html/interfaces.py:29
 msgid "Title"
@@ -827,40 +846,40 @@ msgstr "Texte court affiché en-dessous du titre"
 msgid "Bootstrap: cards"
 msgstr "Bootstrap: cartes"
 
-#: src/pyams_portal/portlets/cards/zmi/__init__.py:99
+#: src/pyams_portal/portlets/cards/zmi/__init__.py:101
 msgid "Click icon to show or hide card"
 msgstr "Cliquer pour afficher ou masquer la carte"
 
-#: src/pyams_portal/portlets/cards/zmi/__init__.py:125
+#: src/pyams_portal/portlets/cards/zmi/__init__.py:127
 msgid "Target"
 msgstr "Cible"
 
-#: src/pyams_portal/portlets/cards/zmi/__init__.py:178
+#: src/pyams_portal/portlets/cards/zmi/__init__.py:180
 msgid "List of portlet cards"
 msgstr "Liste des cartes"
 
-#: src/pyams_portal/portlets/cards/zmi/__init__.py:199
+#: src/pyams_portal/portlets/cards/zmi/__init__.py:201
 msgid "Add card"
 msgstr "Ajouter une carte"
 
-#: src/pyams_portal/portlets/cards/zmi/__init__.py:221
-msgid "Add new card"
-msgstr "Ajouter une carte"
+#: src/pyams_portal/portlets/cards/zmi/__init__.py:216
+msgid "New card"
+msgstr "Nouvelle carte"
 
-#: src/pyams_portal/portlets/cards/zmi/__init__.py:224
+#: src/pyams_portal/portlets/cards/zmi/__init__.py:217
 msgid "New card properties"
 msgstr "Propriétés de la nouvelle carte"
 
-#: src/pyams_portal/portlets/cards/zmi/__init__.py:272
+#: src/pyams_portal/portlets/cards/zmi/__init__.py:262
 #, python-format
 msgid "Card: {}"
-msgstr "Carte « {} »"
+msgstr "Carte : {}"
 
-#: src/pyams_portal/portlets/cards/zmi/__init__.py:275
+#: src/pyams_portal/portlets/cards/zmi/__init__.py:264
 msgid "Card properties"
 msgstr "Propriétés de la carte"
 
-#: src/pyams_portal/portlets/cards/zmi/__init__.py:304
+#: src/pyams_portal/portlets/cards/zmi/__init__.py:301
 msgid "Action button"
 msgstr "Bouton d'action"
 
@@ -977,36 +996,36 @@ msgstr ""
 "Durée d'affichage de l'image, en secondes, lorsque le balayage automatique "
 "est activé"
 
-#: src/pyams_portal/portlets/carousel/__init__.py:103
+#: src/pyams_portal/portlets/carousel/__init__.py:106
 msgid "Bootstrap: carousel"
 msgstr "Bootstrap: carousel"
 
-#: src/pyams_portal/portlets/carousel/zmi/__init__.py:123
+#: src/pyams_portal/portlets/carousel/zmi/__init__.py:126
 msgid "Lead"
 msgstr "En-tête"
 
-#: src/pyams_portal/portlets/carousel/zmi/__init__.py:167
+#: src/pyams_portal/portlets/carousel/zmi/__init__.py:170
 msgid "List of carousel items"
 msgstr "Liste des images du carousel"
 
-#: src/pyams_portal/portlets/carousel/zmi/__init__.py:188
+#: src/pyams_portal/portlets/carousel/zmi/__init__.py:191
 msgid "Add image"
 msgstr "Ajouter une image"
 
-#: src/pyams_portal/portlets/carousel/zmi/__init__.py:204
-msgid "Add new image"
-msgstr "Ajouter une image"
+#: src/pyams_portal/portlets/carousel/zmi/__init__.py:201
+msgid "New image"
+msgstr "Nouvelle image"
 
-#: src/pyams_portal/portlets/carousel/zmi/__init__.py:207
+#: src/pyams_portal/portlets/carousel/zmi/__init__.py:202
 msgid "New image properties"
 msgstr "Propriétés de la nouvelle image"
 
-#: src/pyams_portal/portlets/carousel/zmi/__init__.py:253
+#: src/pyams_portal/portlets/carousel/zmi/__init__.py:245
 #, python-format
 msgid "Image: {}"
-msgstr "Image « {} »"
+msgstr "Image : {}"
 
-#: src/pyams_portal/portlets/carousel/zmi/__init__.py:256
+#: src/pyams_portal/portlets/carousel/zmi/__init__.py:247
 msgid "Carousel image properties"
 msgstr "Propriétés de l'image"
 
@@ -1169,26 +1188,76 @@ msgstr "Texte enrichi (par défaut)"
 msgid "Hidden portlet"
 msgstr "NON affiché"
 
+#, python-format
+#~ msgid "Portlet configuration: « {} »"
+#~ msgstr "Configuration du composant : {}"
+
+#, python-format
+#~ msgid "Portlet: {portlet}"
+#~ msgstr "Composant « {portlet} »"
+
+#, python-format
+#~ msgid "<small>Portlet: {portlet}</small><br />« {renderer} » renderer"
+#~ msgstr ""
+#~ "<small>Composant « {portlet} »</small><br />Mode de rendu « {renderer} »"
+
+#~ msgid "Edit renderer settings"
+#~ msgstr "Propriétés du mode de rendu"
+
+#, python-format
+#~ msgid "« {} »  portal template"
+#~ msgstr "Modèle de présentation « {} »"
+
+#~ msgid "Portlet configuration"
+#~ msgstr "Configuration du composant"
+
+#, python-format
+#~ msgid "« {} » shared template"
+#~ msgstr "Modèle de présentation « {} »"
+
+#, python-format
+#~ msgid "« {} » portlet"
+#~ msgstr "Composant « {} »"
+
+#~ msgid "Add slot"
+#~ msgstr "Ajouter un bloc"
+
+#, python-format
+#~ msgid "« {} » slot properties"
+#~ msgstr "Propriétés du bloc « {} »"
+
+#~ msgid "Add row..."
+#~ msgstr "Ajouter une ligne"
+
+#~ msgid "Add portlet..."
+#~ msgstr "Ajouter un composant"
+
+#~ msgid "Add slot..."
+#~ msgstr "Ajouter un bloc"
+
+#~ msgid "Templates container"
+#~ msgstr "Modèles de présentation"
+
+#~ msgid "Add new portal template"
+#~ msgstr "Ajouter un modèle de présentation"
+
+#~ msgid "Clone portal template"
+#~ msgstr "Dupliquer un modèle de présentation"
+
+#~ msgid "Add template portlet"
+#~ msgstr "Ajouter un composant"
+
 #~ msgid "Click icon to show or hide item"
 #~ msgstr "Cliquer pour afficher ou masquer l'élément"
 
 #~ msgid "Interface d'administration"
 #~ msgstr "Gérer les modèles de présentation"
 
-#~ msgid "Portlets configuration"
-#~ msgstr "Sélection des composants"
-
 #~ msgid "Shared template configuration ({0})"
 #~ msgstr "Configuration d'un modèle de présentation partagé ({0})"
 
-#~ msgid "Template configuration"
-#~ msgstr "Mise en page du modèle de présentation"
-
 #~ msgid "Two registered templates can't share the same name..."
 #~ msgstr "Deux modèles partagés ne peuvent pas partager le même nom !"
-
-#~ msgid "Slot properties"
-#~ msgstr "Propriétés du bloc"
 
 #~ msgid "If 'yes', show slides captions"
 #~ msgstr "Si 'oui', le titre des diapositives est affiché en superposition"

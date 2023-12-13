@@ -205,7 +205,7 @@ class PortalTemplateContainerConfigurationMenu(NavigationMenuItem):
 class PortalTemplateContainerConfigurationForm(AdminEditForm):
     """Portal template container configuration form"""
 
-    title = _("Templates container")
+    title = _("Portlets configuration")
     legend = _("Template selected portlets")
 
     fields = Fields(IPortalTemplateContainerConfiguration)

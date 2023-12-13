@@ -25,7 +25,7 @@ from zope.schema.vocabulary import getVocabularyRegistry
 
 from pyams_i18n.schema import II18nField
 from pyams_layer.interfaces import IPyAMSLayer
-from pyams_portal.interfaces import IPortalTemplate, IPortalTemplateConfiguration, \
+from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalTemplate, IPortalTemplateConfiguration, \
     IPortletPreviewer, IPortletSettings, PREVIEW_MODE
 from pyams_portal.skin import PortletContentProvider
 from pyams_skin.interfaces import BOOTSTRAP_DEVICES_ICONS, BOOTSTRAP_SIZES
@@ -38,7 +38,9 @@ from pyams_utils.text import text_to_html
 __docformat__ = 'restructuredtext'
 
 from pyams_portal import _  # pylint: disable=ungrouped-imports
-
+from pyams_utils.traversing import get_parent
+from pyams_zmi.interfaces import IAdminLayer, IObjectHint, IObjectLabel
+from pyams_zmi.utils import get_object_hint, get_object_label
 
 library = Library('pyams_portal', 'resources')
 
@@ -158,3 +160,19 @@ class PortletPreviewer(PortletContentProvider):
             'visible': visible,
             'icon': icon
         })
+
+
+@adapter_config(required=(IPortalPage, IAdminLayer, Interface),
+                provides=IObjectHint)
+def portal_page_hint(context, request, view):
+    """Portal page hint"""
+    portal_context = get_parent(context, IPortalContext)
+    return get_object_hint(portal_context, request, view)
+
+
+@adapter_config(required=(IPortalPage, IAdminLayer, Interface),
+                provides=IObjectLabel)
+def portal_page_label(context, request, view):
+    """Portal page label"""
+    portal_context = get_parent(context, IPortalContext)
+    return get_object_label(portal_context, request, view)

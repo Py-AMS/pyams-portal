@@ -29,87 +29,68 @@ from pyams_form.interfaces.form import IAJAXFormRenderer, IFormContent, IGroup, 
 from pyams_form.subform import InnerEditForm
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortletsConfiguration, \
-    IPortalTemplate, IPortalTemplateConfiguration, IPortletAddingInfo, IPortletConfiguration, \
+    IPortalTemplate, IPortalTemplateConfiguration, IPortalTemplateContainer, IPortletAddingInfo, IPortletConfiguration, \
     IPortletPreviewer, IPortletRendererSettings, IPortletSettings, MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.page import check_local_template
 from pyams_portal.portlet import LOGGER
 from pyams_portal.skin import PORTLETS_CACHE_NAME, PORTLETS_CACHE_NAMESPACE, PORTLETS_CACHE_REGION
-from pyams_portal.utils import get_portal_page
 from pyams_portal.zmi.interfaces import IPortletConfigurationEditor
-from pyams_portal.zmi.layout import PortalTemplateLayoutView
 from pyams_portal.zmi.widget import RendererSelectFieldWidget
+from pyams_skin.interfaces.view import IModalPage
 from pyams_skin.interfaces.viewlet import IHeaderViewletManager
 from pyams_skin.viewlet.help import AlertMessage
-from pyams_skin.viewlet.menu import MenuDivider, MenuItem
-from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
+from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config, query_adapter
 from pyams_utils.cache import get_cache
 from pyams_utils.dict import merge_dict
+from pyams_utils.registry import get_utility
 from pyams_utils.traversing import get_parent
 from pyams_utils.url import absolute_url
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm, FormGroupChecker
 from pyams_zmi.helper.event import get_json_widget_refresh_callback
-from pyams_zmi.interfaces import IAdminLayer, IObjectLabel
-from pyams_zmi.interfaces.viewlet import IContextAddingsViewletManager
+from pyams_zmi.interfaces import IAdminLayer, IObjectLabel, TITLE_SPAN_BREAK
+from pyams_zmi.interfaces.form import IFormTitle
 from pyams_zmi.utils import get_object_label
-
 
 __docformat__ = 'restructuredtext'
 
 from pyams_portal import _  # pylint: disable=ungrouped-imports
 
 
-@viewlet_config(name='add-template-portlet.divider',
-                context=IPortalTemplate, layer=IAdminLayer,
-                view=PortalTemplateLayoutView, manager=IContextAddingsViewletManager,
-                permission=MANAGE_TEMPLATE_PERMISSION, weight=49)
-class PortalTemplatePortletAddMenuDivider(MenuDivider):
-    """Portal template portlet add menu divider"""
+class PortalTemplatePortletMixinForm:
+    """Portal template portlet mixin form"""
+
+    @property
+    def subtitle(self):
+        translate = self.request.localizer.translate
+        return translate(_("Portlet: {}")).format(translate(self.portlet.label))
 
 
-@viewlet_config(name='add-template-portlet.divider',
-                context=IPortalContext, layer=IAdminLayer,
-                view=PortalTemplateLayoutView, manager=IContextAddingsViewletManager,
-                permission=MANAGE_TEMPLATE_PERMISSION, weight=49)
-class PortalContextPortletAddMenuDivider(MenuDivider):
-    """Portal context portlet add menu divider"""
-
-    page_name = ''
-
-    def __new__(cls, context, request, view, manager):  # pylint: disable=unused-argument
-        page = get_portal_page(context, page_name=view.page_name)
-        if not page.use_local_template:
-            return None
-        return MenuDivider.__new__(cls)
-
-
-@viewlet_config(name='add-template-portlet.menu',
-                context=IPortalTemplate, layer=IAdminLayer,
-                view=PortalTemplateLayoutView, manager=IContextAddingsViewletManager,
-                permission=MANAGE_TEMPLATE_PERMISSION, weight=50)
-class PortalTemplatePortletAddMenu(MenuItem):
-    """Portal template slot add menu"""
-
-    label = _("Add portlet...")
-    icon_class = 'far fa-window-restore'
-
-    href = 'MyAMS.portal.template.addPortlet'
-
-
-@viewlet_config(name='add-template-portlet.menu',
-                context=IPortalContext, layer=IAdminLayer,
-                view=PortalTemplateLayoutView, manager=IContextAddingsViewletManager,
-                permission=MANAGE_TEMPLATE_PERMISSION, weight=50)
-class PortalContextTemplatePortletAddMenu(PortalTemplatePortletAddMenu):
-    """Portal context template portlet add menu"""
-
-    page_name = ''
-
-    def __new__(cls, context, request, view, manager):  # pylint: disable=unused-argument
-        page = get_portal_page(context, page_name=view.page_name)
-        if not page.use_local_template:
-            return None
-        return PortalTemplatePortletAddMenu.__new__(cls)
+@adapter_config(required=(IPortalTemplate, IAdminLayer, PortalTemplatePortletMixinForm),
+                provides=IFormTitle)
+@adapter_config(required=(IPortalPage, IAdminLayer, PortalTemplatePortletMixinForm),
+                provides=IFormTitle)
+@adapter_config(required=(IPortletSettings, IAdminLayer, PortalTemplatePortletMixinForm),
+                provides=IFormTitle)
+def portal_template_portlet_form_title(context, request, form):
+    """Portal template portlet form title getter"""
+    translate = request.localizer.translate
+    if IPortalTemplate.providedBy(form.initial_context):
+        container = get_utility(IPortalTemplateContainer)
+        return TITLE_SPAN_BREAK.format(
+            get_object_label(container, request, form),
+            translate(_("Portal template: {}")).format(form.initial_context.name))
+    parent = get_parent(context, IPortalContext)
+    page = get_parent(context, IPortalPage)
+    if page.use_shared_template:
+        title = translate(_("Shared template: {}")).format(page.template.name)
+    else:
+        title = translate(_("Local template"))
+    if page.inherit_parent:
+        title = translate(_("{} (inherited from parent)")).format(title)
+    return TITLE_SPAN_BREAK.format(
+        get_object_label(parent, request, form),
+        title)
 
 
 @ajax_form_config(name='add-template-portlet.html',
@@ -118,26 +99,18 @@ class PortalContextTemplatePortletAddMenu(PortalTemplatePortletAddMenu):
 @ajax_form_config(name='add-template-portlet.html',
                   context=IPortalPage, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
-class PortalTemplatePortletAddForm(AdminModalAddForm):  # pylint: disable=abstract-method
+class PortalTemplatePortletAddForm(PortalTemplatePortletMixinForm, AdminModalAddForm):  # pylint: disable=abstract-method
     """Portal template portlet add form"""
 
-    @property
-    def title(self):
-        """Title getter"""
-        translate = self.request.localizer.translate
-        if IPortalTemplate.providedBy(self.context):
-            return translate(_("« {} »  portal template")).format(self.context.name)
-        return '<small>{}</small><br />{}'.format(
-            get_object_label(self.context, self.request, self),
-            translate(_("Local template")))
-
-    legend = _("Add template portlet")
+    subtitle = _("New portlet")
+    legend = _("New portlet properties")
 
     fields = Fields(IPortletAddingInfo)
 
     def __init__(self, context, request):
         check_local_template(context)
         super().__init__(context, request)
+        self.initial_context = context
 
     def create_and_add(self, data):
         data = data.get(self, {})
@@ -223,12 +196,13 @@ def drop_template_portlet(request):
 @ajax_form_config(name='portlet-properties.html',
                   context=IPortalPage, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
-class PortalTemplatePortletEditForm(AdminModalEditForm):
+class PortalTemplatePortletEditForm(PortalTemplatePortletMixinForm, AdminModalEditForm):
     """Portal template portlet properties edit form"""
 
     modal_class = 'modal-xl'
 
     portlet = None
+    legend = _("Portlet properties")
 
     def __init__(self, context, request):
         super().__init__(context, request)
@@ -242,27 +216,6 @@ class PortalTemplatePortletEditForm(AdminModalEditForm):
         self.context = portlet_config.editor_settings
         if not portlet_config.can_inherit:
             alsoProvides(self, IPortletConfigurationEditor)
-
-    @property
-    def title(self):
-        """Title getter"""
-        translate = self.request.localizer.translate
-        if IPortalTemplate.providedBy(self.initial_context):
-            title = translate(_("« {} »  portal template")).format(self.initial_context.name)
-        else:
-            page = get_parent(self.context, IPortalPage)
-            if page.use_shared_template:
-                title = translate(_("« {} » shared template")).format(page.template.name)
-            else:
-                title = translate(_("Local template"))
-            if page.inherit_parent:
-                title = translate(_("{} (inherited from parent)")).format(title)
-            if IPortalContext.providedBy(self.initial_context):
-                title = '{} - {}'.format(
-                    get_object_label(self.initial_context, self.request, self), title)
-        return '<small>{}</small><br />{}'.format(
-            title,
-            translate(_("Portlet configuration: « {} »")).format(translate(self.portlet.label)))
 
     @property
     def fields(self):
@@ -475,14 +428,12 @@ class PortletRendererSettingsEditForm(AdminModalEditForm):
         self.renderer = self.context.get_renderer(request)
 
     @property
-    def title(self):
+    def subtitle(self):
         """Title getter"""
         translate = self.request.localizer.translate
-        return translate(_("<small>Portlet: {portlet}</small><br />« {renderer} » renderer")) \
-            .format(portlet=translate(self.renderer.portlet.label),
-                    renderer=translate(self.renderer.label))
+        return translate(_("Renderer: {}")).format(translate(self.renderer.label))
 
-    legend = _("Edit renderer settings")
+    legend = _("Renderer settings")
     modal_class = 'modal-xl'
 
     @property
@@ -496,6 +447,21 @@ class PortletRendererSettingsEditForm(AdminModalEditForm):
 def get_portlet_renderer_settings_edit_form_content(context, request, form):
     """Portlet renderer settings edit form content getter"""
     return IPortletRendererSettings(context)
+
+
+@adapter_config(required=(IPortletSettings, IAdminLayer, IModalPage),
+                provides=IFormTitle)
+def portlet_renderer_settings_edit_form_title(context, request, form):
+    """Portlet renderer settings edit form title"""
+    parent = context.configuration.parent
+    label = get_object_label(parent, request, form, name='form-title')
+    if not IPortalTemplate.providedBy(parent):
+        template = parent.template
+        label = '{} --- {}'.format(label,
+                                   get_object_label(template, request, form, name='form-title'))
+    return TITLE_SPAN_BREAK.format(
+        label,
+        get_object_label(context, request, form, name='form-title'))
 
 
 @adapter_config(required=(Interface, IAdminLayer, PortletRendererSettingsEditForm),
@@ -523,6 +489,6 @@ class PortletRendererSettingsEditFormRenderer(ContextRequestViewAdapter):
                 provides=IObjectLabel)
 def portlet_settings_label(context, request, view):
     """Portlet settings label adapter"""
-    portlet = context.configuration.get_portlet()
     translate = request.localizer.translate
-    return translate(_("Portlet: {portlet}")).format(portlet=translate(portlet.label))
+    portlet = context.configuration.get_portlet()
+    return translate(_("Portlet: {}")).format(translate(portlet.label))

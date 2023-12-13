@@ -26,24 +26,26 @@ from pyams_portal.portlets.cards import ICard, ICardsPortletSettings
 from pyams_portal.zmi import PortletPreviewer
 from pyams_portal.zmi.portlet import PortletConfigurationEditForm
 from pyams_sequence.interfaces import ISequentialIdInfo
+from pyams_skin.interfaces.view import IModalPage
 from pyams_skin.interfaces.viewlet import IContentSuffixViewletManager
 from pyams_skin.viewlet.actions import ContextAddAction
 from pyams_table.column import GetAttrColumn
 from pyams_table.interfaces import IColumn, IValues
 from pyams_template.template import template_config
-from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
+from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config, query_adapter
+from pyams_utils.traversing import get_parent
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm, FormGroupSwitcher
 from pyams_zmi.helper.container import delete_container_element, switch_element_attribute
 from pyams_zmi.helper.event import get_json_table_row_add_callback, \
     get_json_table_row_refresh_callback
 from pyams_zmi.interfaces import IAdminLayer
+from pyams_zmi.interfaces.form import IFormTitle
 from pyams_zmi.interfaces.table import ITableElementEditor
 from pyams_zmi.interfaces.viewlet import IToolbarViewletManager
 from pyams_zmi.table import I18nColumnMixin, IconColumn, InnerTableAdminView, NameColumn, \
     ReorderColumn, SortableTable, TableElementEditor, TrashColumn, VisibilityColumn
 from pyams_zmi.utils import get_object_label
-
 
 __docformat__ = 'restructuredtext'
 
@@ -211,16 +213,7 @@ class ICardForm(Interface):
 class CardAddForm(AdminModalAddForm):
     """Card add form"""
 
-    @property
-    def title(self):
-        """Form title getter"""
-        translate = self.request.localizer.translate
-        portlet = self.context.configuration.get_portlet()
-        return '<small>{}</small><br />{}'.format(
-            translate(_("Portlet configuration: « {} »")).format(portlet.label),
-            translate(_("Add new card"))
-        )
-
+    subtitle = _("New card")
     legend = _("New card properties")
     modal_class = 'modal-xl'
 
@@ -263,19 +256,23 @@ class CardEditForm(AdminModalEditForm):
     """Card properties edit form"""
 
     @property
-    def title(self):
+    def subtitle(self):
         """Form title getter"""
         translate = self.request.localizer.translate
-        portlet = self.context.__parent__.configuration.get_portlet()
-        return '<small>{}</small><br />{}'.format(
-            translate(_("Portlet configuration: « {} »")).format(portlet.label),
-            translate(_("Card: {}")).format(get_object_label(self.context, self.request, self))
-        )
+        return translate(_("Card: {}")).format(get_object_label(self.context, self.request, self))
 
     legend = _("Card properties")
     modal_class = 'modal-xl'
 
     fields = Fields(ICard).select('title', 'illustration', 'body', 'css_class')
+
+
+@adapter_config(required=(ICard, IAdminLayer, IModalPage),
+                provides=IFormTitle)
+def card_edit_form_title(context, request, view):
+    """Card edit form title"""
+    settings = get_parent(context, ICardsPortletSettings)
+    return query_adapter(IFormTitle, request, settings, view)
 
 
 @adapter_config(required=(ICard, IAdminLayer, CardEditForm),

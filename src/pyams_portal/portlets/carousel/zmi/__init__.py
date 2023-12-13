@@ -27,17 +27,20 @@ from pyams_portal.interfaces import IPortletPreviewer, MANAGE_TEMPLATE_PERMISSIO
 from pyams_portal.portlets.carousel import ICarouselImage, ICarouselPortletSettings
 from pyams_portal.zmi import PortletPreviewer
 from pyams_portal.zmi.portlet import PortletConfigurationEditForm
+from pyams_skin.interfaces.view import IModalPage
 from pyams_skin.interfaces.viewlet import IContentSuffixViewletManager
 from pyams_skin.viewlet.actions import ContextAddAction
 from pyams_table.interfaces import IColumn, IValues
 from pyams_template.template import template_config
-from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
+from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config, query_adapter
+from pyams_utils.traversing import get_parent
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm
 from pyams_zmi.helper.container import delete_container_element, switch_element_attribute
 from pyams_zmi.helper.event import get_json_table_row_add_callback, \
     get_json_table_row_refresh_callback
 from pyams_zmi.interfaces import IAdminLayer
+from pyams_zmi.interfaces.form import IFormTitle
 from pyams_zmi.interfaces.table import ITableElementEditor
 from pyams_zmi.interfaces.viewlet import IToolbarViewletManager
 from pyams_zmi.table import IconColumn, InnerTableAdminView, NameColumn, ReorderColumn, SortableTable, \
@@ -195,15 +198,7 @@ class CarouselImageAddAction(ContextAddAction):
 class CarouselImageAddForm(AdminModalAddForm):
     """Carousel image add form"""
 
-    @property
-    def title(self):
-        translate = self.request.localizer.translate
-        portlet = self.context.configuration.get_portlet()
-        return '<small>{}</small><br />{}'.format(
-            translate(_("Portlet configuration: « {} »")).format(portlet.label),
-            translate(_("Add new image"))
-        )
-
+    subtitle = _("New image")
     legend = _("New image properties")
     modal_class = 'modal-xl'
 
@@ -245,18 +240,22 @@ class CarouselImageEditForm(AdminModalEditForm):
     """Carousel image properties edit form"""
 
     @property
-    def title(self):
+    def subtitle(self):
         translate = self.request.localizer.translate
-        portlet = self.context.__parent__.configuration.get_portlet()
-        return '<small>{}</small><br />{}'.format(
-            translate(_("Portlet configuration: « {} »")).format(portlet.label),
-            translate(_("Image: {}")).format(get_object_label(self.context, self.request, self))
-        )
+        return translate(_("Image: {}")).format(get_object_label(self.context, self.request, self))
 
     legend = _("Carousel image properties")
     modal_class = 'modal-xl'
 
     fields = Fields(ICarouselImage).omit('__name__', '__parent__', 'visible')
+
+
+@adapter_config(required=(ICarouselImage, IAdminLayer, IModalPage),
+                provides=IFormTitle)
+def carousel_image_edit_form_title(context, request, view):
+    """Carousel image edit form title"""
+    settings = get_parent(context, ICarouselPortletSettings)
+    return query_adapter(IFormTitle, request, settings, view)
 
 
 @adapter_config(required=(ICarouselImage, IAdminLayer, CarouselImageEditForm),

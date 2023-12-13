@@ -21,13 +21,14 @@ from persistent.mapping import PersistentMapping
 from pyramid.events import subscriber
 from zope.container.contained import Contained
 from zope.container.folder import Folder
-from zope.interface import implementer
+from zope.interface import Interface, implementer
 from zope.lifecycleevent import IObjectAddedEvent, IObjectRemovedEvent
 from zope.location import locate
 from zope.schema.fieldproperty import FieldProperty
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.traversing.interfaces import ITraversable
 
+from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortalPortletsConfiguration, IPortalTemplate, \
     IPortalTemplateConfiguration, IPortalTemplateContainer, IPortalTemplateContainerConfiguration, \
     IPortalTemplateContainerRoles, IPortlet, IPortletConfiguration, \
@@ -46,8 +47,11 @@ from pyams_utils.registry import get_pyramid_registry, get_utility
 from pyams_utils.request import check_request
 from pyams_utils.traversing import get_parent
 from pyams_utils.vocabulary import LocalUtilitiesVocabulary, vocabulary_config
+from pyams_zmi.interfaces import IObjectLabel
 
 __docformat__ = 'restructuredtext'
+
+from pyams_portal import _
 
 
 #
@@ -117,6 +121,15 @@ class PortalTemplate(Persistent, Contained):
 
     name = FieldProperty(IPortalTemplate['name'])
     css_class = FieldProperty(IPortalTemplate['css_class'])
+
+
+@adapter_config(name='form-title',
+                required=(IPortalTemplate, IPyAMSLayer, Interface),
+                provides=IObjectLabel)
+def portal_template_label(context, request, layer):
+    """Portal template label getter"""
+    translate = request.localizer.translate
+    return translate(_("Portal template: {}")).format(context.name)
 
 
 @subscriber(IObjectAddedEvent, context_selector=IPortalTemplate)

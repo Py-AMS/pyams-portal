@@ -26,22 +26,17 @@ from pyams_form.field import Fields
 from pyams_form.interfaces import HIDDEN_MODE
 from pyams_form.interfaces.form import IAJAXFormRenderer, IDataExtractedEvent, IGroup
 from pyams_layer.interfaces import IPyAMSLayer
-from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalTemplate, \
+from pyams_portal.interfaces import IPortalPage, IPortalTemplate, \
     IPortalTemplateConfiguration, IPortalTemplateContainer, ISlot, ISlotConfiguration, \
     MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.page import check_local_template
-from pyams_portal.utils import get_portal_page
-from pyams_portal.zmi.layout import PortalTemplateLayoutView
-from pyams_skin.viewlet.menu import MenuItem
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config
 from pyams_utils.interfaces.data import IObjectData
 from pyams_utils.registry import get_utility
-from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm, FormGroupSwitcher
-from pyams_zmi.interfaces import IAdminLayer
-from pyams_zmi.interfaces.viewlet import IContextAddingsViewletManager
+from pyams_zmi.interfaces import IAdminLayer, TITLE_SPAN_BREAK
+from pyams_zmi.interfaces.form import IFormTitle
 from pyams_zmi.utils import get_object_label
-
 
 __docformat__ = 'restructuredtext'
 
@@ -51,47 +46,22 @@ from pyams_portal import _  # pylint: disable=ungrouped-imports
 class PortalTemplateSlotMixinForm:  # pylint: disable=no-member
     """Portal template slot mixin form"""
 
-    @property
-    def title(self):
-        """Title getter"""
-        translate = self.request.localizer.translate
-        if IPortalTemplate.providedBy(self.context):
-            container = get_utility(IPortalTemplateContainer)
-            return '<small>{}</small><br />{}'.format(
-                get_object_label(container, self.request, self),
-                translate(_("« {} »  portal template")).format(self.context.name))
-        return '<small>{}</small><br />{}'.format(
-            get_object_label(self.context.__parent__, self.request, self),
-            translate(_("Local template")))
 
-
-@viewlet_config(name='add-template-slot.menu',
-                context=IPortalTemplate, layer=IAdminLayer,
-                view=PortalTemplateLayoutView, manager=IContextAddingsViewletManager,
-                permission=MANAGE_TEMPLATE_PERMISSION, weight=20)
-class PortalTemplateSlotAddMenu(MenuItem):
-    """Portal template slot add menu"""
-
-    label = _("Add slot...")
-    icon_class = 'fas fa-columns'
-
-    href = 'MyAMS.portal.template.addSlot'
-
-
-@viewlet_config(name='add-template-slot.menu',
-                context=IPortalContext, layer=IAdminLayer,
-                view=PortalTemplateLayoutView, manager=IContextAddingsViewletManager,
-                permission=MANAGE_TEMPLATE_PERMISSION, weight=20)
-class PortalContextTemplateSlotAddMenu(PortalTemplateSlotAddMenu):
-    """Portal context template slot add menu"""
-
-    page_name = ''
-
-    def __new__(cls, context, request, view, manager):  # pylint: disable=unused-argument
-        page = get_portal_page(context, page_name=view.page_name)
-        if not page.use_local_template:
-            return None
-        return PortalTemplateSlotAddMenu.__new__(cls)
+@adapter_config(required=(IPortalTemplate, IAdminLayer, PortalTemplateSlotMixinForm),
+                provides=IFormTitle)
+@adapter_config(required=(IPortalPage, IAdminLayer, PortalTemplateSlotMixinForm),
+                provides=IFormTitle)
+def portal_template_slot_form_title(context, request, form):
+    """Portal template slot form title"""
+    translate = request.localizer.translate
+    if IPortalTemplate.providedBy(context):
+        container = get_utility(IPortalTemplateContainer)
+        return TITLE_SPAN_BREAK.format(
+            get_object_label(container, request, form),
+            translate(_("Portal template: {}")).format(context.name))
+    return TITLE_SPAN_BREAK.format(
+        get_object_label(context.__parent__, request, form),
+        translate(_("Local template")))
 
 
 @ajax_form_config(name='add-template-slot.html',
@@ -107,7 +77,8 @@ class PortalTemplateSlotAddForm(PortalTemplateSlotMixinForm, AdminModalAddForm):
         check_local_template(context)
         super().__init__(context, request)
 
-    legend = _("Add slot")
+    subtitle = _("New slot")
+    legend = _("New slot properties")
 
     fields = Fields(ISlot)
 
@@ -131,6 +102,23 @@ class PortalTemplateSlotAddForm(PortalTemplateSlotMixinForm, AdminModalAddForm):
         if row_id:
             row_id = row_id - 1
         return config.add_slot(data.get('name'), row_id)
+
+
+@adapter_config(required=(IPortalTemplate, IAdminLayer, PortalTemplateSlotAddForm),
+                provides=IFormTitle)
+@adapter_config(required=(IPortalPage, IAdminLayer, PortalTemplateSlotAddForm),
+                provides=IFormTitle)
+def portal_template_slot_add_form_title(context, request, form):
+    """Portal template slot add form title"""
+    translate = request.localizer.translate
+    if IPortalTemplate.providedBy(context):
+        container = get_utility(IPortalTemplateContainer)
+        return TITLE_SPAN_BREAK.format(
+            get_object_label(container, request, form),
+            translate(_("Portal template: {}")).format(context.name))
+    return TITLE_SPAN_BREAK.format(
+        get_object_label(context.__parent__, request, form),
+        translate(_("Local template")))
 
 
 @subscriber(IDataExtractedEvent, form_selector=PortalTemplateSlotAddForm)
@@ -186,10 +174,12 @@ class PortalTemplateSlotPropertiesEditForm(PortalTemplateSlotMixinForm, AdminMod
     """Portal template slot properties edit form"""
 
     @property
-    def legend(self):
-        """Legend getter"""
+    def subtitle(self):
+        """Subtitle getter"""
         translate = self.request.localizer.translate
-        return translate(_("« {} » slot properties")).format(self.get_content().slot_name)
+        return translate(_("Slot: {}")).format(self.get_content().slot_name)
+
+    legend = _("Slot properties")
 
     label_css_class = 'col-sm-6'
     input_css_class = 'col-sm-2'

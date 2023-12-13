@@ -37,7 +37,7 @@ from pyams_zmi.interfaces import IObjectLabel
 __docformat__ = 'restructuredtext'
 
 from pyams_portal import _  # pylint: disable=ungrouped-imports
-
+from pyams_zmi.utils import get_object_label
 
 CAROUSEL_PORTLET_NAME = 'pyams_portal.portlet.carousel'
 
@@ -74,7 +74,10 @@ class CarouselImage(Persistent, Contained):
                 provides=IObjectLabel)
 def carousel_image_label(context, request, view):  # pylint: disable=unused-argument
     """Carousel image label getter"""
-    return II18n(context).query_attribute('title', request=request)
+    label = II18n(context).query_attribute('title', request=request)
+    if not label:
+        label = get_object_label(context.illustration, request, view)
+    return label
 
 
 @adapter_config(required=ICarouselImage, provides=IViewContextPermissionChecker)
