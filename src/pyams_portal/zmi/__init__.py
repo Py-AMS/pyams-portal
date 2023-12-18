@@ -14,7 +14,6 @@
 
 This module defines base ZMI components.
 """
-from _testbuffer import get_sizeof_void_p
 
 from fanstatic import Library, Resource
 from pyramid.renderers import render
@@ -34,13 +33,13 @@ from pyams_utils.adapter import adapter_config
 from pyams_utils.interfaces.text import IHTMLRenderer
 from pyams_utils.request import get_annotations
 from pyams_utils.text import text_to_html
+from pyams_utils.traversing import get_parent
+from pyams_zmi.interfaces import IAdminLayer, IObjectHint, IObjectLabel
+from pyams_zmi.utils import get_object_hint, get_object_label
 
 __docformat__ = 'restructuredtext'
 
 from pyams_portal import _  # pylint: disable=ungrouped-imports
-from pyams_utils.traversing import get_parent
-from pyams_zmi.interfaces import IAdminLayer, IObjectHint, IObjectLabel
-from pyams_zmi.utils import get_object_hint, get_object_label
 
 library = Library('pyams_portal', 'resources')
 
