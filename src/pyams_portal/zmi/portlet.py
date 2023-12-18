@@ -48,7 +48,7 @@ from pyams_utils.url import absolute_url
 from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm, FormGroupChecker
 from pyams_zmi.helper.event import get_json_widget_refresh_callback
-from pyams_zmi.interfaces import IAdminLayer, IObjectLabel, TITLE_SPAN_BREAK
+from pyams_zmi.interfaces import IAdminLayer, IObjectHint, IObjectLabel, TITLE_SPAN_BREAK
 from pyams_zmi.interfaces.form import IFormTitle
 from pyams_zmi.utils import get_object_label
 
@@ -483,6 +483,14 @@ class PortletRendererSettingsEditFormRenderer(ContextRequestViewAdapter):
             'status': 'success',
             'message': self.request.localizer.translate(self.view.success_message)
         }
+
+
+@adapter_config(required=(IPortletSettings, IAdminLayer, IModalPage),
+                provides=IObjectHint)
+def portlet_settings_hint(context, request, view):
+    """Portlet settings hint adapter"""
+    return get_object_label(context.configuration.parent, request, view,
+                            name='form-title')
 
 
 @adapter_config(required=(IPortletSettings, IAdminLayer, Interface),
