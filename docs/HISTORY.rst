@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.1
+-----
+ - added default portlet settings hint adapter
+
 2.1.0
 -----
  - updated modal forms title
