@@ -37,6 +37,8 @@ To improve rendering performances, each portlet render result can be cached.
     >>> include_viewlet(config)
     >>> from pyams_pagelet import includeme as include_pagelet
     >>> include_pagelet(config)
+    >>> from pyams_file import includeme as include_file
+    >>> include_file(config)
     >>> from pyams_i18n import includeme as include_i18n
     >>> include_i18n(config)
     >>> from pyams_security import includeme as include_security
@@ -873,6 +875,7 @@ Let's try to use several renderers on another portlet:
       </body>
     </html>
 
+
 Header and footer templates
 ---------------------------
 
@@ -920,6 +923,83 @@ shared contents like topics or news use header and footer templates provided by 
     >>> provider.context = folder
     >>> provider.request = request
     >>> provider.page is page
+    True
+
+
+Portlets renderers thumbnails
+-----------------------------
+
+You can assign thumbnails to portlets renderers; if using MyAMS and ZMI, these thumbnails will be
+displayed in renderers selections lists:
+
+    >>> from pyams_portal.interfaces import IPortletsRenderersThumbnails, IPortletRendererThumbnail
+
+    >>> thumbnails = IPortletsRenderersThumbnails(ptc)
+    >>> thumbnails.thumbnails
+    {}
+
+Let's try to add a thumbnail:
+
+    >>> import os, sys
+    >>> img_name = os.path.join(sys.modules['pyams_portal.tests'].__path__[0], 'test_image.png')
+
+    >>> from persistent.mapping import PersistentMapping
+    >>> from zope.location import locate
+    >>> from pyams_utils.factory import create_object
+
+    >>> with open(img_name, 'rb') as file:
+    ...     image = file.read()
+
+    >>> new_thumbnails = PersistentMapping()
+    >>> thumbnail = create_object(IPortletRendererThumbnail)
+    >>> locate(thumbnail, ptc)
+    >>> thumbnail.thumbnail = ('test_image.png', image)
+    >>> new_thumbnails['pyams_portal.portlet.html'] = thumbnail
+    >>> new_thumbnails['pyams_portal.portlet.image'] = ('test_image.png', image)
+    >>> thumbnails.thumbnails = new_thumbnails
+
+
+You can also set or update a single thumbnail:
+
+    >>> thumbnails.set_thumbnail('pyams_portal.portlet.raw', '', ('test_image.png', image))
+    >>> thumbnails.set_thumbnail('pyams_portal.portlet.raw', '', ('test_image.png', image))
+
+    >>> thumbnails.get_thumbnail('pyams_portal.portlet.html', '')
+    <pyams_file.file.ImageFile object at 0x... oid 0x... in <ZODB.Connection.Connection object at 0x...>>
+    >>> thumbnails.get_thumbnail('unknown', '') is None
+    True
+
+Thumbnails support sublocations and traversing:
+
+    >>> from zope.location.interfaces import ISublocations
+    >>> next(config.registry.queryAdapter(ptc, ISublocations, name='thumbnails').sublocations()) is thumbnails
+    True
+
+    >>> from zope.traversing.interfaces import ITraversable
+    >>> traverser = config.registry.queryAdapter(ptc, ITraversable, name='thumbnails')
+    >>> pprint.pprint(traverser.traverse(''))
+    {'pyams_portal.portlet.html': <pyams_portal.thumbnails.PortletRendererThumbnail object at 0x...>,
+     'pyams_portal.portlet.image': <pyams_portal.thumbnails.PortletRendererThumbnail object at 0x...>,
+     'pyams_portal.portlet.raw': <pyams_portal.thumbnails.PortletRendererThumbnail object at 0x...>}
+
+You can finally update a thumbnail with a "no change" value, or delete it:
+
+    >>> from pyams_utils.interfaces.form import NOT_CHANGED, TO_BE_DELETED
+
+    >>> thumbnails.set_thumbnail('pyams_portal.portlet.raw', '', NOT_CHANGED)
+    >>> thumbnails.get_thumbnail('pyams_portal.portlet.raw', '')
+    <pyams_file.file.ImageFile object at 0x... oid 0x... in <ZODB.Connection.Connection object at 0x...>>
+
+    >>> thumbnails.set_thumbnail('pyams_portal.portlet.raw', '', TO_BE_DELETED)
+    >>> thumbnails.get_thumbnail('pyams_portal.portlet.raw', '') is None
+    True
+
+    >>> new_thumbnails['pyams_portal.portlet.html'] = NOT_CHANGED
+    >>> new_thumbnails['pyams_portal.portlet.image'] = TO_BE_DELETED
+    >>> thumbnails.thumbnails = new_thumbnails
+    >>> thumbnails.get_thumbnail('pyams_portal.portlet.html', '')
+    <pyams_file.file.ImageFile object at 0x... oid 0x... in <ZODB.Connection.Connection object at 0x...>>
+    >>> thumbnails.get_thumbnail('pyams_portal.portlet.image', '') is None
     True
 
 

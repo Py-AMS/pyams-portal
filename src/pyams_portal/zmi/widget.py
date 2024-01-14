@@ -16,10 +16,15 @@ This module defines a custom widget used to select portlet renderer, which
 provides access to custom renderer settings, if any.
 """
 
+from zope.interface import implementer
+
 from pyams_form.browser.select import SelectWidget
 from pyams_form.interfaces import INPUT_MODE
 from pyams_form.template import widget_template_config
 from pyams_form.widget import FieldWidget
+from pyams_portal.zmi import layout_css, layout_js
+from pyams_utils.fanstatic import get_resource_path
+from pyams_utils.interfaces.data import IObjectData
 from pyams_zmi.interfaces import IAdminLayer
 
 __docformat__ = 'restructuredtext'
@@ -30,10 +35,22 @@ from pyams_portal import _
 @widget_template_config(mode=INPUT_MODE,
                         template='templates/renderer-input.pt',
                         layer=IAdminLayer)
+@implementer(IObjectData)
 class RendererSelectWidget(SelectWidget):
     """Portlet renderer widget"""
 
     no_value_message = _("No selected renderer (use default)")
+
+    object_data = {
+        'ams-modules': {
+            "portal": {
+                "src": get_resource_path(layout_js),
+                "css": get_resource_path(layout_css)
+            }
+        },
+        'ams-select2-after-init-callback': 'MyAMS.portal.renderer.init',
+        'ams-select2-template-result': 'MyAMS.portal.renderer.formatRenderer'
+    }
 
     @property
     def show_renderer_properties(self):

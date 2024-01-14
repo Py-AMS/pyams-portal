@@ -17,11 +17,13 @@ This module defines portlets management components.
 
 import json
 
-from pyramid.exceptions import NotFound
+from pyramid.httpexceptions import HTTPBadRequest, HTTPNotFound
 from pyramid.renderers import render
 from pyramid.view import view_config
+from zope.component import ComponentLookupError
 from zope.interface import Interface, alsoProvides, implementer
 
+from pyams_content.feature.renderer import HIDDEN_RENDERER_NAME
 from pyams_form.ajax import AJAXFormRenderer, ajax_form_config
 from pyams_form.field import Fields
 from pyams_form.interfaces import HIDDEN_MODE
@@ -30,8 +32,9 @@ from pyams_form.subform import InnerEditForm
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortletsConfiguration, \
     IPortalTemplate, IPortalTemplateConfiguration, IPortalTemplateContainer, IPortletAddingInfo, IPortletConfiguration, \
-    IPortletPreviewer, IPortletRendererSettings, IPortletSettings, MANAGE_TEMPLATE_PERMISSION
-from pyams_portal.page import check_local_template
+    IPortletPreviewer, IPortletRenderer, IPortletRendererSettings, IPortletSettings, IPortletsRenderersThumbnails, \
+    MANAGE_TEMPLATE_PERMISSION
+from pyams_portal.page import check_local_template, portal_context_portlets_configuration
 from pyams_portal.portlet import LOGGER
 from pyams_portal.skin import PORTLETS_CACHE_NAME, PORTLETS_CACHE_NAMESPACE, PORTLETS_CACHE_REGION
 from pyams_portal.zmi.interfaces import IPortletConfigurationEditor
@@ -39,7 +42,7 @@ from pyams_portal.zmi.widget import RendererSelectFieldWidget
 from pyams_skin.interfaces.view import IModalPage
 from pyams_skin.interfaces.viewlet import IHeaderViewletManager
 from pyams_skin.viewlet.help import AlertMessage
-from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config, query_adapter
+from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config, get_adapter_weight
 from pyams_utils.cache import get_cache
 from pyams_utils.dict import merge_dict
 from pyams_utils.registry import get_utility
@@ -190,6 +193,58 @@ def drop_template_portlet(request):
     }
 
 
+@view_config(name='get-renderers.json',
+             context=IPortalTemplate, request_type=IPyAMSLayer,
+             renderer='json', xhr=True,
+             permission=MANAGE_TEMPLATE_PERMISSION)
+@view_config(name='get-renderers.json',
+             context=IPortalContext, request_type=IPyAMSLayer,
+             renderer='json', xhr=True,
+             permission=MANAGE_TEMPLATE_PERMISSION)
+def get_renderers(request):
+    """Portlet settings renderer getter"""
+    page_name = request.params.get('page_name', '')
+    try:
+        configuration = portal_context_portlets_configuration(request.context, page_name)
+    except ComponentLookupError:
+        raise HTTPBadRequest("Bad page name")
+    try:
+        portlet_id = int(request.params.get('portlet_id'))
+    except (TypeError, ValueError):
+        raise HTTPBadRequest("Missing portlet ID")
+    portlet_config = configuration.get_portlet_configuration(portlet_id)
+    if portlet_config is None:
+        raise HTTPNotFound()
+    translate = request.localizer.translate
+    portlet = portlet_config.get_portlet()
+    settings = portlet_config.editor_settings
+    container = get_utility(IPortalTemplateContainer)
+    thumbnails = IPortletsRenderersThumbnails(container, {})
+    terms = []
+    for renderer_name, renderer in sorted(request.registry.getAdapters((request.root, request, request, settings),
+                                                                       IPortletRenderer),
+                                          key=get_adapter_weight):
+        if renderer_name == HIDDEN_RENDERER_NAME:
+            src = '/--static--/pyams_portal/img/hidden.png'
+        else:
+            name = f'{portlet.name}::{renderer_name}' if renderer_name else portlet.name
+            thumbnail = thumbnails.thumbnails.get(name)
+            if thumbnail:
+                src = absolute_url(thumbnail.thumbnail, request)
+            else:
+                src = '/--static--/pyams_portal/img/unknown.png'
+        terms.append({
+            'id': renderer_name,
+            'text': translate(renderer.label),
+            'selected': settings.renderer == renderer_name,
+            'img': src
+        })
+    return {
+        'status': 'success',
+        'items': terms
+    }
+
+
 @ajax_form_config(name='portlet-properties.html',
                   context=IPortalTemplate, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
@@ -211,7 +266,7 @@ class PortalTemplatePortletEditForm(PortalTemplatePortletMixinForm, AdminModalEd
         self.portlet_config = portlet_config = IPortalPortletsConfiguration(self.context) \
             .get_portlet_configuration(portlet_id)
         if portlet_config is None:
-            raise NotFound()
+            raise HTTPNotFound()
         self.portlet = portlet_config.get_portlet()
         self.context = portlet_config.editor_settings
         if not portlet_config.can_inherit:

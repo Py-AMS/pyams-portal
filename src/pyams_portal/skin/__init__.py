@@ -20,20 +20,21 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.traversing.interfaces import ITraversable
 
 from pyams_layer.interfaces import IPyAMSLayer
-from pyams_portal.interfaces import IPortalContext, IPortalContextIndexPage, IPortalPage, \
-    IPortalTemplateConfiguration, \
-    IPortlet, IPortletRenderer, IPortletRendererSettings, IPortletSettings, \
+from pyams_portal.interfaces import ALL_PORTLETS_RENDERERS_VOCABULARY, IPortalContext, IPortalContextIndexPage, \
+    IPortalTemplateConfiguration, IPortlet, IPortletConfiguration, IPortletRenderer, IPortletRendererSettings, \
+    IPortletSettings, \
     PORTLET_RENDERERS_VOCABULARY, PORTLET_RENDERER_SETTINGS_KEY, PREVIEW_MODE
 from pyams_portal.portlet import LOGGER
 from pyams_portal.utils import get_portal_page
 from pyams_utils.adapter import ContextAdapter, adapter_config, get_adapter_weight, \
     get_annotation_adapter
 from pyams_utils.cache import get_cache
+from pyams_utils.factory import create_object
 from pyams_utils.interfaces import ICacheKeyValue
+from pyams_utils.registry import get_pyramid_registry, get_utilities_for
 from pyams_utils.request import check_request, get_annotations, get_display_context
 from pyams_utils.vocabulary import vocabulary_config
 from pyams_viewlet.viewlet import ViewContentProvider
-
 
 __docformat__ = 'restructuredtext'
 
@@ -161,6 +162,27 @@ class PortletRenderersVocabulary(SimpleVocabulary):
                                                                      IPortletRenderer),
                                         key=get_adapter_weight)
         ]
+        super().__init__(terms)
+
+
+@vocabulary_config(name=ALL_PORTLETS_RENDERERS_VOCABULARY)
+class AllPortletsRenderersVocabulary(SimpleVocabulary):
+    """All portlets renderers vocabulary"""
+
+    def __init__(self, context):
+        request = check_request()
+        registry = get_pyramid_registry()
+        translate = request.localizer.translate
+        terms = []
+        for portlet_name, portlet in registry.getUtilitiesFor(IPortlet):
+            configuration = create_object(IPortletConfiguration, portlet=portlet)
+            for renderer_name, renderer in sorted(registry.getAdapters((request.root, request, None,
+                                                                        configuration.settings),
+                                                                       IPortletRenderer),
+                                                  key=get_adapter_weight):
+                terms.append(SimpleTerm(f'{portlet_name}::{renderer_name}' if renderer_name else portlet_name,
+                                        title=f'{translate(portlet.label)}: '
+                                              f'{translate(renderer.label)}'))
         super().__init__(terms)
 
 

@@ -782,6 +782,48 @@ const portal = {
             }
             MyAMS.portal.presentation.handleChange = true;
         }
+    },
+
+    /**
+     * Renderers selection
+     */
+    renderer: {
+
+        init: (select, plugin, settings) => {
+            const layout = $('#portal_config');
+            if (layout.exists()) {
+                const
+                    oldValue = select.val(),
+                    pageName = layout.data('ams-page-name'),
+                    form = select.parents('form'),
+                    portletId = $('input[name="form.widgets.portlet_id"]', form).val();
+                MyAMS.require('ajax').then(() => {
+                    MyAMS.ajax.get('get-renderers.json', {
+                        page_name: pageName,
+                        portlet_id: portletId
+                    }).then((result) => {
+                        select.empty();
+                        $(result.items).each((idx, elt) => {
+                            const option = new Option(elt.text, elt.id, elt.id === oldValue,
+                                elt.id === oldValue);
+                            $(option).attr('data-ams-portal-img', elt.img);
+                            select.append(option);
+                        });
+                    });
+                });
+            }
+        },
+
+        formatRenderer: (renderer) => {
+            const src = $(renderer.element).data('amsPortalImg');
+            if (!src) {
+                return renderer.text;
+            }
+            return $('<span class="renderer-image">' +
+                `   <img class="thumbnail w-100px mr-3" src="${src}" alt="" />` +
+                    renderer.text +
+                '</span>');
+        }
     }
 };
 

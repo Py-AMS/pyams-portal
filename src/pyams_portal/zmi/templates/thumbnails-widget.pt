@@ -1,0 +1,59 @@
+<div class="py-2" i18n:domain="pyams_portal">
+	<input type="hidden"
+		   value="1"
+		   name="${view.name}__marker" />
+	<tal:loop repeat="(portlet_name, portlet) view.get_portlets()">
+		<h4>${i18n:portlet.label}</h4>
+		<ul>
+			<li tal:repeat="(renderer_name, renderer) view.get_renderers(portlet)">
+				<tal:var define="basename ('{}::{}'.format(portlet_name, renderer_name) if renderer_name else portlet_name);
+								 name basename + '__thumbnail';
+								 id name.replace('.', '-');">
+					<strong class="mt-2">${i18n:renderer.label}</strong><br />
+					<div class="form-widget custom-file">
+						<input type="file"
+							   id="${view.id}" name="${name}"
+							   class="custom-file-input"
+							   required="${'required' if view.required else None}"
+							   data-ams-data="${tales:object_data(view)}" />
+						<label for="${view.id}"
+							   class="custom-file-label"
+							   i18n:translate="">Browse...</label>
+					</div>
+					<div class="d-flex flex-row"
+						 tal:define="value view.get_value(portlet_name, renderer_name)"
+						 tal:condition="value">
+						<div class="col-sm-auto my-2">
+							<img class="border-0"
+							     src="${view.get_thumbnail(value)}"
+							     alt="${value.title or value.filename}"/>
+						</div>
+						<div class="col">
+							<div class="row">
+								<div class="col my-2">
+									<i tal:omit-tag="" i18n:translate="">Current value:</i>
+									<i tal:omit-tag="">${value.content_type}</i>
+									<i tal:condition="value.content_type.startswith('image/') and not value.content_type.startswith('image/svg')"
+									   tal:omit-tag="">- ${'{} x {}'.format(*value.get_image_size())}</i>
+									<i tal:omit-tag="">- ${view.get_human_size(value)}</i>
+								</div>
+								<div class="col-auto custom-control custom-switch border-0 text-right">
+									<input type="checkbox"
+									       class="custom-control-input"
+									       id="${id}__deleted"
+									       name="${basename}__deleted"
+									       value="true"/>
+									<label for="${id}__deleted"
+									       class="custom-control-label">
+										<i tal:omit-tag="" i18n:translate="">Delete</i>
+									</label>
+								</div>
+							</div>
+							${structure:provider:pyams.context_actions(context=value)}
+						</div>
+					</div>
+				</tal:var>
+			</li>
+		</ul>
+	</tal:loop>
+</div>

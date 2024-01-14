@@ -82,6 +82,7 @@
 			<div id="portal_config" class="container container-md"
 				 tal:define="page view.get_portal_page()"
 				 data-ams-location="${tales:absolute_url(page)}"
+				 data-ams-page-name="${view.page_name}"
 				 data-ams-allowed-change="${'true' if can_change else 'false'}">
 				<div id="rowMenu" class="dropdown-menu" role="menu"
 					 tal:condition="can_change">
