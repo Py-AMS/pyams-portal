@@ -24,12 +24,11 @@ from zope.location import ILocation
 from zope.location.interfaces import IContained
 from zope.schema import Bool, Choice, Int, List, Object, Text, TextLine
 
+from pyams_file.schema import ImageField
+from pyams_portal import _  # pylint: disable=ungrouped-imports
 from pyams_security.schema import PermissionField, PrincipalsSetField
 from pyams_skin.schema import BootstrapDevicesBooleanField
 from pyams_utils.schema import PersistentListField, PersistentMappingField
-
-from pyams_portal import _  # pylint: disable=ungrouped-imports
-
 
 MANAGE_TEMPLATE_PERMISSION = 'pyams_portal.ManageTemplate'
 '''Permission used to manage templates'''
@@ -46,7 +45,10 @@ PORTLETS_VOCABULARY_NAME = 'pyams_portal.portlets'
 '''Name of portlets vocabulary'''
 
 PORTLET_RENDERERS_VOCABULARY = 'pyams_portal.portlet.renderers'
-'''Name of portlet renderers vocabulary'''
+'''Name of available renderers vocabulary for a single portlet'''
+
+ALL_PORTLETS_RENDERERS_VOCABULARY = 'pyams_portal.portlet.renderers.all'
+'''Name of all portlets renderers vocabulary'''
 
 TEMPLATE_SLOTS_VOCABULARY = 'pyams_portal.template.slots'
 '''Name of template slots vocabulary'''
@@ -209,6 +211,43 @@ class IPortletRenderer(IPortletContentProvider):
 
     resources = Attribute("Tuple of Fanstatic resources needed by this renderer")
 
+
+#
+# Portlets renderers thumbnails
+#
+
+PORTLETS_RENDERERS_SETTINGS_KEY = 'pyams_portal.renderer.thumbnails'
+
+
+class IPortletRendererThumbnail(Interface):
+    """Portlet renderer thumbnail interface"""
+
+    thumbnail = ImageField(title=_("Portlet renderer thumbnail"),
+                           description=_("This image will be displayed into portlet renderer "
+                                         "selection list"),
+                           required=False)
+
+
+class IPortletsRenderersThumbnails(Interface):
+    """Portlets renderers thumbnails interface"""
+
+    thumbnails = PersistentMappingField(title=_("Renderers thumbnails selection"),
+                                        description=_("This property contains thumbnails of all available "
+                                                      "portlets renderers"),
+                                        key_type=Choice(title=_("Renderer name"),
+                                                        vocabulary=ALL_PORTLETS_RENDERERS_VOCABULARY),
+                                        required=False)
+
+    def get_thumbnail(self, portlet_name, renderer_name):
+        """Thumbnail image getter"""
+
+    def set_thumbnail(self, portlet_name, renderer_name, value):
+        """Thumbnail setter"""
+
+
+#
+# Portlets renderers settings
+#
 
 PORTLET_RENDERER_SETTINGS_KEY = 'pyams_portal.renderer.settings'
 
