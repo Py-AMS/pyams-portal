@@ -10,14 +10,13 @@
 # FOR A PARTICULAR PURPOSE.
 #
 
-"""PyAMS_portal.portrlets.carousel module
+"""PyAMS_portal.portlets.carousel module
 
 """
 
 from persistent import Persistent
 from zope.container.contained import Contained
-from zope.container.ordered import OrderedContainer
-from zope.interface import Interface, alsoProvides
+from zope.interface import Interface, alsoProvides, implementer
 from zope.schema.fieldproperty import FieldProperty
 
 from pyams_file.interfaces import IImageFile, IResponsiveImage
@@ -26,18 +25,18 @@ from pyams_i18n.interfaces import II18n
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.portlet import Portlet, PortletSettings, portlet_config
-from pyams_portal.portlets.carousel.interfaces import ICarouselImage, ICarouselPortletSettings
+from pyams_portal.portlets.carousel.interfaces import ICarouselContainer, ICarouselImage, ICarouselPortletSettings
 from pyams_security.interfaces import IViewContextPermissionChecker
 from pyams_utils.adapter import ContextAdapter, adapter_config
-from pyams_utils.container import SimpleContainerMixin
+from pyams_utils.container import BTreeOrderedContainer
 from pyams_utils.factory import factory_config
 from pyams_zmi.interfaces import IObjectLabel
-
+from pyams_zmi.utils import get_object_label
 
 __docformat__ = 'restructuredtext'
 
 from pyams_portal import _  # pylint: disable=ungrouped-imports
-from pyams_zmi.utils import get_object_label
+
 
 CAROUSEL_PORTLET_NAME = 'pyams_portal.portlet.carousel'
 
@@ -87,15 +86,20 @@ class CarouselImagePermissionChecker(ContextAdapter):
     edit_permission = MANAGE_TEMPLATE_PERMISSION
 
 
-@factory_config(provided=ICarouselPortletSettings)
-class CarouselPortletSettings(SimpleContainerMixin, OrderedContainer, PortletSettings):
-    """Carousel portlet settings"""
-
-    title = FieldProperty(ICarouselPortletSettings['title'])
+@implementer(ICarouselContainer)
+class CarouselContainer(BTreeOrderedContainer):
+    """Carousel container persistent class"""
 
     def get_visible_items(self):
         """Visible items getter"""
         yield from filter(lambda x: x.visible, self.values())
+
+
+@factory_config(provided=ICarouselPortletSettings)
+class CarouselPortletSettings(CarouselContainer, PortletSettings):
+    """Carousel portlet settings"""
+
+    title = FieldProperty(ICarouselPortletSettings['title'])
 
 
 @portlet_config(permission=None)

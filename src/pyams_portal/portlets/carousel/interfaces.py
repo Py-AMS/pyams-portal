@@ -15,7 +15,7 @@
 """
 
 from zope.container.constraints import contains
-from zope.container.interfaces import IContainer
+from zope.container.interfaces import IOrderedContainer
 from zope.location.interfaces import IContained
 from zope.schema import Bool, Int
 
@@ -57,14 +57,18 @@ class ICarouselImage(ICarouselItem):
                    default=5)
 
 
-class ICarouselPortletSettings(IPortletSettings, IContainer):
-    """Carousel portlet settings interface"""
+class ICarouselContainer(IOrderedContainer):
+    """Carousel container interface"""
 
     contains(ICarouselItem)
+
+    def get_visible_items(self):
+        """Get iterator over visible items"""
+
+
+class ICarouselPortletSettings(IPortletSettings, ICarouselContainer):
+    """Carousel portlet settings interface"""
 
     title = I18nTextLineField(title=_("Title"),
                               description=_("Main component title"),
                               required=False)
-
-    def get_visible_items(self):
-        """Get iterator over visible items"""
