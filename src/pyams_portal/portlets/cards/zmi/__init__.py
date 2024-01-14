@@ -22,9 +22,8 @@ from pyams_form.field import Fields
 from pyams_form.interfaces.form import IAJAXFormRenderer, IGroup
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortletPreviewer, MANAGE_TEMPLATE_PERMISSION
-from pyams_portal.portlets.cards import ICard, ICardsPortletSettings
+from pyams_portal.portlets.cards.interfaces import ICard, ICardsContainer, ICardsPortletSettings
 from pyams_portal.zmi import PortletPreviewer
-from pyams_portal.zmi.portlet import PortletConfigurationEditForm
 from pyams_sequence.interfaces import ISequentialIdInfo
 from pyams_skin.interfaces.view import IModalPage
 from pyams_skin.interfaces.viewlet import IContentSuffixViewletManager
@@ -40,7 +39,7 @@ from pyams_zmi.helper.container import delete_container_element, switch_element_
 from pyams_zmi.helper.event import get_json_table_row_add_callback, \
     get_json_table_row_refresh_callback
 from pyams_zmi.interfaces import IAdminLayer
-from pyams_zmi.interfaces.form import IFormTitle
+from pyams_zmi.interfaces.form import IFormTitle, IPropertiesEditForm
 from pyams_zmi.interfaces.table import ITableElementEditor
 from pyams_zmi.interfaces.viewlet import IToolbarViewletManager
 from pyams_zmi.table import I18nColumnMixin, IconColumn, InnerTableAdminView, NameColumn, \
@@ -55,12 +54,12 @@ from pyams_portal import _  # pylint: disable=ungrouped-imports
 class CardsTable(SortableTable):
     """Cards table"""
 
-    container_class = ICardsPortletSettings
+    container_class = ICardsContainer
 
     display_if_empty = True
 
 
-@adapter_config(required=(ICardsPortletSettings, IAdminLayer, CardsTable),
+@adapter_config(required=(ICardsContainer, IAdminLayer, CardsTable),
                 provides=IValues)
 class CardsTableValues(ContextRequestViewAdapter):
     """Cards table values adapter"""
@@ -72,14 +71,14 @@ class CardsTableValues(ContextRequestViewAdapter):
 
 
 @adapter_config(name='reorder',
-                required=(ICardsPortletSettings, IAdminLayer, CardsTable),
+                required=(ICardsContainer, IAdminLayer, CardsTable),
                 provides=IColumn)
 class CardsTableReorderColumn(ReorderColumn):
     """Cards table reorder column"""
 
 
 @view_config(name='reorder.json',
-             context=ICardsPortletSettings, request_type=IPyAMSLayer,
+             context=ICardsContainer, request_type=IPyAMSLayer,
              renderer='json', xhr=True,
              permission=MANAGE_TEMPLATE_PERMISSION)
 def reorder_cards_table(request):
@@ -93,7 +92,7 @@ def reorder_cards_table(request):
 
 
 @adapter_config(name='visible',
-                required=(ICardsPortletSettings, IAdminLayer, CardsTable),
+                required=(ICardsContainer, IAdminLayer, CardsTable),
                 provides=IColumn)
 class CardsTableVisibleColumn(VisibilityColumn):
     """Cards table visible column"""
@@ -102,7 +101,7 @@ class CardsTableVisibleColumn(VisibilityColumn):
 
 
 @view_config(name='switch-visible-item.json',
-             context=ICardsPortletSettings, request_type=IPyAMSLayer,
+             context=ICardsContainer, request_type=IPyAMSLayer,
              renderer='json', xhr=True)
 def switch_visible_card(request):
     """Switch visible card"""
@@ -110,7 +109,7 @@ def switch_visible_card(request):
 
 
 @adapter_config(name='title',
-                required=(ICardsPortletSettings, IAdminLayer, CardsTable),
+                required=(ICardsContainer, IAdminLayer, CardsTable),
                 provides=IColumn)
 class CardsTableTitleColumn(NameColumn):
     """Cards table name column"""
@@ -119,7 +118,7 @@ class CardsTableTitleColumn(NameColumn):
 
 
 @adapter_config(name='target',
-                required=(ICardsPortletSettings, IAdminLayer, CardsTable),
+                required=(ICardsContainer, IAdminLayer, CardsTable),
                 provides=IColumn)
 class CardsTableTargetColumn(I18nColumnMixin, GetAttrColumn):
     """Cards table target column"""
@@ -138,7 +137,7 @@ class CardsTableTargetColumn(I18nColumnMixin, GetAttrColumn):
 
 
 @adapter_config(name='illustration',
-                required=(ICardsPortletSettings, IAdminLayer, CardsTable),
+                required=(ICardsContainer, IAdminLayer, CardsTable),
                 provides=IColumn)
 class CardsTableIllustrationColumn(IconColumn):
     """Cards table illustration column"""
@@ -154,14 +153,14 @@ class CardsTableIllustrationColumn(IconColumn):
 
 
 @adapter_config(name='trash',
-                required=(ICardsPortletSettings, IAdminLayer, CardsTable),
+                required=(ICardsContainer, IAdminLayer, CardsTable),
                 provides=IColumn)
 class CardsTableTrashColumn(TrashColumn):
     """Cards table trash column"""
 
 
 @view_config(name='delete-element.json',
-             context=ICardsPortletSettings, request_type=IPyAMSLayer,
+             context=ICardsContainer, request_type=IPyAMSLayer,
              renderer='json', xhr=True,
              permission=MANAGE_TEMPLATE_PERMISSION)
 def delete_card(request):
@@ -170,8 +169,8 @@ def delete_card(request):
 
 
 @viewlet_config(name='cards-content-table',
-                context=ICardsPortletSettings, layer=IAdminLayer,
-                view=PortletConfigurationEditForm,
+                context=ICardsContainer, layer=IAdminLayer,
+                view=IPropertiesEditForm,
                 manager=IContentSuffixViewletManager, weight=10)
 class CardsTableView(InnerTableAdminView):
     """Cards table view"""
@@ -192,7 +191,7 @@ class CardsPortletPreviewer(PortletPreviewer):
 #
 
 @viewlet_config(name='add-card.menu',
-                context=ICardsPortletSettings, layer=IAdminLayer, view=CardsTable,
+                context=ICardsContainer, layer=IAdminLayer, view=CardsTable,
                 manager=IToolbarViewletManager, weight=10,
                 permission=MANAGE_TEMPLATE_PERMISSION)
 class CardAddAction(ContextAddAction):
@@ -207,7 +206,7 @@ class ICardForm(Interface):
 
 
 @ajax_form_config(name='add-card.html',
-                  context=ICardsPortletSettings, layer=IPyAMSLayer,
+                  context=ICardsContainer, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
 @implementer(ICardForm)
 class CardAddForm(AdminModalAddForm):
@@ -224,7 +223,7 @@ class CardAddForm(AdminModalAddForm):
         self.context.append(obj)
 
 
-@adapter_config(required=(ICardsPortletSettings, IAdminLayer, CardAddForm),
+@adapter_config(required=(ICardsContainer, IAdminLayer, CardAddForm),
                 provides=IAJAXFormRenderer)
 class CardAddFormRenderer(ContextRequestViewAdapter):
     """Card add form renderer"""
@@ -271,7 +270,7 @@ class CardEditForm(AdminModalEditForm):
                 provides=IFormTitle)
 def card_edit_form_title(context, request, view):
     """Card edit form title"""
-    settings = get_parent(context, ICardsPortletSettings)
+    settings = get_parent(context, ICardsContainer)
     return query_adapter(IFormTitle, request, settings, view)
 
 

@@ -16,8 +16,7 @@
 
 from persistent import Persistent
 from zope.container.contained import Contained
-from zope.container.ordered import OrderedContainer
-from zope.interface import Interface, alsoProvides
+from zope.interface import Interface, alsoProvides, implementer
 from zope.schema.fieldproperty import FieldProperty
 
 from pyams_file.interfaces import IImageFile, IResponsiveImage
@@ -26,14 +25,13 @@ from pyams_i18n.interfaces import II18n
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import MANAGE_TEMPLATE_PERMISSION
 from pyams_portal.portlet import Portlet, PortletSettings, portlet_config
-from pyams_portal.portlets.cards.interfaces import ICard, ICardsPortletSettings
+from pyams_portal.portlets.cards.interfaces import ICard, ICardsContainer, ICardsPortletSettings
 from pyams_security.interfaces import IViewContextPermissionChecker
 from pyams_sequence.reference import InternalReferenceMixin
 from pyams_utils.adapter import ContextAdapter, adapter_config
-from pyams_utils.container import SimpleContainerMixin
+from pyams_utils.container import BTreeOrderedContainer
 from pyams_utils.factory import factory_config
 from pyams_zmi.interfaces import IObjectLabel
-
 
 __docformat__ = 'restructuredtext'
 
@@ -41,6 +39,15 @@ from pyams_portal import _  # pylint: disable=ungrouped-imports
 
 
 CARDS_PORTLET_NAME = 'pyams_portal.portlet.cards'
+
+
+@implementer(ICardsContainer)
+class CardsContainer(BTreeOrderedContainer):
+    """Bootstrap cards container"""
+
+    def get_visible_items(self):
+        """Get iterator over visible cards"""
+        yield from filter(lambda x: x.visible, self.values())
 
 
 @factory_config(provided=ICard)
@@ -90,15 +97,11 @@ class CardPermissionChecker(ContextAdapter):
 
 
 @factory_config(provided=ICardsPortletSettings)
-class CardsPortletSettings(SimpleContainerMixin, OrderedContainer, PortletSettings):
+class CardsPortletSettings(CardsContainer, PortletSettings):
     """Cards portlet settings"""
 
     title = FieldProperty(ICardsPortletSettings['title'])
     lead = FieldProperty(ICardsPortletSettings['lead'])
-
-    def get_visible_items(self):
-        """Visible items getter"""
-        yield from filter(lambda x: x.visible, self.values())
 
 
 @portlet_config(permission=None)

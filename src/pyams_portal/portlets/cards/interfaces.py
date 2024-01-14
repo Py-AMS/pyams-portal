@@ -15,7 +15,7 @@
 """
 
 from zope.container.constraints import contains
-from zope.container.interfaces import IContainer
+from zope.container.interfaces import IOrderedContainer
 from zope.interface import Invalid, invariant
 from zope.location.interfaces import IContained
 from zope.schema import Bool, Choice, TextLine, URI
@@ -78,10 +78,17 @@ class ICard(IContained):
                          default='col mb-3')
 
 
-class ICardsPortletSettings(IPortletSettings, IContainer):
-    """Bootstrap cards portlet settings interface"""
+class ICardsContainer(IOrderedContainer):
+    """Bootstrap cards container interface"""
 
     contains(ICard)
+
+    def get_visible_items(self):
+        """Get iterator over visible cards"""
+
+
+class ICardsPortletSettings(IPortletSettings, ICardsContainer):
+    """Bootstrap cards portlet settings interface"""
 
     title = I18nTextLineField(title=_("Title"),
                               description=_("Main component title"),
@@ -90,6 +97,3 @@ class ICardsPortletSettings(IPortletSettings, IContainer):
     lead = I18nTextLineField(title=_("Leading text"),
                              description=_("Short text to be displayed below title"),
                              required=False)
-
-    def get_visible_items(self):
-        """Get iterator over visible cards"""
