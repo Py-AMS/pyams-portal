@@ -22,7 +22,7 @@ from zope.annotation.interfaces import IAnnotations
 from zope.component.interfaces import ISite
 
 from pyams_portal.interfaces import IPortalContext, PORTAL_PAGE_KEY
-from pyams_utils.container import find_objects_providing
+from pyams_utils.finder import find_objects_providing
 from pyams_utils.registry import get_local_registry, set_local_registry
 
 
