@@ -52,7 +52,7 @@ from pyams_viewlet.viewlet import viewlet_config
 from pyams_zmi.form import AdminModalAddForm, AdminModalEditForm, FormGroupChecker
 from pyams_zmi.helper.event import get_json_widget_refresh_callback
 from pyams_zmi.interfaces import IAdminLayer, IObjectHint, IObjectLabel, TITLE_SPAN_BREAK
-from pyams_zmi.interfaces.form import IFormTitle
+from pyams_zmi.interfaces.form import IFormTitle, IPropertiesEditForm
 from pyams_zmi.utils import get_object_label
 
 __docformat__ = 'restructuredtext'
@@ -371,6 +371,7 @@ class PortalTemplatePortletEditFormHelp(AlertMessage):
 @adapter_config(name='configuration',
                 required=(Interface, IAdminLayer, IPortletConfigurationEditor),
                 provides=IInnerSubForm)
+@implementer(IPropertiesEditForm)
 class PortletConfigurationEditForm(InnerEditForm):
     """Portlet configuration edit form"""
 
