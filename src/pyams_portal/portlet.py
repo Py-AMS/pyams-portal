@@ -240,7 +240,7 @@ class PortletConfiguration(Persistent, Contained):
     @property
     def can_inherit(self):
         """Check if configuration can be inherited"""
-        return not IPortalTemplate.providedBy(self.__parent__)
+        return (self.__parent__ is not None) and not IPortalTemplate.providedBy(self.__parent__)
 
     @property
     def inherit_parent(self):
@@ -282,7 +282,7 @@ class PortletConfiguration(Persistent, Contained):
                     return page
                 if not page.inherit_parent:
                     break
-            parent = parent.__parent__
+            parent = getattr(parent, '__parent__', None)
             if parent is None:
                 break
         page = get_portal_page(parent, page_name=page_name or '')
