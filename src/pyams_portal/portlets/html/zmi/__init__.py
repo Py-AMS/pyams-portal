@@ -17,7 +17,7 @@ This module defines HTML and code portlets management components.
 
 __docformat__ = 'restructuredtext'
 
-from zope.interface import Interface
+from zope.interface import Interface, alsoProvides
 
 from pyams_form.interfaces.form import IInnerSubForm
 from pyams_layer.interfaces import IPyAMSLayer
@@ -28,6 +28,7 @@ from pyams_portal.zmi.interfaces import IPortletConfigurationEditor
 from pyams_portal.zmi.portlet import PortletConfigurationEditForm
 from pyams_template.template import template_config
 from pyams_utils.adapter import adapter_config
+from pyams_utils.interfaces.data import IObjectData
 from pyams_zmi.interfaces import IAdminLayer
 
 
@@ -43,6 +44,17 @@ class RawPortletSettingsEditForm(PortletConfigurationEditForm):
         if body is not None:
             body.add_widgets_class('height-100')
             body.widget_css_class = 'editor height-400px'
+            renderer = self.context.renderer
+            if renderer == 'rest':
+                body.object_data = {
+                    'ams-filename': 'body.rst'
+                }
+                alsoProvides(body, IObjectData)
+            elif renderer == 'markdown':
+                body.object_data = {
+                    'ams-filename': 'body.md'
+                }
+                alsoProvides(body, IObjectData)
 
 
 @adapter_config(required=(Interface, IPyAMSLayer, Interface, IRawPortletSettings),
