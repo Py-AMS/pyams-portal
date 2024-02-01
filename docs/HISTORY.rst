@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.1
+-----
+ - moved renderers names constants from PyAMS_content package
+
 2.2.0
 -----
  - added support for portlets renderers thumbnails
