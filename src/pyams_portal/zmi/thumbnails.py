@@ -24,7 +24,6 @@ from persistent.mapping import PersistentMapping
 from zope.dublincore.interfaces import IZopeDublinCore
 from zope.schema.interfaces import IDict
 
-from pyams_content.feature.renderer import HIDDEN_RENDERER_NAME
 from pyams_file.file import EXTENSIONS_THUMBNAILS
 from pyams_file.interfaces.thumbnail import IThumbnails
 from pyams_form.ajax import ajax_form_config
@@ -37,8 +36,8 @@ from pyams_form.template import widget_template_config
 from pyams_form.util import to_bytes
 from pyams_form.widget import FieldWidget, Widget
 from pyams_layer.interfaces import IPyAMSLayer
-from pyams_portal.interfaces import IPortalTemplateContainer, IPortlet, IPortletConfiguration, IPortletRenderer, \
-    IPortletsRenderersThumbnails, MANAGE_TEMPLATE_PERMISSION
+from pyams_portal.interfaces import HIDDEN_RENDERER_NAME, IPortalTemplateContainer, IPortlet, IPortletConfiguration, \
+    IPortletRenderer, IPortletsRenderersThumbnails, MANAGE_TEMPLATE_PERMISSION
 from pyams_utils.adapter import ContextRequestViewAdapter, adapter_config, get_adapter_weight
 from pyams_utils.factory import create_object
 from pyams_utils.interfaces.form import NOT_CHANGED, NO_VALUE, TO_BE_DELETED

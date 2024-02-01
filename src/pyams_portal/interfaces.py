@@ -216,6 +216,10 @@ class IPortletRenderer(IPortletContentProvider):
 # Portlets renderers thumbnails
 #
 
+DEFAULT_RENDERER_NAME = 'default'
+HIDDEN_RENDERER_NAME = 'hidden'
+
+
 PORTLETS_RENDERERS_SETTINGS_KEY = 'pyams_portal.renderer.thumbnails'
 
 

@@ -23,14 +23,13 @@ from pyramid.view import view_config
 from zope.component import ComponentLookupError
 from zope.interface import Interface, alsoProvides, implementer
 
-from pyams_content.feature.renderer import HIDDEN_RENDERER_NAME
 from pyams_form.ajax import AJAXFormRenderer, ajax_form_config
 from pyams_form.field import Fields
 from pyams_form.interfaces import HIDDEN_MODE
 from pyams_form.interfaces.form import IAJAXFormRenderer, IFormContent, IGroup, IInnerSubForm
 from pyams_form.subform import InnerEditForm
 from pyams_layer.interfaces import IPyAMSLayer
-from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortletsConfiguration, \
+from pyams_portal.interfaces import HIDDEN_RENDERER_NAME, IPortalContext, IPortalPage, IPortalPortletsConfiguration, \
     IPortalTemplate, IPortalTemplateConfiguration, IPortalTemplateContainer, IPortletAddingInfo, IPortletConfiguration, \
     IPortletPreviewer, IPortletRenderer, IPortletRendererSettings, IPortletSettings, IPortletsRenderersThumbnails, \
     MANAGE_TEMPLATE_PERMISSION
