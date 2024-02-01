@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.2.0
+-----
+ - added support for portlets renderers thumbnails
+ - moved PyAMS_utils finder helpers to new module
+
 2.1.1
 -----
  - added default portlet settings hint adapter
