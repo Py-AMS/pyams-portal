@@ -22,16 +22,14 @@ from zope.traversing.interfaces import ITraversable
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import ALL_PORTLETS_RENDERERS_VOCABULARY, IPortalContext, IPortalContextIndexPage, \
     IPortalTemplateConfiguration, IPortlet, IPortletConfiguration, IPortletRenderer, IPortletRendererSettings, \
-    IPortletSettings, \
-    PORTLET_RENDERERS_VOCABULARY, PORTLET_RENDERER_SETTINGS_KEY, PREVIEW_MODE
+    IPortletSettings, PORTLET_RENDERERS_VOCABULARY, PORTLET_RENDERER_SETTINGS_KEY, PREVIEW_MODE
 from pyams_portal.portlet import LOGGER
 from pyams_portal.utils import get_portal_page
-from pyams_utils.adapter import ContextAdapter, adapter_config, get_adapter_weight, \
-    get_annotation_adapter
+from pyams_utils.adapter import ContextAdapter, adapter_config, get_adapter_weight, get_annotation_adapter
 from pyams_utils.cache import get_cache
 from pyams_utils.factory import create_object
 from pyams_utils.interfaces import ICacheKeyValue
-from pyams_utils.registry import get_pyramid_registry, get_utilities_for
+from pyams_utils.registry import get_pyramid_registry
 from pyams_utils.request import check_request, get_annotations, get_display_context
 from pyams_utils.vocabulary import vocabulary_config
 from pyams_viewlet.viewlet import ViewContentProvider
@@ -44,9 +42,9 @@ from pyams_portal import _  # pylint: disable=ungrouped-imports
 PORTLETS_CACHE_NAME = 'portlets'
 PORTLETS_CACHE_REGION = 'portlets'
 PORTLETS_CACHE_NAMESPACE = 'PyAMS::portlet'
-PORTLETS_CACHE_KEY = 'portlet::{scheme}::{hostname}::{portlet}::{context}::{lang}'
-PORTLETS_CACHE_DISPLAY_CONTEXT_KEY = 'portlet::{scheme}::{hostname}::{portlet}:' \
-                                     ':{context}::{display}::{lang}'
+PORTLETS_CACHE_KEY = 'portlet::{scheme}::{hostname}::{context}::{page}::{portlet}::{lang}'
+PORTLETS_CACHE_DISPLAY_CONTEXT_KEY = 'portlet::{scheme}::{hostname}::{context}::{display}:' \
+                                     ':{page}::{portlet}::{lang}'
 
 
 class PortletContentProvider(ViewContentProvider):
@@ -109,17 +107,19 @@ class PortletRenderer(PortletContentProvider):
     def get_cache_key(self):
         """Cache key getter"""
         display_context = get_display_context(self.request)
-        if display_context is None:
+        if (display_context is None) or (display_context is self.request.context):
             return PORTLETS_CACHE_KEY.format(scheme=self.request.scheme,
                                              hostname=self.request.host,
+                                             context=ICacheKeyValue(self.request.context),
+                                             page=getattr(self.view, 'page_name', 'body') or 'body',
                                              portlet=ICacheKeyValue(self.settings),
-                                             context=ICacheKeyValue(self.context),
                                              lang=self.request.locale_name)
         return PORTLETS_CACHE_DISPLAY_CONTEXT_KEY.format(scheme=self.request.scheme,
                                                          hostname=self.request.host,
-                                                         portlet=ICacheKeyValue(self.settings),
-                                                         context=ICacheKeyValue(self.context),
+                                                         context=ICacheKeyValue(self.request.context),
                                                          display=ICacheKeyValue(display_context),
+                                                         page=getattr(self.view, 'page_name', 'body') or 'body',
+                                                         portlet=ICacheKeyValue(self.settings),
                                                          lang=self.request.locale_name)
 
     def render(self, template_name=''):

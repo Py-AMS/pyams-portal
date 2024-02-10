@@ -164,12 +164,12 @@ class PortletSettings(Persistent, Contained):
             return
         request = check_request()
         registry = request.registry
-        renderer = registry.queryMultiAdapter((request.root, request, request, self),
+        renderer = registry.queryMultiAdapter((request.root, request, None, self),
                                               IPortletRenderer, name=self._renderer)
         if (renderer is not None) and (renderer.target_interface is not None):
             noLongerProvides(self, renderer.target_interface)
         self._renderer = value
-        renderer = registry.queryMultiAdapter((request.root, request, request, self),
+        renderer = registry.queryMultiAdapter((request.root, request, None, self),
                                               IPortletRenderer, name=self._renderer)
         if (renderer is not None) and (renderer.target_interface is not None):
             alsoProvides(self, renderer.target_interface)
@@ -178,7 +178,7 @@ class PortletSettings(Persistent, Contained):
         """Renderer adapter getter"""
         if request is None:
             request = check_request()
-        return request.registry.queryMultiAdapter((request.root, request, request, self),
+        return request.registry.queryMultiAdapter((request.root, request, None, self),
                                                   IPortletRenderer, name=self._renderer)
 
     def get_devices_visibility(self):
