@@ -626,7 +626,7 @@ Rendering portlets requires a matching cache region:
 The cache key is based on the current hostname, on the context and on the current locale:
 
     >>> renderer.get_cache_key()
-    'portlet::http::example.com:80::1::body::...::en'
+    'portlet::http::example.com:80::...::body::...::en'
     >>> renderer.render()
     '<p>This is a test!</p>'
 
