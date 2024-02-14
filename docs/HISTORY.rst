@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.2.2
+-----
+ - updated portlets cache key to include page name (which may be required when
+   a page template is duplicated to be used in another page name)
+
 2.2.1
 -----
  - moved renderers names constants from PyAMS_content package
