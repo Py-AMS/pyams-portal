@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.3
+-----
+ - corrected doctest
+
 2.2.2
 -----
  - updated portlets cache key to include page name (which may be required when
