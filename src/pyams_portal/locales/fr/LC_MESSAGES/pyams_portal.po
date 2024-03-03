@@ -1232,15 +1232,12 @@ msgstr "Jumbotron Bootstrap (par défaut)"
 msgid "Hidden portlet"
 msgstr "NON affiché"
 
-#, python-format
 #~ msgid "Portlet configuration: « {} »"
 #~ msgstr "Configuration du composant : {}"
 
-#, python-format
 #~ msgid "Portlet: {portlet}"
 #~ msgstr "Composant « {portlet} »"
 
-#, python-format
 #~ msgid "<small>Portlet: {portlet}</small><br />« {renderer} » renderer"
 #~ msgstr ""
 #~ "<small>Composant « {portlet} »</small><br />Mode de rendu « {renderer} »"
@@ -1248,25 +1245,21 @@ msgstr "NON affiché"
 #~ msgid "Edit renderer settings"
 #~ msgstr "Propriétés du mode de rendu"
 
-#, python-format
 #~ msgid "« {} »  portal template"
 #~ msgstr "Modèle de présentation « {} »"
 
 #~ msgid "Portlet configuration"
 #~ msgstr "Configuration du composant"
 
-#, python-format
 #~ msgid "« {} » shared template"
 #~ msgstr "Modèle de présentation « {} »"
 
-#, python-format
 #~ msgid "« {} » portlet"
 #~ msgstr "Composant « {} »"
 
 #~ msgid "Add slot"
 #~ msgstr "Ajouter un bloc"
 
-#, python-format
 #~ msgid "« {} » slot properties"
 #~ msgstr "Propriétés du bloc « {} »"
 

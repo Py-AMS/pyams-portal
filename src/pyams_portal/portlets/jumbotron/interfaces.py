@@ -21,8 +21,7 @@ from zope.schema import Bool, Choice, URI
 from pyams_i18n.schema import I18nTextField, I18nTextLineField
 from pyams_portal.interfaces import IPortletSettings
 from pyams_sequence.schema import InternalReferenceField
-from pyams_skin.interfaces import BOOTSTRAP_STATUS
-
+from pyams_skin.interfaces import BOOTSTRAP_STATUS_VOCABULARY
 
 __docformat__ = 'restructuredtext'
 
@@ -70,5 +69,5 @@ class IJumbotronPortletSettings(IPortletSettings):
 
     button_status = Choice(title=_("Button status"),
                            description=_("Status of optional button"),
-                           values=BOOTSTRAP_STATUS,
+                           vocabulary=BOOTSTRAP_STATUS_VOCABULARY,
                            default='primary')
