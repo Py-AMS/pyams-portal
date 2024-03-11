@@ -25,8 +25,9 @@ from zope.interface import Interface, alsoProvides, implementer
 
 from pyams_form.ajax import AJAXFormRenderer, ajax_form_config
 from pyams_form.field import Fields
+from pyams_form.form import get_form_weight
 from pyams_form.interfaces import HIDDEN_MODE
-from pyams_form.interfaces.form import IAJAXFormRenderer, IFormContent, IGroup, IInnerSubForm
+from pyams_form.interfaces.form import IAJAXFormRenderer, IFormContent, IFormFields, IGroup, IInnerSubForm
 from pyams_form.subform import InnerEditForm
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import HIDDEN_RENDERER_NAME, IPortalContext, IPortalPage, IPortalPortletsConfiguration, \
@@ -36,7 +37,7 @@ from pyams_portal.interfaces import HIDDEN_RENDERER_NAME, IPortalContext, IPorta
 from pyams_portal.page import check_local_template, portal_context_portlets_configuration
 from pyams_portal.portlet import LOGGER
 from pyams_portal.skin import PORTLETS_CACHE_NAME, PORTLETS_CACHE_NAMESPACE, PORTLETS_CACHE_REGION
-from pyams_portal.zmi.interfaces import IPortletConfigurationEditor
+from pyams_portal.zmi.interfaces import IPortletConfigurationEditor, IPortletRendererSettingsEditForm
 from pyams_portal.zmi.widget import RendererSelectFieldWidget
 from pyams_skin.interfaces.view import IModalPage
 from pyams_skin.interfaces.viewlet import IHeaderViewletManager
@@ -475,6 +476,7 @@ def delete_template_portlet(request):
 @ajax_form_config(name='renderer-settings.html',
                   context=IPortletSettings, layer=IPyAMSLayer,
                   permission=MANAGE_TEMPLATE_PERMISSION)
+@implementer(IPortletRendererSettingsEditForm)
 class PortletRendererSettingsEditForm(AdminModalEditForm):
     """Portlet renderer settings edit form"""
 
@@ -494,7 +496,19 @@ class PortletRendererSettingsEditForm(AdminModalEditForm):
     @property
     def fields(self):
         """Form fields getter"""
-        return Fields(self.renderer.settings_interface or Interface)
+        settings = self.get_content()
+        fields = self.request.registry.queryMultiAdapter((settings, self.request, self),
+                                                         IFormFields)
+        if fields is None:
+            fields = Fields(self.renderer.settings_interface or Interface)
+        return fields
+
+    def get_groups(self):
+        settings = self.get_content()
+        registry = self.request.registry
+        yield from sorted((adapter for name, adapter in
+                           registry.getAdapters((settings, self.request, self), IGroup)),
+                          key=get_form_weight)
 
 
 @adapter_config(required=(IPortletSettings, IAdminLayer, PortletRendererSettingsEditForm),
