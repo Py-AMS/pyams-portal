@@ -15,17 +15,13 @@
 """
 
 from zope.interface import Interface
-from zope.schema import Choice, TextLine
+from zope.schema import TextLine
 
-from pyams_file.interfaces.thumbnail import THUMBNAILERS_VOCABULARY_NAME
-
+from pyams_skin.schema import BootstrapThumbnailsSelectionField
 
 __docformat__ = 'restructuredtext'
 
 from pyams_portal import _  # pylint: disable=ungrouped-imports
-
-
-CARDS_RENDERER_SETTINGS_KEY = 'pyams_portal.renderer::cards'
 
 
 class ICardsPortletRendererSettings(Interface):
@@ -35,15 +31,16 @@ class ICardsPortletRendererSettings(Interface):
                          description=_("Cards container CSS class"),
                          default='row row-cols-2 row-cols-md-3 row-cols-lg-4')
 
-    thumb_selection = Choice(title=_("Images selection"),
-                             description=_("Cards will use responsive selections by default, "
-                                           "but you can also force selection of another "
-                                           "specific selection"),
-                             vocabulary=THUMBNAILERS_VOCABULARY_NAME,
-                             required=False)
-
-
-MASONRY_CARDS_RENDERER_SETTINGS_KEY = 'pyams_portal.renderer::cards::masonry'
+    thumb_selection = BootstrapThumbnailsSelectionField(
+        title=_("Images selection"),
+        description=_("Cards will use responsive selections by default, "
+                      "but you can also force selection of another "
+                      "specific selection"),
+        default_selection='pano',
+        change_selection=True,
+        default_width=12,
+        change_width=False,
+        required=False)
 
 
 class ICardsPortletMasonryRendererSettings(Interface):
@@ -53,9 +50,13 @@ class ICardsPortletMasonryRendererSettings(Interface):
                          description=_("Cards container CSS class"),
                          default='card-columns')
 
-    thumb_selection = Choice(title=_("Images selection"),
-                             description=_("Cards will use responsive selections by default, "
-                                           "but you can also force selection of another "
-                                           "specific selection"),
-                             vocabulary=THUMBNAILERS_VOCABULARY_NAME,
-                             required=False)
+    thumb_selection = BootstrapThumbnailsSelectionField(
+        title=_("Images selection"),
+        description=_("Cards will use responsive selections by default, "
+                      "but you can also force selection of another "
+                      "specific selection"),
+        default_selection='pano',
+        change_selection=True,
+        default_width=12,
+        change_width=False,
+        required=False)

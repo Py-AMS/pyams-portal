@@ -1,6 +1,7 @@
 <div tal:define="settings view.settings;
 				 renderer_settings view.renderer_settings;
-				 slot_config view.slot_configuration;">
+				 slot_config view.slot_configuration;
+				 selections renderer_settings.thumb_selection;">
 	<h2 tal:define="title i18n:settings.title"
 		tal:condition="title">
 		${title}
@@ -14,16 +15,7 @@
 				<tal:if define="illustration card.illustration"
 						condition="illustration">
 					${structure:tales:picture(illustration,
-											  xs_thumb=renderer_settings.thumb_selection,
-											  xs_width=slot_config.xs_width,
-											  sm_thumb=renderer_settings.thumb_selection,
-											  sm_width=slot_config.sm_width,
-											  md_thumb=renderer_settings.thumb_selection,
-											  md_width=slot_config.md_width,
-											  lg_thumb=renderer_settings.thumb_selection,
-											  lg_width=slot_config.lg_width,
-											  xl_thumb=renderer_settings.thumb_selection,
-											  xl_width=slot_config.xl_width,
+											  selections=selections,
 											  css_class='card-img-top w-100')}
 				</tal:if>
 				<div class="card-body"

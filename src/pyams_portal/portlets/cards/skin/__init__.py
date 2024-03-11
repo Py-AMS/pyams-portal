@@ -22,9 +22,9 @@ from zope.schema.fieldproperty import FieldProperty
 
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortalContext, IPortletRenderer
-from pyams_portal.portlets.cards import ICardsPortletSettings
-from pyams_portal.portlets.cards.skin.interfaces import CARDS_RENDERER_SETTINGS_KEY, \
-    ICardsPortletMasonryRendererSettings, ICardsPortletRendererSettings
+from pyams_portal.portlets.cards.interfaces import ICardsPortletSettings
+from pyams_portal.portlets.cards.skin.interfaces import ICardsPortletMasonryRendererSettings, \
+    ICardsPortletRendererSettings
 from pyams_portal.skin import PortletRenderer
 from pyams_template.template import template_config
 from pyams_utils.adapter import adapter_config
