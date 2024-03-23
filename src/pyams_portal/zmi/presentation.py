@@ -20,7 +20,7 @@ from zope.interface import Invalid, alsoProvides, implementer
 
 from pyams_form.ajax import ajax_form_config
 from pyams_form.field import Fields
-from pyams_form.interfaces.form import IDataExtractedEvent, IGroup, IInnerSubForm
+from pyams_form.interfaces.form import IDataExtractedEvent, IFormContent, IGroup, IInnerSubForm
 from pyams_form.subform import InnerEditForm
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_pagelet.pagelet import pagelet_config
@@ -87,10 +87,6 @@ class PortalContextPresentationEditForm(AdminEditForm):
         if not page.can_inherit:
             alsoProvides(self, IPortalContextPresentationForm)
 
-    def get_content(self):
-        """Form content getter"""
-        return get_portal_page(self.context, page_name=self.page_name)
-
     def apply_changes(self, data):
         page = self.get_content()
         params = self.request.params
@@ -115,6 +111,13 @@ class PortalContextPresentationEditForm(AdminEditForm):
         return {
             IPortalPage: ('inherit_parent', 'use_local_template', 'shared_template')
         }
+
+
+@adapter_config(required=(IPortalContext, IPyAMSLayer, PortalContextPresentationEditForm),
+                provides=IFormContent)
+def portal_context_presentation_form_content(context, request, form):
+    """Portal context presentation edit form content getter"""
+    return get_portal_page(context, page_name=form.page_name)
 
 
 #
@@ -232,9 +235,6 @@ class PortalContextPresentationTemplateEditForm(InnerEditForm):
 
     fields = Fields(IPortalPage).select('shared_template')
 
-    def get_content(self):
-        return self.parent_form.get_content()
-
     @property
     def template_css_class(self):
         """Template CSS class getter"""
@@ -256,6 +256,13 @@ class PortalContextPresentationTemplateEditForm(InnerEditForm):
                 'ams-change-handler': 'MyAMS.portal.presentation.setSharedTemplate'
             }
             alsoProvides(template, IObjectData)
+
+
+@adapter_config(required=(IPortalContext, IPyAMSLayer, PortalContextPresentationTemplateEditForm),
+                provides=IFormContent)
+def portal_context_presentation_template_form_content(context, request, form):
+    """Portal context presentation template form content getter"""
+    return form.parent_form.get_content()
 
 
 @viewlet_config(name='presentation-template.help',

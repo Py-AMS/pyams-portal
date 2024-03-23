@@ -24,7 +24,7 @@ from zope.interface import Interface, Invalid, alsoProvides
 from pyams_form.ajax import ajax_form_config
 from pyams_form.field import Fields
 from pyams_form.interfaces import HIDDEN_MODE
-from pyams_form.interfaces.form import IAJAXFormRenderer, IDataExtractedEvent, IGroup
+from pyams_form.interfaces.form import IAJAXFormRenderer, IDataExtractedEvent, IFormContent, IGroup
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortalPage, IPortalTemplate, \
     IPortalTemplateConfiguration, IPortalTemplateContainer, ISlot, ISlotConfiguration, \
@@ -191,11 +191,6 @@ class PortalTemplateSlotPropertiesEditForm(PortalTemplateSlotMixinForm, AdminMod
         super().__init__(context, request)
         self.config = IPortalTemplateConfiguration(self.context)
 
-    def get_content(self):
-        """Content getter"""
-        slot_name = self.request.params.get('{0}widgets.slot_name'.format(self.prefix))
-        return self.config.slot_config[slot_name]
-
     def update_widgets(self, prefix=None):
         super().update_widgets(prefix)
         slot_name = self.widgets.get('slot_name')
@@ -205,6 +200,16 @@ class PortalTemplateSlotPropertiesEditForm(PortalTemplateSlotMixinForm, AdminMod
             widget = self.widgets.get(name)
             if widget is not None:
                 widget.input_css_class = 'col-sm-6'
+
+
+@adapter_config(required=(IPortalTemplate, IAdminLayer, PortalTemplateSlotPropertiesEditForm),
+                provides=IFormContent)
+@adapter_config(required=(IPortalPage, IAdminLayer, PortalTemplateSlotPropertiesEditForm),
+                provides=IFormContent)
+def portal_template_slot_properties_edit_form_content(context, request, form):
+    """Portal template slot properties edit form content getter"""
+    slot_name = request.params.get('{0}widgets.slot_name'.format(form.prefix))
+    return form.config.slot_config[slot_name]
 
 
 @adapter_config(name='html-codes',
