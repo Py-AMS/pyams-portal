@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.3.0
+-----
+ - updated cards portlet thumbnails selection field
+ - updated portlet renderer settings edit form fields and groups getters
+ - added edit forms content getters
+
 2.2.3
 -----
  - corrected doctest
