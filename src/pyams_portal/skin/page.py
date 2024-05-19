@@ -169,6 +169,10 @@ class BaseTemplateClassTALESExtension(ContextRequestViewAdapter):
 class TemplateContainerClassTALESExtension(BaseTemplateClassTALESExtension):
     """Template container class TALES extension"""
 
+    @reify
+    def page_name(self):
+        return self.view.page_name
+
 
 @adapter_config(name='template_header_class',
                 required=(Interface, IPyAMSLayer, Interface),
