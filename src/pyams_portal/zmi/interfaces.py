@@ -20,7 +20,8 @@ __docformat__ = 'restructuredtext'
 
 from zope.interface import Attribute, Interface
 
-from pyams_form.interfaces.form import IEditForm, IForm
+from pyams_form.interfaces.form import IForm
+from pyams_zmi.interfaces.form import IPropertiesEditForm
 
 
 class IPortletConfigurationEditor(Interface):
@@ -47,5 +48,5 @@ class IPortalContextPresentationForm(IForm):
     page_name = Attribute("Portal page name getter")
 
 
-class IPortletRendererSettingsEditForm(IEditForm):
+class IPortletRendererSettingsEditForm(IPropertiesEditForm):
     """Portlet renderer settings edit form marker interface"""
