@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.3.1
+-----
+ - get template container class from parent view
+ - updated portlet renderer settings edit form parent interface
+
 2.3.0
 -----
  - updated cards portlet thumbnails selection field
