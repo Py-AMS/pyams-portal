@@ -16,6 +16,7 @@ This module is used for Pyramid integration.
 """
 
 import re
+
 from zope.interface import classImplements
 
 from pyams_portal.interfaces import DESIGNER_ROLE, IPortalContext, IPortalFooterContext, \
@@ -24,7 +25,6 @@ from pyams_security.interfaces.base import PUBLIC_PERMISSION, ROLE_ID, VIEW_PERM
     VIEW_SYSTEM_PERMISSION
 from pyams_security.interfaces.names import ADMIN_USER_ID, SYSTEM_ADMIN_ROLE
 from pyams_site.site import BaseSiteRoot
-
 
 __docformat__ = 'restructuredtext'
 
@@ -42,6 +42,12 @@ def include_package(config):
         'id': MANAGE_TEMPLATE_PERMISSION,
         'title': _("Manage presentation templates")
     })
+
+    # upgrade system manager roles
+    config.upgrade_role(SYSTEM_ADMIN_ROLE,
+                        permissions={
+                            MANAGE_TEMPLATE_PERMISSION
+                        })
 
     # register roles
     config.register_role({
