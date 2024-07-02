@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.2
+-----
+ - added permission to system manager role
+
 2.3.1
 -----
  - get template container class from parent view
