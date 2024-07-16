@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.3.3
+-----
+ - reverted update on portlet renderer settings edit form parent interface
+   to avoid side effects on existing forms
+
 2.3.2
 -----
  - added permission to system manager role
