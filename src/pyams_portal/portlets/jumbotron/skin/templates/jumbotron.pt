@@ -12,7 +12,7 @@
 		<tal:if define="target settings.target"
 				condition="(target is not None) or settings.target_url">
 			<a class="btn btn-${settings.button_status} btn-lg" role="button"
-			   tal:define="href tales:absolute_url(target);
+			   tal:define="href tales:canonical_url(target);
 						   url href if target is not None else settings.target_url;"
 			   tal:condition="url"
 			   href="${url}">

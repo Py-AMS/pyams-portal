@@ -35,7 +35,7 @@
 						condition="(target is not None) or card.target_url">
 					<div class="card-footer text-right"
 						 tal:define="label i18n:card.button_label;
-									 href tales:absolute_url(target);
+									 href tales:canonical_url(target);
 									 url href if target is not None else card.target_url;"
 						 tal:condition="label and url">
 						<a class="btn btn-${card.button_status} btn-md mx-auto" role="button"
