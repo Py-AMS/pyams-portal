@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.4.0
+-----
+ - added optional CSS class to portlets settings
+ - use canonical URL instead of relative URL in Bootstrap cards links
+
 2.3.3
 -----
  - reverted update on portlet renderer settings edit form parent interface
