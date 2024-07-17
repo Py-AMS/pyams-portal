@@ -140,6 +140,7 @@ class PortletSettings(Persistent, Contained):
 
     _renderer = FieldProperty(IPortletSettings['renderer'])
     devices_visibility = FieldProperty(IPortletSettings['devices_visibility'])
+    css_class = FieldProperty(IPortletSettings['css_class'])
 
     __name__ = '++settings++'
 

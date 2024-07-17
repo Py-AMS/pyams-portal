@@ -388,8 +388,8 @@ class PortletConfigurationEditForm(InnerEditForm):
     def fields(self):
         """Form fields getter"""
         factory = self.parent_form.settings_factory
-        fields = Fields(factory).omit('__name__', 'renderer', 'devices_visibility') + \
-            Fields(factory).select('renderer', 'devices_visibility')
+        fields = Fields(factory).omit('__name__', 'renderer', 'devices_visibility', 'css_class') + \
+            Fields(factory).select('renderer', 'devices_visibility', 'css_class')
         fields['renderer'].widget_factory = RendererSelectFieldWidget
         return fields
 

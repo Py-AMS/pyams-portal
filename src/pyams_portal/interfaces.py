@@ -117,6 +117,10 @@ class IPortletSettings(ILocation, IAttributeAnnotatable):
     def get_devices_visibility(self):
         """Get CSS classes list matching devices display"""
 
+    css_class = TextLine(title=_("Custom CSS class"),
+                         description=_("This CSS class will be added to base portlet CSS classes"),
+                         required=False)
+
 
 PORTLETS_CONFIGURATION_KEY = 'pyams_portal.portlets'
 

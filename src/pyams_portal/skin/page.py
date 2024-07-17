@@ -102,7 +102,7 @@ class BasePortalContextPage:
                                                            IPortletCSSClass,
                                                            name=settings.renderer,
                                                            default='')
-            return f"{settings.get_devices_visibility()} {css_class}"
+            return f"{settings.get_devices_visibility()} {css_class} {settings.css_class or ''}"
         return ''
 
     def render_portlet(self, portlet_id, template_name=''):
