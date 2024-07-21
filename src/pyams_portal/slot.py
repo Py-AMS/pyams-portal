@@ -90,11 +90,8 @@ class SlotConfiguration(Persistent, Contained):
             device = (device, )
         result = ['col', self.css_class or '']
         for attr in device:
-            width = getattr(self, attr + '_width')
-            if attr == 'xs':
-                result.append('col-{}'.format(width))
-            else:
-                result.append('col-{0}-{1}'.format(attr, width))
+            width = getattr(self, f'{attr}_width')
+            result.append(f'col-{width}' if attr == 'xs' else f'col-{attr}-{width}')
         return ' '.join(result)
 
     def get_width(self, device=None):
@@ -105,7 +102,7 @@ class SlotConfiguration(Persistent, Contained):
             device = (device, )
         result = {}
         for attr in device:
-            result[attr] = getattr(self, attr + '_width')
+            result[attr] = getattr(self, f'{attr}_width')
         return result
 
     def set_width(self, width, device=None):
@@ -115,4 +112,4 @@ class SlotConfiguration(Persistent, Contained):
         elif isinstance(device, str):
             device = (device, )
         for attr in device:
-            setattr(self, attr + '_width', width)
+            setattr(self, f'{attr}_width', width)
