@@ -15,21 +15,25 @@
 This module defines renderers from rich text and code portlets.
 """
 
+from persistent import Persistent
+from zope.container.contained import Contained
 from zope.interface import Interface
+from zope.schema.fieldproperty import FieldProperty
 
 from pyams_i18n.interfaces import II18n
 from pyams_layer.interfaces import IPyAMSLayer
 from pyams_portal.interfaces import IPortalContext, IPortletRenderer
 from pyams_portal.portlets.html import IHTMLPortletSettings, IRawPortletSettings
+from pyams_portal.portlets.html.skin.interfaces import IHTMLPortletAlertRendererSettings
 from pyams_portal.skin import PortletRenderer
 from pyams_template.template import template_config
 from pyams_utils import library
 from pyams_utils.adapter import adapter_config
+from pyams_utils.factory import factory_config
 from pyams_utils.fanstatic import ExternalResource
 from pyams_utils.interfaces.pygments import IPygmentsCodeConfiguration
 from pyams_utils.interfaces.text import IHTMLRenderer
 from pyams_utils.pygments import render_source
-
 
 __docformat__ = 'restructuredtext'
 
@@ -39,7 +43,6 @@ from pyams_portal import _  # pylint: disable=ungrouped-imports
 #
 # Raw HTML portlet renderer
 #
-
 
 @adapter_config(required=(IPortalContext, IPyAMSLayer, Interface, IRawPortletSettings),
                 provides=IPortletRenderer)
@@ -153,3 +156,28 @@ class HTMLPortletDefaultRenderer(PortletRenderer):
     """Rich text portlet renderer"""
 
     label = _("Rich text (default)")
+
+
+#
+# Rich text portlet alert renderer
+#
+
+@factory_config(IHTMLPortletAlertRendererSettings)
+class HTMLPortletAlertRendererSettings(Persistent, Contained):
+    """HTML portlet alert renderer settings"""
+
+    status = FieldProperty(IHTMLPortletAlertRendererSettings['status'])
+    display_dismiss_button = FieldProperty(IHTMLPortletAlertRendererSettings['display_dismiss_button'])
+
+
+@adapter_config(name='alert',
+                required=(IPortalContext, IPyAMSLayer, Interface, IHTMLPortletSettings),
+                provides=IPortletRenderer)
+@template_config(template='templates/html-alert.pt', layer=IPyAMSLayer)
+class HTMLPortletAlertRenderer(PortletRenderer):
+    """Rich text portlet alert renderer"""
+
+    label = _("Bootstrap alert")
+    weight = 10
+
+    settings_interface = IHTMLPortletAlertRendererSettings
