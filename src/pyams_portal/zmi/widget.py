@@ -39,18 +39,23 @@ from pyams_portal import _
 class RendererSelectWidget(SelectWidget):
     """Portlet renderer widget"""
 
+    format_renderers = True
     no_value_message = _("No selected renderer (use default)")
 
-    object_data = {
-        'ams-modules': {
-            "portal": {
-                "src": get_resource_path(layout_js),
-                "css": get_resource_path(layout_css)
-            }
-        },
-        'ams-select2-after-init-callback': 'MyAMS.portal.renderer.init',
-        'ams-select2-template-result': 'MyAMS.portal.renderer.formatRenderer'
-    }
+    @property
+    def object_data(self):
+        if not self.format_renderers:
+            return None
+        return {
+            'ams-modules': {
+                "portal": {
+                    "src": get_resource_path(layout_js),
+                    "css": get_resource_path(layout_css)
+                }
+            },
+            'ams-select2-after-init-callback': 'MyAMS.portal.renderer.init',
+            'ams-select2-template-result': 'MyAMS.portal.renderer.formatRenderer'
+        }
 
     @property
     def show_renderer_properties(self):
