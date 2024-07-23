@@ -393,6 +393,9 @@ class PortletConfigurationEditForm(InnerEditForm):
         fields['renderer'].widget_factory = RendererSelectFieldWidget
         return fields
 
+    success_message = _('Data successfully updated.')
+    no_changes_message = _('No changes were applied.')
+
 
 @adapter_config(required=(Interface, IAdminLayer, PortletConfigurationEditForm),
                 provides=IAJAXFormRenderer)

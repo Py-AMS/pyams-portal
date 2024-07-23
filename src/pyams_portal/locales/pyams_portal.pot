@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2024-07-17 00:22+0200\n"
+"POT-Creation-Date: 2024-07-23 16:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -399,6 +399,7 @@ msgid "Share template"
 msgstr ""
 
 #: ./src/pyams_portal/zmi/layout.py:299
+#: ./src/pyams_portal/portlets/html/skin/templates/html-alert.pt:11
 msgid "Close"
 msgstr ""
 
@@ -420,7 +421,7 @@ msgid ""
 "Your page will then be configured to use this template, but your previous local template will not be lost..."
 msgstr ""
 
-#: ./src/pyams_portal/zmi/portlet.py:69 ./src/pyams_portal/zmi/portlet.py:571
+#: ./src/pyams_portal/zmi/portlet.py:69 ./src/pyams_portal/zmi/portlet.py:574
 #, python-format
 msgid "Portlet: {}"
 msgstr ""
@@ -457,18 +458,26 @@ msgstr ""
 msgid "Portlet settings"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/portlet.py:425
+#: ./src/pyams_portal/zmi/portlet.py:396
+msgid "Data successfully updated."
+msgstr ""
+
+#: ./src/pyams_portal/zmi/portlet.py:397
+msgid "No changes were applied."
+msgstr ""
+
+#: ./src/pyams_portal/zmi/portlet.py:428
 msgid ""
 "You changed selected portlet renderer. Don't omit to check new renderer "
 "settings..."
 msgstr ""
 
-#: ./src/pyams_portal/zmi/portlet.py:491
+#: ./src/pyams_portal/zmi/portlet.py:494
 #, python-format
 msgid "Renderer: {}"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/portlet.py:493
+#: ./src/pyams_portal/zmi/portlet.py:496
 msgid "Renderer settings"
 msgstr ""
 
@@ -504,7 +513,7 @@ msgstr ""
 msgid "Management interface"
 msgstr ""
 
-#: ./src/pyams_portal/zmi/widget.py:42
+#: ./src/pyams_portal/zmi/widget.py:43
 msgid "No selected renderer (use default)"
 msgstr ""
 
@@ -1121,24 +1130,44 @@ msgstr ""
 msgid "Title:"
 msgstr ""
 
-#: ./src/pyams_portal/portlets/html/skin/__init__.py:50
+#: ./src/pyams_portal/portlets/html/skin/interfaces.py:31
+msgid "Alert status"
+msgstr ""
+
+#: ./src/pyams_portal/portlets/html/skin/interfaces.py:32
+msgid "Bootstrap alert status defines alert rendering color"
+msgstr ""
+
+#: ./src/pyams_portal/portlets/html/skin/interfaces.py:37
+msgid "Display dismiss button"
+msgstr ""
+
+#: ./src/pyams_portal/portlets/html/skin/interfaces.py:38
+msgid "Select this option to display a dismiss button"
+msgstr ""
+
+#: ./src/pyams_portal/portlets/html/skin/__init__.py:53
 msgid "HTML source code (default)"
 msgstr ""
 
-#: ./src/pyams_portal/portlets/html/skin/__init__.py:65
+#: ./src/pyams_portal/portlets/html/skin/__init__.py:68
 msgid "Formatted source code"
 msgstr ""
 
-#: ./src/pyams_portal/portlets/html/skin/__init__.py:102
+#: ./src/pyams_portal/portlets/html/skin/__init__.py:105
 msgid "ReStructured text"
 msgstr ""
 
-#: ./src/pyams_portal/portlets/html/skin/__init__.py:129
+#: ./src/pyams_portal/portlets/html/skin/__init__.py:132
 msgid "Markdown text"
 msgstr ""
 
-#: ./src/pyams_portal/portlets/html/skin/__init__.py:155
+#: ./src/pyams_portal/portlets/html/skin/__init__.py:158
 msgid "Rich text (default)"
+msgstr ""
+
+#: ./src/pyams_portal/portlets/html/skin/__init__.py:180
+msgid "Bootstrap alert"
 msgstr ""
 
 #: ./src/pyams_portal/skin/__init__.py:221
