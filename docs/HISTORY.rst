@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.5.0
+-----
+ - added rich text portlet "alert" renderer
+ - added property to disable renderers preview in renderer selection widget
+
 2.4.0
 -----
  - added optional CSS class to portlets settings
