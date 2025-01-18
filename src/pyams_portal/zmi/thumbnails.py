@@ -177,6 +177,9 @@ class PortalTemplatesContainerThumbnailsEditForm(AdminEditForm):
 
     fields = Fields(IPortletsRenderersThumbnails)
     fields['thumbnails'].widget_factory = RenderersThumbnailsFieldWidget
+    
+    label_css_class = 'hidden'
+    input_css_class = 'col-12 px-4'
 
 
 @adapter_config(required=(IPortalTemplateContainer, IAdminLayer, PortalTemplatesContainerThumbnailsEditForm),
