@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.5.2
+-----
+ - added support for Python 3.12
+
 2.5.1
 -----
  - updated form CSS class
