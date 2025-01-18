@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.5.1
+-----
+ - updated form CSS class
+
 2.5.0
 -----
  - added rich text portlet "alert" renderer
