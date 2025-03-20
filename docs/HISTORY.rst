@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.6.0
+-----
+ - added and updated sublocations adapters
+ - added deleters to files properties
+
 2.5.2
 -----
  - added support for Python 3.12
