@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.6.1
+-----
+ - updated Gitlab-CI for Python 3.12
+
 2.6.0
 -----
  - added and updated sublocations adapters
