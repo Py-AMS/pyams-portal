@@ -109,7 +109,7 @@ class PortalTemplateContainerRenderersThumbnailsSublocations(ContextAdapter):
 
     def sublocations(self):
         """Thumbnails sub-locations getter"""
-        yield IPortletsRenderersThumbnails(self.context)
+        yield from IPortletsRenderersThumbnails(self.context).thumbnails.values()
 
 
 @adapter_config(name='thumbnails',

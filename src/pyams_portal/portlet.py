@@ -24,15 +24,16 @@ from pyramid.exceptions import ConfigurationError
 from zope.container.contained import Contained
 from zope.copy import clone
 from zope.interface import alsoProvides, implementer, noLongerProvides
-from zope.lifecycleevent import ObjectCreatedEvent
+from zope.lifecycleevent import ObjectCreatedEvent, ObjectRemovedEvent
 from zope.location import locate
+from zope.location.interfaces import ISublocations
 from zope.schema.fieldproperty import FieldProperty
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.traversing.interfaces import ITraversable
 
 from pyams_portal.interfaces import IPortalContext, IPortalPage, IPortalPortletsConfiguration, \
     IPortalTemplate, IPortlet, IPortletConfiguration, IPortletRenderer, \
-    IPortletSettings, MANAGE_TEMPLATE_PERMISSION, PORTLETS_VOCABULARY_NAME
+    IPortletRendererSettings, IPortletSettings, MANAGE_TEMPLATE_PERMISSION, PORTLETS_VOCABULARY_NAME
 from pyams_portal.utils import get_portal_page
 from pyams_security.interfaces import IViewContextPermissionChecker
 from pyams_utils.adapter import ContextAdapter, adapter_config
@@ -343,6 +344,16 @@ class PortletConfigurationSettingsTraverser(ContextAdapter):
         return self.context.settings
 
 
+@adapter_config(name='settings',
+                required=IPortletConfiguration,
+                provides=ISublocations)
+class PortletConfigurationSettingsSublocations(ContextAdapter):
+    """Portlet configuration settings sub-locations"""
+
+    def sublocations(self):
+        yield self.context._settings
+
+
 @adapter_config(required=IPortletConfiguration,
                 provides=IViewContextPermissionChecker)
 class PortletConfigurationPermissionChecker(ContextAdapter):
@@ -373,6 +384,13 @@ class PortalPortletsConfiguration(PersistentMapping, Contained):
     def __setitem__(self, key, value):
         super().__setitem__(key, value)
         locate(value, self.__parent__, '++portlet++{0}'.format(key))
+        
+    def __delitem__(self, key):
+        configuration = self.get(key)
+        super().__delitem__(key)
+        if configuration is not None:
+            registry = get_pyramid_registry()
+            registry.notify(ObjectRemovedEvent(configuration))
 
     def get_portlet_configuration(self, portlet_id):
         """Portlet configuration getter"""
@@ -399,3 +417,13 @@ class PortalPortletsConfiguration(PersistentMapping, Contained):
             portlet_id = (portlet_id,)
         for p_id in portlet_id:
             del self[p_id]
+
+
+@adapter_config(name='portlets',
+                required=IPortalPortletsConfiguration,
+                provides=ISublocations)
+class PortalPortletsConfigurationSublocations(ContextAdapter):
+    """Portal portlets configuration sub-locations"""
+    
+    def sublocations(self):
+        yield from self.context.values()

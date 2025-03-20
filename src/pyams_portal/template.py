@@ -24,6 +24,7 @@ from zope.container.folder import Folder
 from zope.interface import Interface, implementer
 from zope.lifecycleevent import IObjectAddedEvent, IObjectRemovedEvent
 from zope.location import locate
+from zope.location.interfaces import ISublocations
 from zope.schema.fieldproperty import FieldProperty
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.traversing.interfaces import ITraversable
@@ -165,6 +166,30 @@ class PortalTemplatesVocabulary(LocalUtilitiesVocabulary):
     """Portal templates vocabulary"""
 
     interface = IPortalTemplate
+
+
+@adapter_config(name='portlet',
+                required=IPortalTemplate,
+                provides=ITraversable)
+class PortalTemplatePortletTraverser(ContextAdapter):
+    """++portlet++ template traverser"""
+
+    def traverse(self, name, furtherpath=None):  # pylint: disable=unused-argument
+        """Portal template traverser to portlet configuration"""
+        config = IPortalPortletsConfiguration(self.context)
+        if name:
+            return config.get_portlet_configuration(int(name))
+        return config
+
+
+@adapter_config(name='portlets',
+                required=IPortalTemplate,
+                provides=ISublocations)
+class PortalTemplatePortletsSublocations(ContextAdapter):
+    """Portal template portlets sublocations adapter"""
+
+    def sublocations(self):
+        yield IPortalPortletsConfiguration(self.context)
 
 
 #
@@ -394,20 +419,6 @@ class PortalTemplateSlotsVocabulary(SimpleVocabulary):
             for slot_name in sorted(config.slot_names)
         ]
         super().__init__(terms)
-
-
-@adapter_config(name='portlet',
-                required=IPortalTemplate,
-                provides=ITraversable)
-class PortalTemplatePortletTraverser(ContextAdapter):
-    """++portlet++ template traverser"""
-
-    def traverse(self, name, furtherpath=None):  # pylint: disable=unused-argument
-        """Portal template traverser to portlet configuration"""
-        config = IPortalPortletsConfiguration(self.context)
-        if name:
-            return config.get_portlet_configuration(int(name))
-        return config
 
 
 #

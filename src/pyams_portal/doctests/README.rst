@@ -972,8 +972,10 @@ You can also set or update a single thumbnail:
 Thumbnails support sublocations and traversing:
 
     >>> from zope.location.interfaces import ISublocations
-    >>> next(config.registry.queryAdapter(ptc, ISublocations, name='thumbnails').sublocations()) is thumbnails
-    True
+    >>> list(config.registry.queryAdapter(ptc, ISublocations, name='thumbnails').sublocations())
+    [<pyams_portal.thumbnails.PortletRendererThumbnail object at 0x...>,
+     <pyams_portal.thumbnails.PortletRendererThumbnail object at 0x...>,
+     <pyams_portal.thumbnails.PortletRendererThumbnail object at 0x...>]
 
     >>> from zope.traversing.interfaces import ITraversable
     >>> traverser = config.registry.queryAdapter(ptc, ITraversable, name='thumbnails')
