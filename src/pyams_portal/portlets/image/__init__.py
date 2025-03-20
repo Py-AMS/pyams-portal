@@ -23,7 +23,6 @@ from pyams_portal.portlet import Portlet, PortletSettings, portlet_config
 from pyams_portal.portlets.image.interfaces import IImagePortletSettings
 from pyams_utils.factory import factory_config
 
-
 __docformat__ = 'restructuredtext'
 
 from pyams_portal import _  # pylint: disable=ungrouped-imports  # pylint: disable=ungrouped-imports
@@ -49,6 +48,11 @@ class ImagePortletSettings(PortletSettings):
         self._image = value
         if IImageFile.providedBy(self._image):
             alsoProvides(self._image, IResponsiveImage)
+            
+    @image.deleter
+    def image(self):
+        """Image deleter"""
+        del self._image
 
 
 @portlet_config(permission=None)
