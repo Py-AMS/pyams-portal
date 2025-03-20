@@ -16,6 +16,7 @@ This modules defines the main portlets rendering components.
 """
 
 from zope.interface import Interface, implementer
+from zope.location.interfaces import ISublocations
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.traversing.interfaces import ITraversable
 
@@ -206,6 +207,18 @@ class PortletSettingsRendererSettingsTraverser(ContextAdapter):
     def traverse(self, name, furtherpath=None):  # pylint: disable=unused-argument
         """Traverse settings to renderer settings"""
         return IPortletRendererSettings(self.context)
+
+
+@adapter_config(name='renderer',
+                required=IPortletSettings,
+                provides=ISublocations)
+class PortletSettingsRendererSettingsSublocations(ContextAdapter):
+    """Portlet settings renderer settings sub-locations"""
+    
+    def sublocations(self):
+        settings = IPortletRendererSettings(self.context, None)
+        if settings is not None:
+            yield settings
 
 
 #
