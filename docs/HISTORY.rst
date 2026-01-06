@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.6.2
+-----
+ - added check for null value when getting portlet renderer settings
+
 2.6.1
 -----
  - updated Gitlab-CI for Python 3.12
