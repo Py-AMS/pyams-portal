@@ -192,7 +192,7 @@ class AllPortletsRenderersVocabulary(SimpleVocabulary):
 def portlet_renderer_settings_adapter(context):
     """Portlet renderer settings adapter"""
     renderer = context.get_renderer()
-    if not renderer.settings_interface:
+    if (renderer is None) or not renderer.settings_interface:
         return None
     return get_annotation_adapter(context, renderer.settings_key, renderer.settings_interface,
                                   name='++renderer++')
